@@ -35,6 +35,8 @@ func (g *Game) InitLevel1() {
 		for y := range l1.yTiles {
 			tiles[i].position.X = (float32(x) - float32(y)) * ((float32(g.tex.Width) / 2) * GRASS_TILE_SCALE)
 			tiles[i].position.Y = (float32(x) + float32(y)) * ((float32(g.tex.Height)/2 - 50) * GRASS_TILE_SCALE)
+			tiles[i].x = x
+			tiles[i].y = y
 			tiles[i].texture = g.tex
 			i++
 		}

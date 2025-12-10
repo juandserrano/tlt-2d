@@ -16,6 +16,7 @@ type Game struct {
 	levels          map[int]Level
 	currentLevel    int
 	cameraMoveSpeed float32
+	debug bool
 }
 
 func Run() {
@@ -28,6 +29,7 @@ func Run() {
 func (g *Game) init() {
 	g.wWidth = WINDOW_WIDTH
 	g.wHeight = WINDOW_HEIGHT
+	g.debug = false
 	// rl.ClearWindowState(rl.FlagWindowResizable)
 	rl.InitWindow(int32(g.wWidth), int32(g.wHeight), "The Last Tower")
 	g.camera = rl.NewCamera2D(rl.Vector2{X: 0, Y: 0}, rl.Vector2{X: 0, Y: 0}, 0, 1)
