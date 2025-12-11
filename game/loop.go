@@ -5,7 +5,7 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 func (g *Game) Loop() {
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
-		g.handleInput()
+		g.handleInput(dt)
 		g.player.update(dt)
 
 		rl.BeginDrawing()

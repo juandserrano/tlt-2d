@@ -3,16 +3,19 @@ package game
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Player struct {
-	texture   rl.Texture2D
-	position  rl.Vector2
-	prevPos   rl.Vector2
-	targetPos rl.Vector2
-	gridX     int
-	gridY     int
-	xOffset   float32
-	yOffset   float32
-	isMoving  bool
-	moveSpeed float32
+	texture           rl.Texture2D
+	position          rl.Vector2
+	prevPos           rl.Vector2
+	targetPos         rl.Vector2
+	gridX             int
+	gridY             int
+	xOffset           float32
+	yOffset           float32
+	isMoving          bool
+	moveSpeed         float32
+	moveCooldown      float32
+	moveCooldownTimer float32
+	moveOnCooldown    bool
 }
 
 func (p *Player) draw() {
@@ -25,6 +28,9 @@ func (g *Game) initPlayer() {
 	g.player.yOffset = -float32(g.player.texture.Height) * 0.15
 	g.player.position.X += g.player.xOffset
 	g.player.position.Y += g.player.yOffset
+	g.player.moveCooldown = 0.3
+	g.player.moveCooldownTimer = g.player.moveCooldown
+	g.player.moveOnCooldown = false
 	g.player.moveSpeed = 20
 }
 
