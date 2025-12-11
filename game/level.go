@@ -2,6 +2,8 @@ package game
 
 import (
 	"sort"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type Level struct {
@@ -25,8 +27,8 @@ func ySortTiles(tiles []Tile) {
 
 func (g *Game) InitLevel1() {
 	l1 := g.levels[1]
-	l1.xTiles = 40
-	l1.yTiles = 40
+	l1.xTiles = 200
+	l1.yTiles = 300
 
 	tiles := make([]Tile, l1.xTiles*l1.yTiles)
 
@@ -55,4 +57,19 @@ func (l *Level) Draw() {
 		t.Draw()
 
 	}
+}
+
+// GetTileCenter returns the visual center point of the tile.
+// Useful for centering the camera or placing a unit standing in the middle.
+func GetTileCenter(x, y int, tileTexture rl.Texture2D) rl.Vector2 {
+
+	// 2. Calculate Center Grid Coordinate (e.g., 5.5, 5.5)
+	centerX := float32(x) // + 0.5
+	centerY := float32(y) // + 0.5
+
+	// 3. Isometric Math for the center
+	isoX := (centerX - centerY) * (float32(tileTexture.Width) * GRASS_TILE_SCALE / 2)
+	isoY := (centerX + centerY) * (float32(tileTexture.Height) * GRASS_TILE_SCALE / 2)
+
+	return rl.Vector2{X: isoX, Y: isoY}
 }

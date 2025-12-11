@@ -15,9 +15,20 @@ func (g *Game) handleCamera() {
 		}
 	}
 
-	moveSpeed := g.cameraMoveSpeed / g.camera.Zoom
-	// Move on screen limits
+	focusOnPlayer := true
+	if focusOnPlayer {
+		moveCameraWithPlayer(g)
+	} else {
+		moveCameraWithLimits(g)
+	}
+}
 
+func moveCameraWithPlayer(g *Game) {
+	g.camera.Target = g.player.position
+}
+
+func moveCameraWithLimits(g *Game) {
+	moveSpeed := g.cameraMoveSpeed / g.camera.Zoom
 	const sideBufferPx = 20
 	mousePosition := rl.GetMousePosition()
 	if mousePosition.X >= float32(rl.GetScreenWidth())-sideBufferPx {
@@ -31,31 +42,6 @@ func (g *Game) handleCamera() {
 	}
 	if mousePosition.Y <= sideBufferPx {
 		g.camera.Target.Y -= moveSpeed
-	}
-
-	if rl.IsKeyDown(rl.KeyW) {
-		g.camera.Target.Y -= moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyUp) {
-		g.camera.Target.Y -= moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyS) {
-		g.camera.Target.Y += moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyDown) {
-		g.camera.Target.Y += moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyA) {
-		g.camera.Target.X -= moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyLeft) {
-		g.camera.Target.X -= moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyD) {
-		g.camera.Target.X += moveSpeed
-	}
-	if rl.IsKeyDown(rl.KeyRight) {
-		g.camera.Target.X += moveSpeed
 	}
 
 	var leftMostPos float32
@@ -84,4 +70,5 @@ func (g *Game) handleCamera() {
 	if g.camera.Target.Y > bottomMostPos-float32(rl.GetScreenHeight()) {
 		g.camera.Target.Y = bottomMostPos - float32(rl.GetScreenHeight())
 	}
+
 }
