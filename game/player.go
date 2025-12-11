@@ -32,10 +32,18 @@ func (g *Game) MovePlayer(dx, dy int) {
 	if g.player.isMoving {
 		return
 	}
+
 	g.player.gridX += dx
 	g.player.gridY += dy
+	if (g.player.gridX) < 0 {
+		g.player.gridX = 0
+	}
+	if (g.player.gridY) < 0 {
+		g.player.gridY = 0
+	}
 
-	newPos := GetTileCenter(g.player.gridX, g.player.gridY, g.tex)
+	l := g.levels[g.currentLevel]
+	newPos := l.GetTileCenterPosition(g.player.gridX, g.player.gridY)
 	g.player.prevPos = g.player.position
 	g.player.targetPos.X = newPos.X + g.player.xOffset
 	g.player.targetPos.Y = newPos.Y + g.player.yOffset
