@@ -6,12 +6,12 @@ func (g *Game) handleCamera() {
 	// zoom
 	wheel := rl.GetMouseWheelMove()
 	if wheel != 0 {
-		g.camera.Zoom += wheel * 0.1
-		if g.camera.Zoom < 0.5 {
-			g.camera.Zoom = 0.5
+		g.camera.Fovy -= wheel * 1
+		if g.camera.Fovy < 20 {
+			g.camera.Fovy = 20
 		}
-		if g.camera.Zoom > 2 {
-			g.camera.Zoom = 2
+		if g.camera.Fovy > 70 {
+			g.camera.Fovy = 70
 		}
 	}
 
@@ -28,7 +28,7 @@ func moveCameraWithPlayer(g *Game) {
 }
 
 func moveCameraWithLimits(g *Game) {
-	moveSpeed := g.cameraMoveSpeed / g.camera.Zoom
+	moveSpeed := g.cameraMoveSpeed / g.camera.Fovy
 	const sideBufferPx = 20
 	mousePosition := rl.GetMousePosition()
 	if mousePosition.X >= float32(rl.GetScreenWidth())-sideBufferPx {
@@ -48,21 +48,21 @@ func moveCameraWithLimits(g *Game) {
 	var rightMostPos float32
 	var bottomMostPos float32
 	for _, t := range g.levels[g.currentLevel].tiles {
-		if t.x == 0 && t.y == 39 {
+		if t.x == 0 && t.z == 39 {
 			leftMostPos = t.position.X
 		}
-		if t.x == 39 && t.y == 0 {
+		if t.x == 39 && t.z == 0 {
 			rightMostPos = t.position.X
 		}
-		if t.x == 39 && t.y == 39 {
+		if t.x == 39 && t.z == 39 {
 			bottomMostPos = t.position.Y
 		}
 	}
 	if g.camera.Target.X < leftMostPos {
 		g.camera.Target.X = leftMostPos
 	}
-	if g.camera.Target.X > rightMostPos-float32(rl.GetScreenWidth())*g.camera.Zoom {
-		g.camera.Target.X = rightMostPos - float32(rl.GetScreenWidth())*g.camera.Zoom
+	if g.camera.Target.X > rightMostPos-float32(rl.GetScreenWidth())*g.camera.Fovy {
+		g.camera.Target.X = rightMostPos - float32(rl.GetScreenWidth())*g.camera.Fovy
 	}
 	if g.camera.Target.Y < -100 {
 		g.camera.Target.Y = -100

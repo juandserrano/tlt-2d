@@ -13,11 +13,16 @@ func (g *Game) toggleDebug() {
 }
 func (g *Game) DrawWorldDebug() {
 	DrawTileCenters(g)
+	rl.DrawSphere(rl.Vector3{0, 0, 0}, 0.05, rl.Blue)
+	rl.DrawSphere(rl.Vector3{0, 1, 0}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 1, 1}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 1, 0}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{0, 1, 1}, 0.05, rl.White)
 	// rl.DrawRectangleRec(rl.NewRectangle(g.player.position.X, g.player.position.Y, float32(g.player.texture.Width), float32(g.player.texture.Height)), rl.Blue)
 }
 
 func (g *Game) DrawStaticDebug() {
-	zoomStr := fmt.Sprintf("Zoom: %.2f", g.camera.Zoom)
+	zoomStr := fmt.Sprintf("Zoom: %.2f", g.camera.Fovy)
 	rl.DrawText(zoomStr, 10, 10, 20, rl.Red)
 	// playerGridPosStr := fmt.Sprintf("x: %d, y: %d", g.player.gridX, g.player.gridY)
 	// rl.DrawText(playerGridPosStr, 10, 20, 20, rl.Red)
@@ -25,6 +30,10 @@ func (g *Game) DrawStaticDebug() {
 	rl.DrawText(playerPosStr, 10, 40, 20, rl.Red)
 	delta := fmt.Sprintf("deltaX: %.2f, deltaY: %.2f", g.player.position.X-g.player.prevPos.X, g.player.position.Y-g.player.prevPos.Y)
 	rl.DrawText(delta, 10, 80, 20, rl.Red)
+	bbox := rl.GetModelBoundingBox(g.basicTileModel)
+	size := rl.Vector3Subtract(bbox.Max, bbox.Min)
+	wStr := fmt.Sprintf("width: %.2f, height: %.2f, length: %.2f", size.X, size.Y, size.Z)
+	rl.DrawText(wStr, 10, 100, 20, rl.Blue)
 }
 
 func DrawTileCenters(g *Game) {
