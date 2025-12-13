@@ -11,18 +11,6 @@ type Level struct {
 	id     int
 }
 
-//func (l *Level) ySortTiles() {
-//	sort.Slice(l.tiles[:], func(i, j int) bool {
-//		return l.tiles[i].position.Y < l.tiles[j].position.Y
-//	})
-//}
-
-// func ySortTiles(tiles []Tile) {
-// 	sort.Slice(tiles[:], func(i, j int) bool {
-// 		return tiles[i].position.Y < tiles[j].position.Y
-// 	})
-// }
-
 func (g *Game) InitLevel1() {
 	l1 := g.levels[1]
 	l1.xTiles = 10
@@ -43,13 +31,10 @@ func (g *Game) InitLevel1() {
 			tiles[i].position.Y = -0.05 // lower tile so that 0 is top face
 			tiles[i].x = x
 			tiles[i].z = z
-			// tiles[i].texture = g.tex
 			tiles[i].model = g.basicTileModel
 			i++
 		}
 	}
-
-	//ySortTiles(tiles)
 
 	g.levels[1] = Level{
 		id:    1,
@@ -60,21 +45,5 @@ func (g *Game) InitLevel1() {
 func (l *Level) Draw() {
 	for _, t := range l.tiles {
 		t.Draw()
-
 	}
-}
-
-// GetTileCenter returns the visual center point of the tile.
-// Useful for centering the camera or placing a unit standing in the middle.
-func GetTileCenter(x, y int, tileTexture rl.Texture2D) rl.Vector2 {
-
-	// 2. Calculate Center Grid Coordinate (e.g., 5.5, 5.5)
-	centerX := float32(x) // + 0.5
-	centerY := float32(y) // + 0.5
-
-	// 3. Isometric Math for the center
-	isoX := (centerX - centerY) * (float32(tileTexture.Width) * GRASS_TILE_SCALE / 2)
-	isoY := (centerX + centerY) * (float32(tileTexture.Height) * GRASS_TILE_SCALE / 2)
-
-	return rl.Vector2{X: isoX, Y: isoY}
 }
