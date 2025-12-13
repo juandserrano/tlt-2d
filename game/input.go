@@ -1,7 +1,7 @@
 package game
 
 func (g *Game) handleInput(dt float32) {
-	// g.handleCamera()
+	g.handleCamera()
 	// g.handlePlayerMovement(dt)
 	g.toggleDebug()
 }

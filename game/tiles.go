@@ -29,5 +29,5 @@ func (t *Tile) Draw() {
 // }
 
 func (g *Game) LoadBasicTile() {
-	g.basicTileModel = rl.LoadModel("assets/models/tiles/plain_tile.obj")
+	g.basicTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
 }

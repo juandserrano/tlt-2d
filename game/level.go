@@ -40,7 +40,7 @@ func (g *Game) InitLevel1() {
 			tiles[i].height = size.Y
 			tiles[i].position.X = float32(x) * (tiles[i].width)
 			tiles[i].position.Z = float32(z) * (tiles[i].length)
-			tiles[i].position.Y = -0.1 // lower tile so that 0 is top face
+			tiles[i].position.Y = -0.05 // lower tile so that 0 is top face
 			tiles[i].x = x
 			tiles[i].z = z
 			// tiles[i].texture = g.tex

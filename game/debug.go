@@ -14,10 +14,17 @@ func (g *Game) toggleDebug() {
 func (g *Game) DrawWorldDebug() {
 	DrawTileCenters(g)
 	rl.DrawSphere(rl.Vector3{0, 0, 0}, 0.05, rl.Blue)
-	rl.DrawSphere(rl.Vector3{0, 1, 0}, 0.05, rl.White)
-	rl.DrawSphere(rl.Vector3{1, 1, 1}, 0.05, rl.White)
-	rl.DrawSphere(rl.Vector3{1, 1, 0}, 0.05, rl.White)
-	rl.DrawSphere(rl.Vector3{0, 1, 1}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 1}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 2}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 3}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 4}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 5}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{2, 0, 2}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{2, 0, 3}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{2, 0, 4}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{2, 0, 5}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{1, 0, 0}, 0.05, rl.White)
+	rl.DrawSphere(rl.Vector3{0, 0, 1}, 0.05, rl.White)
 	// rl.DrawRectangleRec(rl.NewRectangle(g.player.position.X, g.player.position.Y, float32(g.player.texture.Width), float32(g.player.texture.Height)), rl.Blue)
 }
 
