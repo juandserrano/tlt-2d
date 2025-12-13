@@ -34,6 +34,7 @@ func (g *Game) init() {
 	g.wWidth = WINDOW_WIDTH
 	g.wHeight = WINDOW_HEIGHT
 	g.debug = false
+	rl.SetConfigFlags(rl.FlagWindowResizable)
 	// rl.ClearWindowState(rl.FlagWindowResizable)
 	rl.InitWindow(int32(g.wWidth), int32(g.wHeight), "The Last Tower")
 	g.camera = rl.NewCamera3D(rl.Vector3{X: 20, Y: 20, Z: 20}, rl.Vector3{X: 0, Y: 0, Z: 0}, rl.Vector3{0, 1, 0}, 70.0, rl.CameraPerspective)

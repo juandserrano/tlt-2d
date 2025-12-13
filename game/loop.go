@@ -3,7 +3,7 @@ package game
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 func (g *Game) Loop() {
-	rl.DisableCursor()
+	// rl.DisableCursor()
 	for !rl.WindowShouldClose() {
 		rl.UpdateCamera(&g.camera, rl.CameraFree)
 		dt := rl.GetFrameTime()
