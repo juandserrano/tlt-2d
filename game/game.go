@@ -20,6 +20,9 @@ type Game struct {
 	cameraMoveSpeed float32
 	debug           bool
 	player          Player
+	shader          rl.Shader
+	viewPosLoc      int32
+	lightPosLoc     int32
 }
 
 func Run() {
@@ -45,4 +48,21 @@ func (g *Game) init() {
 	g.currentLevel = 1
 	// g.initPlayer()
 	g.InitLevel1()
+
+	// Load shader
+	g.shader = rl.LoadShader("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
+	g.viewPosLoc = rl.GetShaderLocation(g.shader, "viewPos")
+	g.lightPosLoc = rl.GetShaderLocation(g.shader, "lightPos")
+
+	// Set shader location for standard attributes
+	// Note: Raylib models usually have these bound by default.
+	// In this simple case, Raylib handles standard attributes automatically when drawing models.
+
+	// Ambient light level
+	ambientLoc := rl.GetShaderLocation(g.shader, "ambient")
+	ambient := []float32{0.0, 0.0, 0.0, 1.0}
+	rl.SetShaderValue(g.shader, ambientLoc, ambient, rl.ShaderUniformVec4)
+
+	// Assign shader to basic tile model
+	g.basicTileModel.Materials.Shader = g.shader
 }
