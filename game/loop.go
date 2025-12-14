@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -26,6 +27,7 @@ func (g *Game) Loop() {
 		rl.EndMode3D()
 		if g.debug {
 			g.DrawStaticDebug()
+			rl.DrawText(fmt.Sprintf("mousepos: %v", rl.GetMousePosition()), 100, 100, 20, rl.Blue)
 		}
 		rl.EndDrawing()
 	}

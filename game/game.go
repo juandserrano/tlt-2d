@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	WINDOW_WIDTH      = 1024
-	WINDOW_HEIGHT     = 720
+	WINDOW_WIDTH      = 800
+	WINDOW_HEIGHT     = 600
 	CAMERA_MOVE_SPEED = 3.0
 )
 
@@ -14,7 +14,7 @@ type Game struct {
 	wWidth          int
 	wHeight         int
 	camera          rl.Camera3D
-	basicTileModel  rl.Model
+	tiles           map[TileType]Tile
 	levels          map[int]Level
 	currentLevel    int
 	cameraMoveSpeed float32
@@ -36,12 +36,14 @@ func (g *Game) init() {
 	g.wWidth = WINDOW_WIDTH
 	g.wHeight = WINDOW_HEIGHT
 	g.debug = false
-	rl.SetConfigFlags(rl.FlagWindowResizable)
+	rl.SetConfigFlags(rl.FlagWindowResizable | rl.FlagMsaa4xHint | rl.FlagVsyncHint)
+	rl.SetTargetFPS(60)
 	rl.InitWindow(int32(g.wWidth), int32(g.wHeight), "The Last Tower")
 	g.initCamera()
+	g.levels = make(map[int]Level)
+	g.tiles = make(map[TileType]Tile)
 	g.LoadResources()
 
-	g.levels = make(map[int]Level)
 	g.LoadLevel(1)
 	g.initPlayer()
 

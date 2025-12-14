@@ -8,7 +8,11 @@ func (g *Game) LoadResources() {
 }
 
 func (g *Game) LoadTileModels() {
-	g.basicTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
+
+	g.tiles[TileTypeClear] = Tile{
+		model:    rl.LoadModel("assets/models/tiles/basic_ground_tile.glb"),
+		tileType: TileTypeClear,
+	}
 
 }
 
