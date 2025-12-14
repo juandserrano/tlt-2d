@@ -14,27 +14,21 @@ type Level struct {
 	centerXZ rl.Vector2
 }
 
-func (g *Game) InitLevel1() {
-	l1 := g.levels[1]
-	l1.xTiles = 20
-	l1.zTiles = 20
-	bbox := rl.GetModelBoundingBox(g.basicTileModel)
-	size := rl.Vector3Subtract(bbox.Max, bbox.Min)
+func (g *Game) LoadLevel(level int) {
+	// l := g.levels[level]
+	var l Level
+	l.xTiles = 20
+	l.zTiles = 20
 
-	tiles := make([]Tile, l1.xTiles*l1.zTiles)
+	tiles := make([]Tile, l.xTiles*l.zTiles)
 
 	i := 0
-	for x := range l1.xTiles {
-		for z := range l1.zTiles {
-			tiles[i].width = size.X
-			tiles[i].length = size.Z
-			tiles[i].height = size.Y
+	for x := range l.xTiles {
+		for z := range l.zTiles {
 			tilePos := GridToWorldHex(x, z, 1.16/2.0)
 			tiles[i].position.X = tilePos.X
 			tiles[i].position.Z = tilePos.Y
 
-			// tiles[i].position.X = float32(x) * (1)                // * (tiles[i].width)
-			// tiles[i].position.Z = float32(z) * (3.0 / 4.0 * 1.16) // * (tiles[i].length)
 			tiles[i].position.Y = -0.05 // lower tile so that 0 is top face
 			tiles[i].x = x
 			tiles[i].z = z
@@ -43,15 +37,16 @@ func (g *Game) InitLevel1() {
 		}
 	}
 
-	center := GridToWorldHex(l1.xTiles/2, l1.zTiles/2, 1.16/2.0)
+	center := GridToWorldHex(l.xTiles/2, l.zTiles/2, 1.16/2.0)
 
-	g.levels[1] = Level{
-		id:       1,
+	g.levels[level] = Level{
+		id:       level,
 		tiles:    tiles,
-		xTiles:   l1.xTiles,
-		zTiles:   l1.zTiles,
+		xTiles:   l.xTiles,
+		zTiles:   l.zTiles,
 		centerXZ: center,
 	}
+	g.currentLevel = level
 }
 
 func (l *Level) Draw() {

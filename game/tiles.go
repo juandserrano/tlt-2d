@@ -11,16 +11,8 @@ type Tile struct {
 	model    rl.Model
 	x        int
 	z        int
-	width    float32
-	length   float32
-	height   float32
 }
 
 func (t *Tile) Draw() {
 	rl.DrawModel(t.model, t.position, 1, rl.White)
-}
-
-func (g *Game) LoadBasicTile() {
-	g.basicTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
-
 }

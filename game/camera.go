@@ -2,12 +2,19 @@ package game
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
+func (g *Game) initCamera() {
+	g.camera = rl.NewCamera3D(
+		rl.Vector3{X: 20, Y: 20, Z: 20},
+		rl.Vector3{X: 0, Y: 0, Z: 0},
+		rl.Vector3{X: 0, Y: 1, Z: 0}, 70.0,
+		rl.CameraPerspective)
+	g.cameraMoveSpeed = CAMERA_MOVE_SPEED
+}
+
 func (g *Game) handleCamera() {
 	// Zoom
 	wheel := rl.GetMouseWheelMove()
 	if wheel != 0 {
-		// Raylib's UpdateCameraPro handles zoom via the 3rd argument (zoom factor)
-		// Positive zooms in, negative zooms out.
 		rl.UpdateCameraPro(&g.camera, rl.Vector3Zero(), rl.Vector3Zero(), -wheel)
 	}
 
@@ -15,9 +22,6 @@ func (g *Game) handleCamera() {
 	if rl.IsMouseButtonDown(rl.MouseMiddleButton) {
 		delta := rl.GetMouseDelta()
 		rotationSensitivity := float32(0.2)
-		// UpdateCameraPro(camera, movement, rotation, zoom)
-		// Rotation X: Horizontal (around UP axis)
-		// Rotation Y: Vertical (around RIGHT axis)
 		rl.UpdateCameraPro(&g.camera,
 			rl.Vector3Zero(),
 			rl.Vector3{X: delta.X * rotationSensitivity, Y: delta.Y * rotationSensitivity, Z: 0},
@@ -28,13 +32,6 @@ func (g *Game) handleCamera() {
 	if rl.IsMouseButtonDown(rl.MouseRightButton) {
 		delta := rl.GetMouseDelta()
 		panSpeed := float32(0.05)
-		// Panning moves both Position and Target
-		// UpdateCameraPro input movement is relative to camera frame?
-		// Forward/Back, Right/Left, Up/Down.
-		// Delta X -> Right/Left
-		// Delta Y -> Up/Down (or Forward/Back depending on view)
-		// Let's implement simple pan:
-		// Right = -delta.X, Up = delta.Y
 		rl.UpdateCameraPro(&g.camera,
 			rl.Vector3{X: delta.Y * panSpeed, Y: -delta.X * panSpeed, Z: 0},
 			rl.Vector3Zero(),
