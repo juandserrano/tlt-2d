@@ -12,7 +12,6 @@ func (g *Game) toggleDebug() {
 	}
 }
 func (g *Game) DrawWorldDebug() {
-	DrawTileCenters(g)
 	rl.DrawSphere(rl.Vector3{0, 0, 0}, 0.05, rl.Blue)
 	rl.DrawSphere(rl.Vector3{1, 0, 1}, 0.05, rl.White)
 	rl.DrawSphere(rl.Vector3{1, 0, 2}, 0.05, rl.White)
@@ -26,6 +25,11 @@ func (g *Game) DrawWorldDebug() {
 	rl.DrawSphere(rl.Vector3{1, 0, 0}, 0.05, rl.White)
 	rl.DrawSphere(rl.Vector3{0, 0, 1}, 0.05, rl.White)
 	// rl.DrawRectangleRec(rl.NewRectangle(g.player.position.X, g.player.position.Y, float32(g.player.texture.Width), float32(g.player.texture.Height)), rl.Blue)
+
+	// draw lights debug
+	rl.DrawSphere(g.sunLight.Position, 0.2, rl.Blue)
+
+	// rl.DrawLine3D(g.sunLight.Position,)
 }
 
 func (g *Game) DrawStaticDebug() {
@@ -41,14 +45,4 @@ func (g *Game) DrawStaticDebug() {
 	size := rl.Vector3Subtract(bbox.Max, bbox.Min)
 	wStr := fmt.Sprintf("width: %.2f, height: %.2f, length: %.2f", size.X, size.Y, size.Z)
 	rl.DrawText(wStr, 10, 100, 20, rl.Blue)
-}
-
-func DrawTileCenters(g *Game) {
-	for _, t := range g.levels[g.currentLevel].tiles {
-		rl.DrawCircle(int32(t.position.X), int32(t.position.Y), 2, rl.Red)
-		// coords := fmt.Sprintf("x: %.2f, y: %.2f", t.position.X, t.position.Y)
-		// gridcoords := fmt.Sprintf("gx: %d, gy: %d", t.x, t.y)
-		// rl.DrawText(coords, int32(t.position.X)+10, int32(t.position.Y), 4, rl.White)
-		// rl.DrawText(gridcoords, int32(t.position.X)+10, int32(t.position.Y-10), 4, rl.White)
-	}
 }
