@@ -1,6 +1,8 @@
 package game
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 const GRASS_TILE_SCALE = 0.1
 

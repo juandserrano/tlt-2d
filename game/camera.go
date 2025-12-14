@@ -24,18 +24,6 @@ func (g *Game) handleCamera() {
 			0.0)
 	}
 
-	// Focus on player (optional, keep target on player?)
-	// If we are orbiting freely, maybe we don't want to snap target to player every frame?
-	// But usually "Orbit" implies orbiting THE PLAYER.
-	// If we blindly update Target, it might fight UpdateCameraPro which modifies Position AND Target (relative).
-	// Actually UpdateCameraPro keeps distance consistent?
-	// Let's ensure Target closely follows player if desired, or we just let it be free.
-	// User didn't specify "Follow Player", just "User can orbit".
-	// But previous code had `moveCameraWithPlayer`.
-	// For now, let's leave it loose. If the user wants to follow player, they can ask.
-	// Or simplistic: Update Target to player position, but recalculate Position to maintain offset?
-	// That's complex. Let's just allow free orbit around current target.
-
 	// Panning with Right Click? (Optional, good for UX)
 	if rl.IsMouseButtonDown(rl.MouseRightButton) {
 		delta := rl.GetMouseDelta()
@@ -48,7 +36,7 @@ func (g *Game) handleCamera() {
 		// Let's implement simple pan:
 		// Right = -delta.X, Up = delta.Y
 		rl.UpdateCameraPro(&g.camera,
-			rl.Vector3{X: -delta.X * panSpeed, Y: delta.Y * panSpeed, Z: 0},
+			rl.Vector3{X: delta.Y * panSpeed, Y: -delta.X * panSpeed, Z: 0},
 			rl.Vector3Zero(),
 			0.0)
 	}
