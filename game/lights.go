@@ -59,9 +59,9 @@ func CreateLight(shader rl.Shader, id int, lType LightType, pos, target rl.Vecto
 // UpdateLightValues sends the Go data to the GPU
 func UpdateLightValues(shader rl.Shader, l Light) {
 	// Convert Bool to Int for Shader
-	enabled := int32(0)
+	enabled := float32(0.0)
 	if l.Enabled {
-		enabled = 1
+		enabled = 1.0
 	}
 	lType := int32(l.Type)
 
@@ -74,7 +74,7 @@ func UpdateLightValues(shader rl.Shader, l Light) {
 	}
 
 	// Send to Shader
-	rl.SetShaderValue(shader, l.enabledLoc, []float32{float32(enabled)}, rl.ShaderUniformInt)
+	rl.SetShaderValue(shader, l.enabledLoc, []float32{enabled}, rl.ShaderUniformFloat)
 	rl.SetShaderValue(shader, l.typeLoc, []float32{float32(lType)}, rl.ShaderUniformInt)
 	rl.SetShaderValue(shader, l.posLoc, []float32{l.Position.X, l.Position.Y, l.Position.Z}, rl.ShaderUniformVec3)
 	rl.SetShaderValue(shader, l.targetLoc, []float32{l.Target.X, l.Target.Y, l.Target.Z}, rl.ShaderUniformVec3)

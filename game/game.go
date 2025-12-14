@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -63,13 +61,16 @@ func (g *Game) init() {
 	ambient := []float32{0.5, 0.5, 0.5, 1.0}
 	rl.SetShaderValue(g.ambientShader, ambientLoc, ambient, rl.ShaderUniformVec4)
 	rl.SetShaderValue(g.ambientShader, locViewPos, []float32{g.camera.Position.X, g.camera.Position.Y, g.camera.Position.Z}, rl.ShaderUniformVec3)
-	g.sunLight = CreateLight(g.ambientShader, 0, LightDirectional, rl.NewVector3(0, 2, 0), rl.Vector3Zero(), rl.Blue, 20)
-	CreateLight(g.ambientShader, 1, LightPoint, rl.NewVector3(1, 1, 1), rl.Vector3Zero(), rl.Green, 3)
+	g.sunLight = CreateLight(
+		g.ambientShader, 0, LightDirectional,
+		rl.NewVector3(g.levels[g.currentLevel].centerXZ.X, 5, g.levels[g.currentLevel].centerXZ.Y),
+		rl.Vector3Zero(),
+		rl.White,
+		2)
 
 	// Assign shader to all materials
 	materials := g.basicTileModel.GetMaterials()
 	for i := range materials {
 		materials[i].Shader = g.ambientShader
 	}
-	fmt.Println("enabled:", g.sunLight.Enabled, " - color:", g.sunLight.Color, " - pos:", g.sunLight.Position, " - target:", g.sunLight.Target, " - type:", g.sunLight.Type)
 }

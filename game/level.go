@@ -7,16 +7,17 @@ import (
 )
 
 type Level struct {
-	tiles  []Tile
-	xTiles int
-	zTiles int
-	id     int
+	tiles    []Tile
+	xTiles   int
+	zTiles   int
+	id       int
+	centerXZ rl.Vector2
 }
 
 func (g *Game) InitLevel1() {
 	l1 := g.levels[1]
-	l1.xTiles = 10
-	l1.zTiles = 3
+	l1.xTiles = 20
+	l1.zTiles = 20
 	bbox := rl.GetModelBoundingBox(g.basicTileModel)
 	size := rl.Vector3Subtract(bbox.Max, bbox.Min)
 
@@ -28,7 +29,7 @@ func (g *Game) InitLevel1() {
 			tiles[i].width = size.X
 			tiles[i].length = size.Z
 			tiles[i].height = size.Y
-			tilePos := GridToWorldHex(x, z, 0.5)
+			tilePos := GridToWorldHex(x, z, 1.16/2.0)
 			tiles[i].position.X = tilePos.X
 			tiles[i].position.Z = tilePos.Y
 
@@ -42,9 +43,14 @@ func (g *Game) InitLevel1() {
 		}
 	}
 
+	center := GridToWorldHex(l1.xTiles/2, l1.zTiles/2, 1.16/2.0)
+
 	g.levels[1] = Level{
-		id:    1,
-		tiles: tiles,
+		id:       1,
+		tiles:    tiles,
+		xTiles:   l1.xTiles,
+		zTiles:   l1.zTiles,
+		centerXZ: center,
 	}
 }
 
@@ -76,5 +82,5 @@ func GridToWorldHex(col, row int, size float32) rl.Vector2 {
 	// 3. Calculate Y Position
 	y := float32(row) * vertDist
 
-	return rl.Vector2{X: x, Y: y}
+	return rl.Vector2{X: y, Y: x}
 }
