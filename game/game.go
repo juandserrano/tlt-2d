@@ -21,6 +21,7 @@ type Game struct {
 	debug           bool
 	player          Player
 	ambientShader   rl.Shader
+	waterShader     rl.Shader
 	sunLight        Light
 }
 

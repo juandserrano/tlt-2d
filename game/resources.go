@@ -13,6 +13,10 @@ func (g *Game) LoadTileModels() {
 		model:    rl.LoadModel("assets/models/tiles/basic_ground_tile.glb"),
 		tileType: TileTypeClear,
 	}
+	g.tiles[TileTypeWater] = Tile{
+		model:    rl.LoadModel("assets/models/tiles/basic_ground_tile.glb"),
+		tileType: TileTypeWater,
+	}
 
 }
 

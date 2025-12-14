@@ -13,13 +13,19 @@ func (g *Game) initShadersAndLights() {
 	ambient := []float32{0.5, 0.5, 0.5, 1.0}
 	rl.SetShaderValue(g.ambientShader, ambientLoc, ambient, rl.ShaderUniformVec4)
 
-	// Assign shader to all tile models
+	// Assign ambient shader to all tile models
 	for _, v := range g.tiles {
 		materials := v.model.GetMaterials()
 		for i := range materials {
 			materials[i].Shader = g.ambientShader
 		}
+	}
 
+	g.waterShader = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")
+
+	materials := g.tiles[TileTypeWater].model.GetMaterials()
+	for i := range materials {
+		materials[i].Shader = g.waterShader
 	}
 
 	// LIGTHS

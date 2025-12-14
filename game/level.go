@@ -19,7 +19,7 @@ func (g *Game) LoadLevel(level int) {
 	// l := g.levels[level]
 	var l Level
 	l.xTiles = 20
-	l.zTiles = 3
+	l.zTiles = 20
 
 	tiles := make([]Tile, l.xTiles*l.zTiles)
 
@@ -44,6 +44,13 @@ func (g *Game) LoadLevel(level int) {
 			i++
 		}
 	}
+
+	// Water tiles
+	tiles[5].tileType = TileTypeWater
+	tiles[5].model = g.tiles[TileTypeWater].model
+
+	tiles[6].tileType = TileTypeWater
+	tiles[6].model = g.tiles[TileTypeWater].model
 
 	center := GridToWorldHex(l.xTiles/2, l.zTiles/2, HEX_TILE_WIDTH/2.0)
 

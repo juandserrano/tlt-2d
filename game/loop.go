@@ -19,6 +19,14 @@ func (g *Game) Loop() {
 		g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 5.0)
 		UpdateLightValues(g.ambientShader, g.sunLight)
 
+		// Get shader locations
+		timeLoc := rl.GetShaderLocation(g.waterShader, "time")
+		viewPosLoc := rl.GetShaderLocation(g.waterShader, "viewPos")
+		rl.SetShaderValue(g.waterShader, timeLoc, []float32{time}, rl.ShaderUniformFloat)
+
+		camPos := []float32{g.camera.Position.X, g.camera.Position.Y, g.camera.Position.Z}
+		rl.SetShaderValue(g.waterShader, viewPosLoc, camPos, rl.ShaderUniformVec3)
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Gray)
 		rl.BeginMode3D(g.camera)
