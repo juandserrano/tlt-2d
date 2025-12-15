@@ -22,6 +22,8 @@ type Game struct {
 	player          Player
 	ambientShader   rl.Shader
 	waterShader     rl.Shader
+	plainTileModel  rl.Model
+	waterTileModel  rl.Model
 	sunLight        Light
 }
 

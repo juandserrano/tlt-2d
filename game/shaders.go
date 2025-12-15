@@ -1,6 +1,8 @@
 package game
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 func (g *Game) initShadersAndLights() {
 	// SHADERS

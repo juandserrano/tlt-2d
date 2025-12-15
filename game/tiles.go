@@ -24,14 +24,14 @@ var hitpos rl.Vector3
 
 type Tile struct {
 	position rl.Vector3
-	model    rl.Model
-	x        int
-	z        int
+	model    *rl.Model
+	gridX    int
+	gridZ    int
 	tileType TileType
 }
 
 func (t *Tile) Draw() {
-	rl.DrawModel(t.model, t.position, 1, rl.White)
+	rl.DrawModel(*t.model, t.position, 1, rl.White)
 }
 
 // GetHexFromMouse returns the grid coordinates (q, r) of the hex under the mouse.
