@@ -17,8 +17,8 @@ type Level struct {
 
 func (g *Game) LoadLevel(level int) {
 	var l Level
-	l.xTiles = 40
-	l.zTiles = 40
+	l.xTiles = 1
+	l.zTiles = 1
 
 	// tiles := make([]Tile, l.xTiles*l.zTiles)
 
