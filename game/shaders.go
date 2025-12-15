@@ -21,6 +21,14 @@ func (g *Game) initShadersAndLights() {
 		mats[i].Shader = g.ambientShader
 	}
 
+	// Assigh ambient shader to enemies
+	for i := range EnemiesInPlay {
+		mats := EnemiesInPlay[i].model.GetMaterials()
+		for j := range mats {
+			mats[j].Shader = g.ambientShader
+		}
+	}
+
 	// Assign ambient shader to all tile models
 	for _, v := range g.tiles {
 		materials := v.model.GetMaterials()
