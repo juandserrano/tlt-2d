@@ -24,7 +24,9 @@ type Game struct {
 	waterShader     rl.Shader
 	plainTileModel  rl.Model
 	waterTileModel  rl.Model
+	pawnModel       rl.Model
 	sunLight        Light
+	spotLight       Light
 }
 
 func Run() {
@@ -49,6 +51,7 @@ func (g *Game) init() {
 
 	g.LoadLevel(1)
 	g.initPlayerCastle()
+	g.NewEnemy(EnemyTypePawn, 5, 5)
 
 	g.initShadersAndLights()
 }

@@ -61,7 +61,7 @@ void main() {
     // finalColor = vec4(1.0, 1.0, 1.0, 1.0); return;
     
     // Final Math: (Ambient + Sum of all Lights) * Texture
-    vec3 finalRGB = (ambient.rgb + lightDot) * texelColor.rgb * colDiffuse.rgb;
+    vec3 finalRGB = (ambient.rgb + lightDot) * texelColor.rgb * colDiffuse.rgb * fragColor.rgb;
     finalColor = vec4(finalRGB, texelColor.a);
 }
 

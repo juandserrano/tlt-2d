@@ -17,32 +17,8 @@ type Level struct {
 
 func (g *Game) LoadLevel(level int) {
 	var l Level
-	l.xTiles = 1
-	l.zTiles = 1
-
-	// tiles := make([]Tile, l.xTiles*l.zTiles)
-
-	// i := 0
-	// for x := range l.xTiles {
-	// 	for z := range l.zTiles {
-	// 		tilePos := GridToWorldHex(x, z, HEX_TILE_WIDTH/2.0)
-	// 		tiles[i].position.X = tilePos.X
-	// 		tiles[i].position.Z = tilePos.Y
-
-	// 		tiles[i].position.Y = -0.05 // lower tile so that 0 is top face
-	// 		tiles[i].gridX = x
-	// 		tiles[i].gridZ = z
-	// 		tiles[i].model = g.tiles[TileTypeClear].model
-	// 		// Apply model based on tile type
-	// 		switch tiles[i].tileType {
-	// 		case TileTypeClear:
-	// 			tiles[i].model = g.tiles[TileTypeClear].model
-	// 		default:
-	// 			fmt.Println("Im drawing only clear")
-	// 		}
-	// 		i++
-	// 	}
-	// }
+	l.xTiles = 50
+	l.zTiles = 50
 
 	// // Water tiles
 	// tiles[5].tileType = TileTypeWater
@@ -152,4 +128,14 @@ func GenerateFlatTopGrid(countX, countZ int, radius float32) []Tile {
 	}
 
 	return tiles
+}
+
+func (g *Game) GetTileCenter(gridX, gridZ int) rl.Vector3 {
+	for _, t := range g.levels[g.currentLevel].tiles {
+		if t.gridX == gridX && t.gridZ == gridZ {
+			return t.position
+		}
+	}
+
+	return rl.Vector3Zero()
 }

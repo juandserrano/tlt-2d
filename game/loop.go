@@ -45,6 +45,7 @@ func (g *Game) Loop() {
 func (g *Game) Draw() {
 	g.DrawLevel(g.currentLevel)
 	g.playerCastle.draw()
+	g.drawEnemies()
 	if g.debug {
 		g.DrawWorldDebug()
 	}

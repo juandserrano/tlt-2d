@@ -46,4 +46,11 @@ func (g *Game) initShadersAndLights() {
 		rl.White,
 		1)
 
+	g.spotLight = CreateLight(
+		g.ambientShader, 1, LightPoint,
+		rl.NewVector3(g.playerCastle.position.X-3, 5, g.playerCastle.position.Z),
+		rl.Vector3{0, -1, 0},
+		rl.White,
+		2)
+
 }
