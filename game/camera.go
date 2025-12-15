@@ -5,7 +5,7 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 func (g *Game) initCamera() {
 	tar := rl.NewVector3(0, 0, 0)
 	g.camera = rl.NewCamera3D(
-		rl.Vector3{X: tar.X - 30, Y: 20, Z: tar.Z},
+		rl.Vector3{X: tar.X - 5, Y: 10, Z: tar.Z},
 		tar,
 		rl.Vector3{X: 0, Y: 1, Z: 0}, 70.0,
 		rl.CameraPerspective)
