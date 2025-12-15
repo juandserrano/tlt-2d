@@ -1,19 +1,12 @@
 package game
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func (g *Game) handleLeftClick() {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-		q, r, ok := GetHexFromMouse(g.camera, HEX_TILE_WIDTH)
-		if ok {
-			fmt.Println(q, " ", r)
-		} else {
-			fmt.Println("No hex clicked")
-		}
+		g.NextTurn()
 	}
 }
 

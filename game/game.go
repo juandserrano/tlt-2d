@@ -27,6 +27,7 @@ type Game struct {
 	pawnModel       rl.Model
 	sunLight        Light
 	spotLight       Light
+	testPawn        Enemy
 }
 
 func Run() {
@@ -52,6 +53,11 @@ func (g *Game) init() {
 	g.LoadLevel(1)
 	g.initPlayerCastle()
 	g.NewEnemy(EnemyTypePawn, 5, 5)
+	g.testPawn = EnemiesInPlay[0]
 
 	g.initShadersAndLights()
+}
+
+func (g *Game) NextTurn() {
+	g.UpdateEnemies()
 }

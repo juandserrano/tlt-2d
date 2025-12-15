@@ -7,6 +7,10 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+type GridCoord struct {
+	X int
+	Z int
+}
 type Level struct {
 	tiles    []Tile
 	xTiles   int
@@ -130,9 +134,9 @@ func GenerateFlatTopGrid(countX, countZ int, radius float32) []Tile {
 	return tiles
 }
 
-func (g *Game) GetTileCenter(gridX, gridZ int) rl.Vector3 {
+func (g *Game) GetTileCenter(gPos GridCoord) rl.Vector3 {
 	for _, t := range g.levels[g.currentLevel].tiles {
-		if t.gridX == gridX && t.gridZ == gridZ {
+		if t.gridX == gPos.X && t.gridZ == gPos.Z {
 			return t.position
 		}
 	}
