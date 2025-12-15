@@ -15,6 +15,12 @@ func (g *Game) initShadersAndLights() {
 	ambient := []float32{0.5, 0.5, 0.5, 1.0}
 	rl.SetShaderValue(g.ambientShader, ambientLoc, ambient, rl.ShaderUniformVec4)
 
+	// Assigh ambient shader to player tower
+	mats := g.playerCastle.model.GetMaterials()
+	for i := range mats {
+		mats[i].Shader = g.ambientShader
+	}
+
 	// Assign ambient shader to all tile models
 	for _, v := range g.tiles {
 		materials := v.model.GetMaterials()
@@ -35,9 +41,9 @@ func (g *Game) initShadersAndLights() {
 	// Create basic sun illumination
 	g.sunLight = CreateLight(
 		g.ambientShader, 0, LightDirectional,
-		rl.NewVector3(g.levels[g.currentLevel].centerXZ.X, 5, g.levels[g.currentLevel].centerXZ.Y),
+		rl.NewVector3(g.levels[g.currentLevel].centerXZ.X-2, 50, g.levels[g.currentLevel].centerXZ.Y+2),
 		rl.Vector3Zero(),
 		rl.White,
-		2)
+		1)
 
 }

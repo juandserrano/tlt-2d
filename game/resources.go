@@ -10,6 +10,7 @@ func (g *Game) LoadResources() {
 func (g *Game) LoadTileModels() {
 	g.plainTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
 	g.waterTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
+	g.playerCastle.model = rl.LoadModel("assets/models/castle/tower.glb")
 
 	g.tiles[TileTypeClear] = Tile{
 		model:    &g.plainTileModel,

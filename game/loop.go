@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -12,12 +11,14 @@ func (g *Game) Loop() {
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
 		g.handleInput(dt)
-		g.player.update(dt)
-		// Animate sun (Circle around center)
+		g.playerCastle.update(dt)
+
 		time := float32(rl.GetTime())
-		g.sunLight.Position.X = float32(math.Cos(float64(time)) * 10.0)
-		g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 5.0)
-		UpdateLightValues(g.ambientShader, g.sunLight)
+
+		// Animate sun (Circle around center)
+		// g.sunLight.Position.X = float32(math.Cos(float64(time)) * 10.0)
+		// g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 5.0)
+		// UpdateLightValues(g.ambientShader, g.sunLight)
 
 		// Get shader locations
 		timeLoc := rl.GetShaderLocation(g.waterShader, "time")
@@ -43,7 +44,7 @@ func (g *Game) Loop() {
 
 func (g *Game) Draw() {
 	g.DrawLevel(g.currentLevel)
-	g.player.draw()
+	g.playerCastle.draw()
 	if g.debug {
 		g.DrawWorldDebug()
 	}

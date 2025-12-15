@@ -17,8 +17,8 @@ type Level struct {
 
 func (g *Game) LoadLevel(level int) {
 	var l Level
-	l.xTiles = 20
-	l.zTiles = 20
+	l.xTiles = 40
+	l.zTiles = 40
 
 	// tiles := make([]Tile, l.xTiles*l.zTiles)
 
@@ -103,7 +103,7 @@ func GridToWorldHex(col, row int, size float32) rl.Vector2 {
 	// 3. Calculate Y Position
 	y := float32(row) * vertDist
 
-	return rl.Vector2{X: y, Y: x}
+	return rl.Vector2{X: x, Y: y}
 }
 
 func GenerateFlatTopGrid(countX, countZ int, radius float32) []Tile {

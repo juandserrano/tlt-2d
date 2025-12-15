@@ -19,7 +19,7 @@ type Game struct {
 	currentLevel    int
 	cameraMoveSpeed float32
 	debug           bool
-	player          Player
+	playerCastle    Castle
 	ambientShader   rl.Shader
 	waterShader     rl.Shader
 	plainTileModel  rl.Model
@@ -48,7 +48,7 @@ func (g *Game) init() {
 	g.LoadResources()
 
 	g.LoadLevel(1)
-	g.initPlayer()
+	g.initPlayerCastle()
 
 	g.initShadersAndLights()
 }

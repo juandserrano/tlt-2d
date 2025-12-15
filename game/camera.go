@@ -7,7 +7,7 @@ func (g *Game) initCamera() {
 	g.camera = rl.NewCamera3D(
 		rl.Vector3{X: tar.X - 5, Y: 10, Z: tar.Z},
 		tar,
-		rl.Vector3{X: 0, Y: 1, Z: 0}, 70.0,
+		rl.Vector3{X: 0, Y: 1, Z: 0}, 90.0,
 		rl.CameraPerspective)
 	g.cameraMoveSpeed = CAMERA_MOVE_SPEED
 }
