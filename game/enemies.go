@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -56,17 +56,32 @@ func (g *Game) UpdateEnemies() {
 	}
 }
 
+func closestGridPositionToOrigin(gridPositions []GridCoord) GridCoord {
+	closestDistance := 99999.0
+	var closestGridCoord GridCoord
+	for i := range gridPositions {
+		pos := GridToWorldHex(gridPositions[i].X, gridPositions[i].Z, HEX_TILE_WIDTH/2.0)
+		d := math.Sqrt(math.Pow(float64(pos.X), 2) + math.Pow(float64(pos.Y), 2))
+		if d < float64(closestDistance) {
+			closestGridCoord = gridPositions[i]
+			closestDistance = d
+		}
+	}
+	return closestGridCoord
+}
+
 func (e *Enemy) move() {
 	neighbourPositions := GetNeighbourPositions(e.gridPos)
-	fmt.Printf("%v", neighbourPositions)
+	closest := closestGridPositionToOrigin(neighbourPositions)
 	switch e.enemyType {
 	case EnemyTypePawn:
-		if e.moveOnGridX {
-			e.gridPos.X--
-		} else {
-			e.gridPos.Z--
-		}
-		e.moveOnGridX = !e.moveOnGridX
+		// if e.moveOnGridX {
+		// 	e.gridPos.X--
+		// } else {
+		// 	e.gridPos.Z--
+		// }
+		// e.moveOnGridX = !e.moveOnGridX
+		e.gridPos = closest
 
 	}
 }
