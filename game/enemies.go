@@ -78,6 +78,9 @@ func closestGridPositionToOrigin(gridPositions []GridCoord) GridCoord {
 func (e *Enemy) move() {
 	neighbourPositions := GetNeighbourPositions(e.gridPos)
 	closest := closestGridPositionToOrigin(neighbourPositions)
+	if e.gridPos.X == 0 && e.gridPos.Z == 0 {
+		closest = e.gridPos
+	}
 	switch e.enemyType {
 	case EnemyTypePawn:
 		// if e.moveOnGridX {
@@ -92,13 +95,22 @@ func (e *Enemy) move() {
 }
 
 func GetNeighbourPositions(c GridCoord) []GridCoord {
+	if c.X%2 != 0 {
+		return []GridCoord{
+			{X: c.X - 1, Z: c.Z},     //
+			{X: c.X - 1, Z: c.Z + 1}, //
+			{X: c.X, Z: c.Z + 1},     //
+			{X: c.X, Z: c.Z - 1},     //
+			{X: c.X + 1, Z: c.Z + 1}, //
+			{X: c.X + 1, Z: c.Z},     //
+		}
+	}
 	return []GridCoord{
-		{X: c.X - 1, Z: c.Z}, //
-
-		{X: c.X - 1, Z: c.Z + 1}, //
+		{X: c.X - 1, Z: c.Z},     //
+		{X: c.X - 1, Z: c.Z - 1}, //
 		{X: c.X, Z: c.Z + 1},     //
 		{X: c.X, Z: c.Z - 1},     //
-		{X: c.X + 1, Z: c.Z + 1}, //
+		{X: c.X + 1, Z: c.Z - 1}, //
 		{X: c.X + 1, Z: c.Z},     //
 	}
 

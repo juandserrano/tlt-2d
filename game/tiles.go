@@ -23,11 +23,13 @@ const (
 var hitpos rl.Vector3
 
 type Tile struct {
-	position rl.Vector3
-	model    *rl.Model
-	gridX    int
-	gridZ    int
-	tileType TileType
+	position   rl.Vector3
+	model      *rl.Model
+	gridX      int
+	gridZ      int
+	tileType   TileType
+	isWalkable bool
+	isOccupied bool
 }
 
 func (t *Tile) Draw() {
