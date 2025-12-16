@@ -12,7 +12,10 @@ func (g *Game) toggleDebug() {
 	}
 }
 func (g *Game) DrawWorldDebug() {
-	rl.DrawSphere(rl.Vector3{5, 0, 5}, 0.1, rl.Red)
+	// Draw grid coords
+	for i := range g.levels[g.currentLevel].tiles {
+		g.levels[g.currentLevel].tiles[i].debugDrawGridCoord()
+	}
 }
 
 func (g *Game) DrawStaticDebug() {

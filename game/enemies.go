@@ -42,6 +42,11 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
 	rl.DrawModel(*e.model, pos, 1.0, rl.White)
+	neighbours := GetNeighbourPositions(e.gridPos)
+	for i := range neighbours {
+		t := g.GetTileWithGridPos(GridCoord{neighbours[i].X, neighbours[i].Z})
+		t.debugDrawGridCoord()
+	}
 }
 
 func (g *Game) drawEnemies() {
@@ -88,14 +93,13 @@ func (e *Enemy) move() {
 
 func GetNeighbourPositions(c GridCoord) []GridCoord {
 	return []GridCoord{
-		{X: c.X - 1, Z: c.Z},
-		{X: c.X - 1, Z: c.Z - 1},
-		{X: c.X - 1, Z: c.Z + 1},
-		{X: c.X, Z: c.Z + 1},
-		{X: c.X, Z: c.Z - 1},
-		{X: c.X + 1, Z: c.Z + 1},
-		{X: c.X + 1, Z: c.Z},
-		{X: c.X + 1, Z: c.Z - 1},
+		{X: c.X - 1, Z: c.Z}, //
+
+		{X: c.X - 1, Z: c.Z + 1}, //
+		{X: c.X, Z: c.Z + 1},     //
+		{X: c.X, Z: c.Z - 1},     //
+		{X: c.X + 1, Z: c.Z + 1}, //
+		{X: c.X + 1, Z: c.Z},     //
 	}
 
 }

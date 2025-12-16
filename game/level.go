@@ -143,3 +143,13 @@ func (g *Game) GetTileCenter(gPos GridCoord) rl.Vector3 {
 
 	return rl.Vector3Zero()
 }
+
+func (g *Game) GetTileWithGridPos(gPos GridCoord) *Tile {
+	for _, t := range g.levels[g.currentLevel].tiles {
+		if t.gridX == gPos.X && t.gridZ == gPos.Z {
+			return &t
+		}
+	}
+
+	return nil
+}
