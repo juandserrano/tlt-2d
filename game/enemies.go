@@ -83,14 +83,7 @@ func (e *Enemy) move() {
 	}
 	switch e.enemyType {
 	case EnemyTypePawn:
-		// if e.moveOnGridX {
-		// 	e.gridPos.X--
-		// } else {
-		// 	e.gridPos.Z--
-		// }
-		// e.moveOnGridX = !e.moveOnGridX
 		e.gridPos = closest
-
 	}
 }
 
