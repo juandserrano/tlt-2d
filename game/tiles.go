@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"image/color"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -37,7 +38,7 @@ func (t *Tile) Draw() {
 	rl.DrawModel(*t.model, t.position, 1, rl.White)
 }
 
-func (t *Tile) debugDrawGridCoord() {
+func (t *Tile) debugDrawGridCoord(color color.RGBA) {
 	// --- DRAW TEXT 3D ---
 	// 1. Push the current matrix so we don't mess up other 3D objects
 	rl.PushMatrix()
@@ -64,7 +65,7 @@ func (t *Tile) debugDrawGridCoord() {
 	fontSize := int32(20)
 	textWidth := rl.MeasureText(text, fontSize)
 
-	rl.DrawText(text, -textWidth/2, 0, fontSize, rl.Red)
+	rl.DrawText(text, -textWidth/2, 0, fontSize, color)
 
 	// 6. Restore the matrix
 	rl.PopMatrix()

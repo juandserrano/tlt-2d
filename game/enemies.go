@@ -44,10 +44,13 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
 	rl.DrawModel(*e.model, pos, 1.0, rl.White)
-	neighbours := GetNeighbourPositions(e.gridPos)
-	for i := range neighbours {
-		t := g.GetTileWithGridPos(GridCoord{neighbours[i].X, neighbours[i].Z})
-		t.debugDrawGridCoord()
+	if g.debugLevel == 2 {
+		neighbours := GetNeighbourPositions(e.gridPos)
+		for i := range neighbours {
+			t := g.GetTileWithGridPos(GridCoord{neighbours[i].X, neighbours[i].Z})
+			t.debugDrawGridCoord(rl.Blue)
+		}
+
 	}
 }
 

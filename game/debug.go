@@ -8,13 +8,18 @@ import (
 
 func (g *Game) toggleDebug() {
 	if rl.IsKeyPressed(rl.KeyG) {
-		g.debug = !g.debug
+		g.debugLevel++
+		if g.debugLevel > 2 {
+			g.debugLevel = 0
+		}
 	}
 }
 func (g *Game) DrawWorldDebug() {
 	// Draw grid coords
-	for i := range g.levels[g.currentLevel].tiles {
-		g.levels[g.currentLevel].tiles[i].debugDrawGridCoord()
+	if g.debugLevel == 1 {
+		for i := range g.levels[g.currentLevel].tiles {
+			g.levels[g.currentLevel].tiles[i].debugDrawGridCoord(rl.Red)
+		}
 	}
 }
 

@@ -52,11 +52,11 @@ func (g *Game) Draw() {
 	g.DrawLevel(g.currentLevel)
 	g.playerCastle.draw()
 	g.drawEnemies()
-	if g.debug {
+	if g.debugLevel != 0 {
 		g.DrawWorldDebug()
 	}
 	rl.EndMode3D()
-	if g.debug {
+	if g.debugLevel != 0 {
 		g.DrawStaticDebug()
 	}
 	rl.EndDrawing()

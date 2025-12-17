@@ -32,7 +32,7 @@ type Game struct {
 	tiles          map[TileType]Tile
 	levels         map[int]Level
 	currentLevel   int
-	debug          bool
+	debugLevel     uint8
 	playerCastle   Castle
 	ambientShader  rl.Shader
 	waterShader    rl.Shader
@@ -57,7 +57,7 @@ func (g *Game) init() {
 	rl.SetTargetFPS(g.Config.Window.TargetFPS)
 	fmt.Println(g.Config.Window.TargetFPS)
 	rl.InitWindow(g.Config.Window.Width, g.Config.Window.Height, g.Config.GameName)
-	g.debug = false
+	g.debugLevel = 0
 	g.initCamera()
 	g.levels = make(map[int]Level)
 	g.tiles = make(map[TileType]Tile)
