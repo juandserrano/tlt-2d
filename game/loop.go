@@ -2,13 +2,19 @@ package game
 
 import (
 	"fmt"
+	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func (g *Game) Loop() {
 	// rl.DisableCursor()
+	frameCount := 0
 	for !rl.WindowShouldClose() {
+		frameCount++
+		if frameCount%30 == 0 {
+			g.CheckAndLoadConfig(false)
+		}
 		dt := rl.GetFrameTime()
 		g.handleInput(dt)
 		g.playerCastle.update(dt)
@@ -29,7 +35,11 @@ func (g *Game) Loop() {
 		rl.SetShaderValue(g.waterShader, viewPosLoc, camPos, rl.ShaderUniformVec3)
 
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.Gray)
+		rl.ClearBackground(color.RGBA{
+			uint8(g.Config.Window.BackgroundColor.R * 255),
+			uint8(g.Config.Window.BackgroundColor.G * 255),
+			uint8(g.Config.Window.BackgroundColor.B * 255),
+			uint8(g.Config.Window.BackgroundColor.A * 255)})
 		rl.BeginMode3D(g.camera)
 		rl.DrawGrid(10, 1.0)
 		g.Draw()

@@ -21,8 +21,8 @@ type Level struct {
 
 func (g *Game) LoadLevel(level int) {
 	var l Level
-	l.xTiles = 50
-	l.zTiles = 50
+	l.xTiles = 20
+	l.zTiles = 20
 
 	// // Water tiles
 	// tiles[5].tileType = TileTypeWater

@@ -9,7 +9,6 @@ func (g *Game) initCamera() {
 		tar,
 		rl.Vector3{X: 0, Y: 1, Z: 0}, 90.0,
 		rl.CameraPerspective)
-	g.cameraMoveSpeed = CAMERA_MOVE_SPEED
 }
 
 func (g *Game) handleCamera() {
