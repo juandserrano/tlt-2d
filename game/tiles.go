@@ -30,6 +30,7 @@ type Tile struct {
 	tileType   TileType
 	isWalkable bool
 	isOccupied bool
+	isSpawn    bool
 }
 
 func (t *Tile) Draw() {

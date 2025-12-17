@@ -41,7 +41,6 @@ type Game struct {
 	pawnModel      rl.Model
 	sunLight       Light
 	spotLight      Light
-	testPawn       Enemy
 	frameCount     int
 }
 
@@ -63,10 +62,10 @@ func (g *Game) init() {
 	g.levels = make(map[int]Level)
 	g.tiles = make(map[TileType]Tile)
 	g.LoadResources()
+	g.initShadersAndLights()
 
 	g.Round = g.NewRound()
 	g.State = StatePlaying
-	g.initShadersAndLights()
 }
 
 func (g *Game) NextTurn() {

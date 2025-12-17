@@ -11,7 +11,7 @@ func (g *Game) handlePlayingInput(dt float32) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 		fmt.Println("Select card to play")
 	}
-	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+	if rl.IsMouseButtonPressed(rl.MouseButtonRight) && rl.IsKeyDown(rl.KeyLeftShift) {
 		g.Turn = TurnResolving
 		fmt.Println("ENTERING RESOLVING STATE")
 	}

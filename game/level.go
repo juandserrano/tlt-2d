@@ -132,6 +132,13 @@ func GenerateFlatTopGrid(countX, countZ int, radius float32) []Tile {
 				tileType: TileTypeClear,
 			}
 
+			// // Modify spawnable tiles by distance
+			if tile.gridX == 17 || tile.gridX == -17 {
+				if tile.gridZ <= 10 && tile.gridZ >= -10 {
+					tile.isSpawn = true
+				}
+			}
+
 			tiles = append(tiles, tile)
 		}
 	}

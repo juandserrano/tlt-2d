@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -39,6 +40,8 @@ func (g *Game) Update(dt float32) {
 	}
 
 	g.UpdateShaders()
+
+	fmt.Println("sizeof EnemiesActive:", len(EnemiesInPlay))
 }
 
 func (g *Game) Draw() {
