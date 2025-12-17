@@ -37,6 +37,13 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 
 	e.gridPos.X = posGridX
 	e.gridPos.Z = posGridZ
+
+	// Assign ambient shader to enemy
+	mats := e.model.GetMaterials()
+	for j := range mats {
+		mats[j].Shader = g.ambientShader
+	}
+
 	EnemiesInPlay = append(EnemiesInPlay, e)
 }
 

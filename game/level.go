@@ -43,6 +43,11 @@ func (g *Game) LoadLevelTiles(level int) {
 		default:
 			fmt.Println("Im drawing only clear")
 		}
+		// Assign ambient shader to tile models
+		materials := newGrid[i].model.GetMaterials()
+		for i := range materials {
+			materials[i].Shader = g.ambientShader
+		}
 	}
 
 	g.levels[level] = Level{

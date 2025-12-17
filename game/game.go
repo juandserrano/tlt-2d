@@ -27,6 +27,7 @@ type Game struct {
 	Config         GameConfig
 	State          GameState
 	Turn           TurnState
+	Round          Round
 	camera         rl.Camera3D
 	tiles          map[TileType]Tile
 	levels         map[int]Level
@@ -63,13 +64,8 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.LoadResources()
 
+	g.Round = g.NewRound()
 	g.State = StatePlaying
-	g.Turn = TurnPlayer
-	g.LoadLevelTiles(1)
-	g.initPlayerCastle()
-	g.NewEnemy(EnemyTypePawn, 5, 5)
-	g.testPawn = EnemiesInPlay[0]
-
 	g.initShadersAndLights()
 }
 

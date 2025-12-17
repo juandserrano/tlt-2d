@@ -23,6 +23,9 @@ func (g *Game) Update(dt float32) {
 
 	switch g.State {
 	case StatePlaying:
+		if g.Round.TurnNumber == 0 {
+			g.Round.SetUp(g)
+		}
 		switch g.Turn {
 		case TurnPlayer:
 			g.TurnPlayer(dt)
