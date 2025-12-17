@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -22,6 +21,8 @@ func (g *Game) Loop() {
 
 func (g *Game) Update(dt float32) {
 
+	g.toggleDebug()
+	g.handleCamera()
 	switch g.State {
 	case StatePlaying:
 		if g.Round.TurnNumber == 0 {
@@ -37,21 +38,25 @@ func (g *Game) Update(dt float32) {
 		}
 	case StatePause:
 
+	case StateWorldEditor:
+
 	}
 
 	g.UpdateShaders()
-
-	fmt.Println("sizeof EnemiesActive:", len(EnemiesInPlay))
 }
 
 func (g *Game) Draw() {
 	rl.BeginDrawing()
 	rl.ClearBackground(color.RGBA{uint8(g.Config.Window.BackgroundColor.R * 255), uint8(g.Config.Window.BackgroundColor.G * 255), uint8(g.Config.Window.BackgroundColor.B * 255), uint8(g.Config.Window.BackgroundColor.A * 255)})
 	rl.BeginMode3D(g.camera)
-	rl.DrawGrid(10, 1.0)
-	g.DrawLevel(g.currentLevel)
-	g.playerCastle.draw()
-	g.drawEnemies()
+	switch g.State {
+	case StateWorldEditor:
+		g.DrawLevel(g.currentLevel)
+	default:
+		g.DrawLevel(g.currentLevel)
+		g.playerCastle.draw()
+		g.drawEnemies()
+	}
 	if g.debugLevel != 0 {
 		g.DrawWorldDebug()
 	}
@@ -59,6 +64,7 @@ func (g *Game) Draw() {
 	if g.debugLevel != 0 {
 		g.DrawStaticDebug()
 	}
+
 	rl.EndDrawing()
 }
 

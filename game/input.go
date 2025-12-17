@@ -7,7 +7,6 @@ import (
 )
 
 func (g *Game) handlePlayingInput(dt float32) {
-	g.handleCamera()
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 		fmt.Println("Select card to play")
 	}
@@ -16,5 +15,8 @@ func (g *Game) handlePlayingInput(dt float32) {
 		fmt.Println("ENTERING RESOLVING STATE")
 	}
 
-	g.toggleDebug()
+	if rl.IsKeyPressed(rl.KeyA) && rl.IsKeyDown(rl.KeyLeftShift) {
+		g.State = StateWorldEditor
+		fmt.Println("ENTERING WORLD EDITOR")
+	}
 }

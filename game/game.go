@@ -13,6 +13,7 @@ const (
 	StatePlaying
 	StatePause
 	StateGameOver
+	StateWorldEditor
 )
 
 type TurnState int
