@@ -68,25 +68,30 @@ func (l *Level) Draw() {
 
 // GridToWorldHex converts grid coordinates (col, row) to World Pixels
 func GridToWorldHex(col, row int, size float32) rl.Vector2 {
-	// 1. Calculate dimensions based on Size
-	// Width of a pointy hex is sqrt(3) * size
-	hexWidth := float32(math.Sqrt(3)) * size
+	// 1. Calculate dimensions based on Size (Flat-Top)
+	// Width is 2 * size
+	// hexWidth := 2.0 * size -- Unused
+	// Height is sqrt(3) * size
+	hexHeight := float32(math.Sqrt(3)) * size
 
-	// Height is 2 * size, but rows overlap by 1/4, so vertical step is 1.5 * size
-	vertDist := size * 1.5
+	// Horizontal distance between centers (3/4 of width = 3/4 * 2 * size = 1.5 * size)
+	horizDist := 1.5 * size
+	// Vertical distance between centers (full height)
+	vertDist := hexHeight
 
 	// 2. Calculate X Position
-	// Standard X spacing is hexWidth
-	x := float32(col) * hexWidth
+	// Columns are offset by 3/4 width
+	x := float32(col) * horizDist
 
-	// OFFSET LOGIC:
-	// If the row is Odd, we shift this tile right by half a width
-	if row%2 == 1 {
-		x += hexWidth / 2.0
-	}
-
-	// 3. Calculate Y Position
+	// 3. Calculate Y Position (mapped to Z in world)
 	y := float32(row) * vertDist
+
+	// OFFSET LOGIC (Odd-Q):
+	// If the column is Odd, we shift this tile down (Postive Z/Y) by half a height
+	// Go's % operator returns negative result for negative operands (-1 % 2 == -1), so != 0 is correct.
+	if col%2 != 0 {
+		y += vertDist / 2.0
+	}
 
 	return rl.Vector2{X: x, Y: y}
 }
