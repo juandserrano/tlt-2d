@@ -27,6 +27,9 @@ type GameConfig struct {
 	Camera struct {
 		MoveSpeed float32 `json:"move_speed"`
 	} `json:"camera"`
+	World struct {
+		AnimateSun bool `json:"animate_sun"`
+	} `json:"world"`
 }
 
 func (g *Game) ApplyConfig() {

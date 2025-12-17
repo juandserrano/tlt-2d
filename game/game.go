@@ -6,8 +6,27 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+type GameState int
+
+const (
+	StateMenu GameState = iota
+	StatePlaying
+	StatePause
+	StateGameOver
+)
+
+type TurnState int
+
+const (
+	TurnPlayer TurnState = iota
+	TurnResolving
+	TurnComputer
+)
+
 type Game struct {
 	Config         GameConfig
+	State          GameState
+	Turn           TurnState
 	camera         rl.Camera3D
 	tiles          map[TileType]Tile
 	levels         map[int]Level
@@ -22,6 +41,7 @@ type Game struct {
 	sunLight       Light
 	spotLight      Light
 	testPawn       Enemy
+	frameCount     int
 }
 
 func Run() {
@@ -29,7 +49,6 @@ func Run() {
 	game.init()
 	defer rl.CloseWindow()
 	game.Loop()
-
 }
 
 func (g *Game) init() {
@@ -44,7 +63,9 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.LoadResources()
 
-	g.LoadLevel(1)
+	g.State = StatePlaying
+	g.Turn = TurnPlayer
+	g.LoadLevelTiles(1)
 	g.initPlayerCastle()
 	g.NewEnemy(EnemyTypePawn, 5, 5)
 	g.testPawn = EnemiesInPlay[0]

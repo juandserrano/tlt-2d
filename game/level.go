@@ -19,10 +19,10 @@ type Level struct {
 	centerXZ rl.Vector2
 }
 
-func (g *Game) LoadLevel(level int) {
+func (g *Game) LoadLevelTiles(level int) {
 	var l Level
-	l.xTiles = 20
-	l.zTiles = 20
+	l.xTiles = 50
+	l.zTiles = 50
 
 	// // Water tiles
 	// tiles[5].tileType = TileTypeWater

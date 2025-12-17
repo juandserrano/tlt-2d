@@ -1,6 +1,8 @@
 package game
 
 import (
+	"math"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -57,8 +59,31 @@ func (g *Game) initShadersAndLights() {
 	g.spotLight = CreateLight(
 		g.ambientShader, 1, LightPoint,
 		rl.NewVector3(g.playerCastle.position.X-3, 5, g.playerCastle.position.Z),
-		rl.Vector3{0, -1, 0},
+		rl.Vector3{X: 0, Y: -1, Z: 0},
 		rl.White,
 		2)
 
+}
+
+func (g *Game) UpdateShaders() {
+	time := float32(rl.GetTime())
+
+	// Animate sun (Circle around center)
+	if g.Config.World.AnimateSun {
+		g.AnimateSun(time)
+	}
+
+	// Get shader locations
+	timeLoc := rl.GetShaderLocation(g.waterShader, "time")
+	viewPosLoc := rl.GetShaderLocation(g.waterShader, "viewPos")
+	rl.SetShaderValue(g.waterShader, timeLoc, []float32{time}, rl.ShaderUniformFloat)
+
+	camPos := []float32{g.camera.Position.X, g.camera.Position.Y, g.camera.Position.Z}
+	rl.SetShaderValue(g.waterShader, viewPosLoc, camPos, rl.ShaderUniformVec3)
+}
+
+func (g *Game) AnimateSun(time float32) {
+	g.sunLight.Position.X = float32(math.Cos(float64(time)) * 10.0)
+	g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 5.0)
+	UpdateLightValues(g.ambientShader, g.sunLight)
 }

@@ -24,6 +24,6 @@ func (g *Game) initPlayerCastle() {
 	g.playerCastle.position.Y = 0
 }
 
-func (p *Castle) update(dt float32) {
-
+func (g *Game) TurnPlayer(dt float32) {
+	g.handlePlayingInput(dt)
 }

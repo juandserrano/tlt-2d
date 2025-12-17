@@ -1,7 +1,7 @@
 {
   "window": {
     "game_name": "The Last Tower",
-    "width": 900,
+    "width": 800,
     "height": 600,
     "background_color": {
       "r": 0.3,
@@ -9,9 +9,12 @@
       "b": 0.3,
       "a": 1.0
     },
-    "target_fps": 60
+    "target_fps": 120
   },
   "camera": {
     "move_speed": 0.5
+  },
+  "world": {
+    "animate_sun": false
   }
 }

@@ -134,7 +134,7 @@ func AxialRoundToOffset(frQ, frR float64) (int, int) {
 	if diffX > diffY && diffX > diffZ {
 		rx = -ry - rz
 	} else if diffY > diffZ {
-		ry = -rx - rz
+		// ry = -rx - rz
 	} else {
 		rz = -rx - ry
 	}

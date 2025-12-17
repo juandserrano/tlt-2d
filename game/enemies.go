@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -105,6 +106,25 @@ func GetNeighbourPositions(c GridCoord) []GridCoord {
 		{X: c.X, Z: c.Z - 1},     //
 		{X: c.X + 1, Z: c.Z - 1}, //
 		{X: c.X + 1, Z: c.Z},     //
+	}
+
+}
+
+func (g *Game) TurnResolve(dt float32) {
+	fmt.Println("Resolving...")
+	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+		g.Turn = TurnComputer
+		fmt.Println("ENTERING COMPUTER TURN")
+	}
+}
+
+func (g *Game) TurnComputer(dt float32) {
+	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
+		g.NextTurn()
+	}
+	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+		g.Turn = TurnPlayer
+		fmt.Println("ENTERING PLAYER TURN")
 	}
 
 }
