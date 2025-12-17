@@ -24,7 +24,7 @@ func (g *Game) CreateEnemyWave(waveNumber int) {
 	if waveNumber == 1 {
 		for _, t := range g.levels[g.currentLevel].tiles {
 			if t.isSpawn {
-				g.NewEnemy(EnemyTypePawn, t.gridX, t.gridZ)
+				g.NewEnemy(EnemyTypeKnight, t.gridX, t.gridZ)
 			}
 		}
 

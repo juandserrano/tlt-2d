@@ -86,3 +86,17 @@ func AxialRoundToOffset(frQ, frR float64) (int, int) {
 
 	return col, row
 }
+
+func GetDirectionTo(from, to rl.Vector3) rl.Vector3 {
+	return rl.Vector3Normalize(rl.Vector3Subtract(from, to))
+}
+
+func CalculateRotation(from, to rl.Vector3) int {
+
+	dir := GetDirectionTo(from, to)
+	angleRad := math.Atan2(float64(dir.Z), float64(dir.X))
+
+	angleDeg := float32(angleRad * (180.0 / math.Pi))
+	angleDeg -= 90.0
+	return int(angleDeg)
+}

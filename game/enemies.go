@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"juandserrano/tlt-2d/game/util"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -33,6 +34,8 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 	switch eType {
 	case EnemyTypePawn:
 		e.model = &g.pawnModel
+	case EnemyTypeKnight:
+		e.model = &g.knightModel
 	}
 
 	e.gridPos.X = posGridX
@@ -43,7 +46,8 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 
 func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
-	rl.DrawModel(*e.model, pos, 1.0, rl.White)
+	rl.DrawModelEx(*e.model, pos, rl.Vector3{0, 1, 0}, float32(util.CalculateRotation(pos, rl.Vector3{0, 0, 0})), rl.Vector3One(), rl.White)
+	// Debug neighbour tile coords
 	if g.debugLevel == 2 {
 		neighbours := GetNeighbourPositions(e.gridPos)
 		for i := range neighbours {
@@ -86,10 +90,7 @@ func (e *Enemy) move() {
 	if e.gridPos.X == 0 && e.gridPos.Z == 0 {
 		closest = e.gridPos
 	}
-	switch e.enemyType {
-	case EnemyTypePawn:
-		e.gridPos = closest
-	}
+	e.gridPos = closest
 }
 
 func GetNeighbourPositions(c GridCoord) []GridCoord {

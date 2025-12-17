@@ -40,6 +40,7 @@ type Game struct {
 	plainTileModel rl.Model
 	waterTileModel rl.Model
 	pawnModel      rl.Model
+	knightModel    rl.Model
 	sunLight       Light
 	spotLight      Light
 	frameCount     int
