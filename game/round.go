@@ -14,10 +14,13 @@ func (g *Game) NewRound() Round {
 
 func (r *Round) SetUp(g *Game) {
 	g.enemyBag = g.NewEnemyBag()
+	fmt.Println(len(g.enemyBag.enemies))
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)
 	g.initPlayerCastle()
 	startingEnemies := g.enemyBag.PickStartingEnemies()
+	fmt.Println(len(g.enemyBag.enemies))
+
 	g.spawnEnemies(startingEnemies)
 
 	// g.CreateEnemyWave(1)
@@ -27,14 +30,13 @@ func (r *Round) SetUp(g *Game) {
 }
 
 func (g *Game) spawnEnemies(enemies []Enemy) {
-	for i := range enemies {
-		for _, t := range g.levels[g.currentLevel].tiles {
-			if t.isSpawn {
-				g.PlaceEnemyWithPos(enemies[i], t.gridX, t.gridZ)
-				fmt.Println("Spawning enemy type", enemies[i].enemyType)
-			}
+	for _, t := range g.levels[g.currentLevel].tiles {
+		if t.isSpawn {
+			g.PlaceEnemyWithPos(enemies[0], t.gridX, t.gridZ)
+			fmt.Println("Spawning enemy type", enemies[0].enemyType)
+			enemies[0] = enemies[len(enemies)-1]
+			enemies = enemies[:len(enemies)-1]
 		}
-
 	}
 }
 
