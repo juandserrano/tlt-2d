@@ -35,6 +35,12 @@ func (g *Game) initShadersAndLights() {
 		mats[j].Shader = g.ambientShader
 	}
 
+	// Assign ambient shader to bishop model
+	mats = g.bishopModel.GetMaterials()
+	for j := range mats {
+		mats[j].Shader = g.ambientShader
+	}
+
 	g.waterShader = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")
 
 	materials := g.tiles[TileTypeWater].model.GetMaterials()

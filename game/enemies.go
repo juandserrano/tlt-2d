@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"juandserrano/tlt-2d/game/util"
 	"math"
+	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
+
+type EnemyBag struct {
+	enemies []Enemy
+}
 
 type EnemyType int
 
@@ -27,7 +32,22 @@ type Enemy struct {
 	moveOnGridX bool
 }
 
-func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
+func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
+	e := g.NewEnemy(eType)
+
+	e.gridPos.X = posGridX
+	e.gridPos.Z = posGridZ
+
+	EnemiesInPlay = append(EnemiesInPlay, e)
+}
+
+func (g *Game) PlaceEnemyWithPos(e Enemy, posGridX, posGridZ int) {
+	e.gridPos.X = posGridX
+	e.gridPos.Z = posGridZ
+	EnemiesInPlay = append(EnemiesInPlay, e)
+}
+
+func (g *Game) NewEnemy(eType EnemyType) Enemy {
 	var e Enemy
 	e.enemyType = eType
 	e.moveOnGridX = true
@@ -36,12 +56,11 @@ func (g *Game) NewEnemy(eType EnemyType, posGridX, posGridZ int) {
 		e.model = &g.pawnModel
 	case EnemyTypeKnight:
 		e.model = &g.knightModel
+	case EnemyTypeBishop:
+		e.model = &g.bishopModel
 	}
+	return e
 
-	e.gridPos.X = posGridX
-	e.gridPos.Z = posGridZ
-
-	EnemiesInPlay = append(EnemiesInPlay, e)
 }
 
 func (e *Enemy) draw(g *Game) {
@@ -131,5 +150,94 @@ func (g *Game) TurnComputer(dt float32) {
 		g.Turn = TurnPlayer
 		fmt.Println("ENTERING PLAYER TURN")
 	}
+
+}
+
+func (g *Game) NewEnemyBag() EnemyBag {
+	var enemies []Enemy
+	pawnQty := 20
+	knightQty := 10
+	bishopQty := 5
+
+	for range pawnQty {
+		enemies = append(enemies, g.NewEnemy(EnemyTypePawn))
+	}
+	for range knightQty {
+		enemies = append(enemies, g.NewEnemy(EnemyTypeKnight))
+	}
+	for range bishopQty {
+		enemies = append(enemies, g.NewEnemy(EnemyTypeBishop))
+	}
+	enemies = append(enemies, g.NewEnemy(EnemyTypeQueen))
+	enemies = append(enemies, g.NewEnemy(EnemyTypeKing))
+
+	bag := EnemyBag{
+		enemies: enemies,
+	}
+
+	return bag
+
+}
+
+func (b *EnemyBag) PickRandom(qty int) []Enemy {
+	var picked []Enemy
+	for range qty {
+		if len(b.enemies) == 0 {
+			fmt.Println("No more enemies in the bag")
+			break
+		}
+		idx := rand.Intn(len(b.enemies))
+		picked = append(picked, b.enemies[idx])
+		b.enemies[idx] = b.enemies[len(b.enemies)-1]
+		b.enemies = b.enemies[:len(b.enemies)-1]
+	}
+	return picked
+}
+
+func (b *EnemyBag) PickOneFromType(eType EnemyType) (Enemy, error) {
+	var picked Enemy
+	if len(b.enemies) == 0 {
+		fmt.Println("No more enemies in the bag")
+		return picked, fmt.Errorf("no more enemies in the bag")
+	}
+	for i := range b.enemies {
+		if b.enemies[i].enemyType == eType {
+			picked = b.enemies[i]
+			b.enemies[i] = b.enemies[len(b.enemies)-1]
+			b.enemies = b.enemies[:len(b.enemies)-1]
+			return picked, nil
+		}
+	}
+	return picked, fmt.Errorf("no more enemies of type %v", eType)
+}
+
+func (b *EnemyBag) PickStartingEnemies() []Enemy {
+	var startingEnemies []Enemy
+	pawnQty := 3
+	knightQty := 2
+	bishopQty := 1
+	for range pawnQty {
+		pawn, err := b.PickOneFromType(EnemyTypePawn)
+		if err != nil {
+			return nil
+		}
+		startingEnemies = append(startingEnemies, pawn)
+	}
+	for range knightQty {
+		knight, err := b.PickOneFromType(EnemyTypeKnight)
+		if err != nil {
+			return nil
+		}
+		startingEnemies = append(startingEnemies, knight)
+	}
+	for range bishopQty {
+		bishop, err := b.PickOneFromType(EnemyTypeBishop)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return nil
+		}
+		startingEnemies = append(startingEnemies, bishop)
+	}
+	return startingEnemies
 
 }

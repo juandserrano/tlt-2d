@@ -34,6 +34,7 @@ type Game struct {
 	levels         map[int]Level
 	currentLevel   int
 	debugLevel     uint8
+	enemyBag       EnemyBag
 	playerCastle   Castle
 	ambientShader  rl.Shader
 	waterShader    rl.Shader
@@ -41,6 +42,7 @@ type Game struct {
 	waterTileModel rl.Model
 	pawnModel      rl.Model
 	knightModel    rl.Model
+	bishopModel    rl.Model
 	sunLight       Light
 	spotLight      Light
 	frameCount     int
@@ -65,7 +67,6 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.LoadResources()
 	g.initShadersAndLights()
-
 	g.Round = g.NewRound()
 	g.State = StatePlaying
 }
