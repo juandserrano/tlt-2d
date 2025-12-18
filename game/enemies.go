@@ -53,11 +53,11 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 	e.moveOnGridX = true
 	switch eType {
 	case EnemyTypePawn:
-		e.model = &g.pawnModel
+		e.model = g.enemyModels[EnemyTypePawn]
 	case EnemyTypeKnight:
-		e.model = &g.knightModel
+		e.model = g.enemyModels[EnemyTypeKnight]
 	case EnemyTypeBishop:
-		e.model = &g.bishopModel
+		e.model = g.enemyModels[EnemyTypeBishop]
 	}
 	return e
 

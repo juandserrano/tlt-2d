@@ -10,9 +10,12 @@ func (g *Game) LoadResources() {
 func (g *Game) LoadModels() {
 	g.plainTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
 	g.waterTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
-	g.pawnModel = rl.LoadModel("assets/models/enemies/pawn.glb")
-	g.knightModel = rl.LoadModel("assets/models/enemies/knight.glb")
-	g.bishopModel = rl.LoadModel("assets/models/enemies/bishop.glb")
+	pawnModel := rl.LoadModel("assets/models/enemies/pawn.glb")
+	g.enemyModels[EnemyTypePawn] = &pawnModel
+	knightModel := rl.LoadModel("assets/models/enemies/knight.glb")
+	g.enemyModels[EnemyTypeKnight] = &knightModel
+	bishopModel := rl.LoadModel("assets/models/enemies/bishop.glb")
+	g.enemyModels[EnemyTypeBishop] = &bishopModel
 	g.playerCastle.model = rl.LoadModel("assets/models/castle/tower.glb")
 
 	g.tiles[TileTypeClear] = Tile{

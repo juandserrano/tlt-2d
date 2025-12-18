@@ -46,7 +46,7 @@ func (g *Game) LoadLevelTiles(level int) {
 		// Assign ambient shader to tile models
 		materials := newGrid[i].model.GetMaterials()
 		for i := range materials {
-			materials[i].Shader = g.ambientShader
+			materials[i].Shader = *g.shaders[AmbientShader]
 		}
 	}
 
