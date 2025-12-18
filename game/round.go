@@ -14,6 +14,7 @@ func (g *Game) NewRound() Round {
 
 func (r *Round) SetUp(g *Game) {
 	g.enemyBag = g.NewEnemyBag()
+	g.deck = g.NewDeck()
 	fmt.Println(len(g.enemyBag.enemies))
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)

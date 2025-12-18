@@ -35,6 +35,7 @@ type Game struct {
 	currentLevel   int
 	debugLevel     uint8
 	enemyBag       EnemyBag
+	deck           Deck
 	playerCastle   Castle
 	shaders        map[ShaderName]*rl.Shader
 	plainTileModel rl.Model
@@ -65,6 +66,7 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.shaders = make(map[ShaderName]*rl.Shader)
 	g.enemyModels = make(map[EnemyType]*rl.Model)
+	g.cardModels = make(map[CardType]*rl.Model)
 	g.LoadResources()
 	g.initShadersAndLights()
 	g.Round = g.NewRound()

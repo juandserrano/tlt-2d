@@ -50,6 +50,12 @@ func (g *Game) initShadersAndLights() {
 		mats[j].Shader = *g.shaders[AmbientShader]
 	}
 
+	// Assign ambient shader to cards models
+	mats = g.cardModels[CardTypeAttackPawn].GetMaterials()
+	for i := range mats {
+		mats[i].Shader = *g.shaders[AmbientShader]
+	}
+
 	wShader := new(rl.Shader)
 	*wShader = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")
 	g.shaders[WaterShader] = wShader
@@ -64,17 +70,17 @@ func (g *Game) initShadersAndLights() {
 	// Create basic sun illumination
 	g.sunLight = CreateLight(
 		*g.shaders[AmbientShader], 0, LightDirectional,
-		rl.NewVector3(g.levels[g.currentLevel].centerXZ.X-2, 50, g.levels[g.currentLevel].centerXZ.Y+2),
+		rl.NewVector3(g.levels[g.currentLevel].centerXZ.X-100, 50, g.levels[g.currentLevel].centerXZ.Y+2),
 		rl.Vector3Zero(),
 		rl.White,
-		1)
+		2)
 
 	g.spotLight = CreateLight(
 		*g.shaders[AmbientShader], 1, LightPoint,
-		rl.NewVector3(g.playerCastle.position.X-3, 5, g.playerCastle.position.Z),
+		rl.NewVector3(g.playerCastle.position.X-3, 10, g.playerCastle.position.Z),
 		rl.Vector3{X: 0, Y: -1, Z: 0},
 		rl.White,
-		2)
+		1)
 
 }
 
@@ -96,7 +102,7 @@ func (g *Game) UpdateShaders() {
 }
 
 func (g *Game) AnimateSun(time float32) {
-	g.sunLight.Position.X = float32(math.Cos(float64(time)) * 10.0)
-	g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 5.0)
+	g.sunLight.Position.X = float32(math.Cos(float64(time)) * 100.0)
+	g.sunLight.Position.Z = float32(math.Sin(float64(time)) * 50.0)
 	UpdateLightValues(*g.shaders[AmbientShader], g.sunLight)
 }

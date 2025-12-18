@@ -26,4 +26,5 @@ func (g *Game) initPlayerCastle() {
 
 func (g *Game) TurnPlayer(dt float32) {
 	g.handlePlayingInput(dt)
+
 }

@@ -52,10 +52,15 @@ func (g *Game) Draw() {
 	switch g.State {
 	case StateWorldEditor:
 		g.DrawLevel(g.currentLevel)
-	default:
+	case StatePlaying:
+		g.drawEnemies()
 		g.DrawLevel(g.currentLevel)
 		g.playerCastle.draw()
-		g.drawEnemies()
+		if g.Turn == TurnPlayer {
+			g.drawCards()
+
+		}
+	default:
 	}
 	if g.debugLevel != 0 {
 		g.DrawWorldDebug()
