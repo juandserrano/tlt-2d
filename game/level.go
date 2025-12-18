@@ -21,8 +21,8 @@ type Level struct {
 
 func (g *Game) LoadLevelTiles(level int) {
 	var l Level
-	l.xTiles = 50
-	l.zTiles = 50
+	l.xTiles = 30
+	l.zTiles = 30
 
 	// // Water tiles
 	// tiles[5].tileType = TileTypeWater
@@ -140,10 +140,10 @@ func GenerateFlatTopGrid(countX, countZ int, radius float32) []Tile {
 			// // Modify spawnable tiles
 			if tile.gridX == 12 && tile.gridZ == 0 ||
 				tile.gridX == -12 && tile.gridZ == 0 ||
-				tile.gridX == 6 && tile.gridZ == 10 ||
-				tile.gridX == -6 && tile.gridZ == 10 ||
-				tile.gridX == 6 && tile.gridZ == -10 ||
-				tile.gridX == -6 && tile.gridZ == -10 {
+				tile.gridX == 6 && tile.gridZ == 9 ||
+				tile.gridX == -6 && tile.gridZ == 9 ||
+				tile.gridX == 6 && tile.gridZ == -9 ||
+				tile.gridX == -6 && tile.gridZ == -9 {
 				tile.isSpawn = true
 			}
 
