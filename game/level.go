@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -41,7 +40,6 @@ func (g *Game) LoadLevelTiles(level int) {
 		case TileTypeClear:
 			newGrid[i].model = g.tiles[TileTypeClear].model
 		default:
-			fmt.Println("Im drawing only clear")
 		}
 		// Assign ambient shader to tile models
 		materials := newGrid[i].model.GetMaterials()

@@ -45,7 +45,7 @@ func (g *Game) CheckAndLoadConfig(isFirstLoad bool) {
 	g.Config.configPath = "config/config.json"
 	info, err := os.Stat(g.Config.configPath)
 	if err != nil {
-		fmt.Println("EEERRROORRR")
+		fmt.Println("error with config.json file")
 		return
 	}
 	if info.ModTime().After(g.Config.lastModTime) {

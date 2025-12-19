@@ -81,7 +81,18 @@ func (d *Deck) toggleSelectTopCard() {
 	d.cards[len(d.cards)-1].selected = !d.cards[len(d.cards)-1].selected
 }
 
-func (d *Deck) moveTopCardToHand() {
+func (d *Deck) moveTopCardToHand(h *Hand) {
+	availablePosInHand, err := h.nextAvailablePosition()
+	if err != nil {
+		return
+	}
+	h.cards = append(h.cards, d.cards[len(d.cards)-1]) // Add card to hand cards
+	// Move position of card to deck position
+	newCardInHand := &h.cards[len(h.cards)-1]
+	newCardInHand.position = rl.Vector2{
+		X: availablePosInHand.X - float32(newCardInHand.texture.Width)/2.0,
+		Y: availablePosInHand.Y - float32(newCardInHand.texture.Height)/2.0}
+	d.cards = d.cards[:len(d.cards)-1] // Remove card from deck
 
 }
 

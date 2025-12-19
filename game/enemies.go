@@ -197,7 +197,6 @@ func (b *EnemyBag) PickRandom(qty int) []Enemy {
 func (b *EnemyBag) PickOneFromType(eType EnemyType) (Enemy, error) {
 	var picked Enemy
 	if len(b.enemies) == 0 {
-		fmt.Println("No more enemies in the bag")
 		return picked, fmt.Errorf("no more enemies in the bag")
 	}
 	for i := range b.enemies {

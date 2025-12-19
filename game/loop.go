@@ -38,7 +38,7 @@ func (g *Game) Update(dt float32) {
 		}
 	case StatePause:
 
-	case StateWorldEditor:
+		// case StateWorldEditor:
 
 	}
 
@@ -50,8 +50,8 @@ func (g *Game) Draw() {
 	rl.ClearBackground(color.RGBA{uint8(g.Config.Window.BackgroundColor.R * 255), uint8(g.Config.Window.BackgroundColor.G * 255), uint8(g.Config.Window.BackgroundColor.B * 255), uint8(g.Config.Window.BackgroundColor.A * 255)})
 	rl.BeginMode3D(g.camera)
 	switch g.State {
-	case StateWorldEditor:
-		g.DrawLevel(g.currentLevel)
+	// case StateWorldEditor:
+	// 	g.DrawLevel(g.currentLevel)
 	case StatePlaying:
 		g.drawEnemies()
 		g.DrawLevel(g.currentLevel)
@@ -65,7 +65,6 @@ func (g *Game) Draw() {
 	if g.Turn == TurnPlayer {
 		g.drawCards()
 		g.playerHand.draw()
-
 	}
 	if g.debugLevel != 0 {
 		g.DrawStaticDebug()

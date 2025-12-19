@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -60,7 +58,6 @@ func (g *Game) init() {
 	g.CheckAndLoadConfig(true)
 	rl.SetConfigFlags(rl.FlagWindowResizable | rl.FlagMsaa4xHint)
 	rl.SetTargetFPS(g.Config.Window.TargetFPS)
-	fmt.Println(g.Config.Window.TargetFPS)
 	rl.InitWindow(g.Config.Window.Width, g.Config.Window.Height, g.Config.GameName)
 	g.debugLevel = 0
 	g.initCamera()

@@ -1,7 +1,5 @@
 package game
 
-import "fmt"
-
 type Round struct {
 	TurnNumber int
 }
@@ -16,12 +14,11 @@ func (r *Round) SetUp(g *Game) {
 	g.enemyBag = g.NewEnemyBag()
 	g.playerHand = g.NewHand()
 	g.deck = g.NewDeck()
-	fmt.Println(len(g.enemyBag.enemies))
+	g.deck.moveTopCardToHand(&g.playerHand)
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)
 	g.initPlayerCastle()
 	startingEnemies := g.enemyBag.PickStartingEnemies()
-	fmt.Println(len(g.enemyBag.enemies))
 
 	g.spawnEnemies(startingEnemies)
 
@@ -35,7 +32,6 @@ func (g *Game) spawnEnemies(enemies []Enemy) {
 	for _, t := range g.levels[g.currentLevel].tiles {
 		if t.isSpawn {
 			g.PlaceEnemyWithPos(enemies[0], t.gridX, t.gridZ)
-			fmt.Println("Spawning enemy type", enemies[0].enemyType)
 			enemies[0] = enemies[len(enemies)-1]
 			enemies = enemies[:len(enemies)-1]
 		}

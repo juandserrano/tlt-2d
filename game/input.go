@@ -8,7 +8,6 @@ import (
 
 func (g *Game) handlePlayingInput(dt float32) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-		fmt.Println("Select card to play")
 		if g.deck.isMouseOnTopCard() {
 			g.deck.toggleSelectTopCard()
 		}
@@ -18,8 +17,8 @@ func (g *Game) handlePlayingInput(dt float32) {
 		fmt.Println("ENTERING RESOLVING STATE")
 	}
 
-	if rl.IsKeyPressed(rl.KeyA) && rl.IsKeyDown(rl.KeyLeftShift) {
-		g.State = StateWorldEditor
-		fmt.Println("ENTERING WORLD EDITOR")
-	}
+	// if rl.IsKeyPressed(rl.KeyA) && rl.IsKeyDown(rl.KeyLeftShift) {
+	// 	g.State = StateWorldEditor
+	// 	fmt.Println("ENTERING WORLD EDITOR")
+	// }
 }
