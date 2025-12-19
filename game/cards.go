@@ -12,33 +12,45 @@ const (
 	CardTypeAttackQueen
 )
 
+const DECK_SIZE = 30
+
 type Deck struct {
-	cards []Card
+	cards    []Card
+	position rl.Vector2
 }
 type Card struct {
-	model     *rl.Model
-	material  *rl.Material
-	position  rl.Vector3
-	available bool
+	// model     *rl.Model
+	// material  *rl.Material
+	// position  rl.Vector3
+	texture         *rl.Texture2D
+	position        rl.Vector2
+	available       bool
+	selected        bool
+	selectedYOffset int
 }
 
-func (g *Game) NewCard(cardType CardType, pos rl.Vector3, available bool) Card {
+func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 	c := Card{
-		model:     g.cardModels[cardType],
-		position:  pos,
-		available: available,
+		// model:     g.cardModels[cardType],
+		texture:         g.cardTextures[cardType],
+		position:        pos,
+		available:       available,
+		selected:        false,
+		selectedYOffset: 10,
 	}
 	return c
 }
 
-func (c *Card) move(newPos rl.Vector3) {
+func (c *Card) move(newPos rl.Vector2) {
 	c.position = newPos
 }
 
 func (g *Game) NewDeck() Deck {
 	var d Deck
-	for i := range 30 {
-		c := g.NewCard(CardTypeAttackPawn, rl.Vector3{X: 2, Y: 2 + (float32(i) * 0.012), Z: 3}, true)
+	d.position = rl.Vector2{X: 10, Y: 20}
+	for i := range DECK_SIZE {
+		offset := float32(i) * 0.3
+		c := g.NewCard(CardTypeAttackPawn, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
 		d.cards = append(d.cards, c)
 	}
 	return d
@@ -50,7 +62,39 @@ func (g *Game) drawCards() {
 	}
 }
 
+func (c *Card) update() {
+	if c.selected {
+
+	}
+}
 func (c *Card) draw() {
-	rl.DrawModelEx(*c.model, c.position,
-		rl.Vector3{0, 1, 0}, 0, rl.Vector3{1, 1, 1}, rl.White)
+	// rl.DrawModelEx(*c.model, c.position,
+	// 	rl.Vector3{0, 1, 0}, 0, rl.Vector3{1, 1, 1}, rl.White)
+	offset := 0
+	if c.selected {
+		offset = c.selectedYOffset
+	}
+	rl.DrawTexture(*c.texture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+}
+
+func (d *Deck) toggleSelectTopCard() {
+	d.cards[len(d.cards)-1].selected = !d.cards[len(d.cards)-1].selected
+}
+
+func (d *Deck) moveTopCardToHand() {
+
+}
+
+func (d *Deck) isMouseOnTopCard() bool {
+	mousePos := rl.GetMousePosition()
+	topCard := d.cards[len(d.cards)-1]
+	var bounds rl.Rectangle
+	if topCard.selected {
+		bounds = rl.NewRectangle(topCard.position.X, topCard.position.Y-float32(topCard.selectedYOffset), float32(topCard.texture.Width), float32(topCard.texture.Height))
+
+	} else {
+		bounds = rl.NewRectangle(topCard.position.X, topCard.position.Y, float32(topCard.texture.Width), float32(topCard.texture.Height))
+
+	}
+	return rl.CheckCollisionPointRec(mousePos, bounds)
 }

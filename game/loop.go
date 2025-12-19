@@ -56,16 +56,17 @@ func (g *Game) Draw() {
 		g.drawEnemies()
 		g.DrawLevel(g.currentLevel)
 		g.playerCastle.draw()
-		if g.Turn == TurnPlayer {
-			g.drawCards()
-
-		}
 	default:
 	}
 	if g.debugLevel != 0 {
 		g.DrawWorldDebug()
 	}
 	rl.EndMode3D()
+	if g.Turn == TurnPlayer {
+		g.drawCards()
+		g.playerHand.draw()
+
+	}
 	if g.debugLevel != 0 {
 		g.DrawStaticDebug()
 	}

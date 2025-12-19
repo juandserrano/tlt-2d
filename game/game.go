@@ -35,16 +35,18 @@ type Game struct {
 	currentLevel   int
 	debugLevel     uint8
 	enemyBag       EnemyBag
+	playerHand     Hand
 	deck           Deck
 	playerCastle   Castle
 	shaders        map[ShaderName]*rl.Shader
 	plainTileModel rl.Model
 	waterTileModel rl.Model
 	enemyModels    map[EnemyType]*rl.Model
-	cardModels     map[CardType]*rl.Model
-	sunLight       Light
-	spotLight      Light
-	frameCount     int
+	// cardModels     map[CardType]*rl.Model
+	cardTextures map[CardType]*rl.Texture2D
+	sunLight     Light
+	spotLight    Light
+	frameCount   int
 }
 
 func Run() {
@@ -66,7 +68,8 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.shaders = make(map[ShaderName]*rl.Shader)
 	g.enemyModels = make(map[EnemyType]*rl.Model)
-	g.cardModels = make(map[CardType]*rl.Model)
+	// g.cardModels = make(map[CardType]*rl.Model)
+	g.cardTextures = make(map[CardType]*rl.Texture2D)
 	g.LoadResources()
 	g.initShadersAndLights()
 	g.Round = g.NewRound()

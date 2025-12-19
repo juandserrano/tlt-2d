@@ -1,8 +1,8 @@
 {
   "window": {
     "game_name": "The Last Tower",
-    "width": 800,
-    "height": 600,
+    "width": 1024,
+    "height": 720,
     "background_color": {
       "r": 0.3,
       "g": 0.3,
@@ -16,5 +16,8 @@
   },
   "world": {
     "animate_sun": false
+  },
+  "rules": {
+    "hand_limit": 5
   }
 }

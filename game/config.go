@@ -30,6 +30,9 @@ type GameConfig struct {
 	World struct {
 		AnimateSun bool `json:"animate_sun"`
 	} `json:"world"`
+	Rules struct {
+		HandLimit int `json:"hand_limit"`
+	} `json:"rules"`
 }
 
 func (g *Game) ApplyConfig() {

@@ -14,11 +14,13 @@ func (g *Game) LoadModels() {
 	pawnModel := rl.LoadModel("assets/models/enemies/pawn.glb")
 	knightModel := rl.LoadModel("assets/models/enemies/knight.glb")
 	bishopModel := rl.LoadModel("assets/models/enemies/bishop.glb")
-	attackPawnCardModel := rl.LoadModel("assets/models/cards/attack_pawn.glb")
+	// attackPawnCardModel := rl.LoadModel("assets/models/cards/attack_pawn.glb")
+	attackPawnCardTexture := rl.LoadTexture("assets/textures/cards/attack_pawn.png")
 	g.enemyModels[EnemyTypePawn] = &pawnModel
 	g.enemyModels[EnemyTypeKnight] = &knightModel
 	g.enemyModels[EnemyTypeBishop] = &bishopModel
-	g.cardModels[CardTypeAttackPawn] = &attackPawnCardModel
+	// g.cardModels[CardTypeAttackPawn] = &attackPawnCardModel
+	g.cardTextures[CardTypeAttackPawn] = &attackPawnCardTexture
 
 	g.tiles[TileTypeClear] = Tile{
 		model:    &g.plainTileModel,

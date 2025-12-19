@@ -51,10 +51,10 @@ func (g *Game) initShadersAndLights() {
 	}
 
 	// Assign ambient shader to cards models
-	mats = g.cardModels[CardTypeAttackPawn].GetMaterials()
-	for i := range mats {
-		mats[i].Shader = *g.shaders[AmbientShader]
-	}
+	// mats = g.cardModels[CardTypeAttackPawn].GetMaterials()
+	// for i := range mats {
+	// 	mats[i].Shader = *g.shaders[AmbientShader]
+	// }
 
 	wShader := new(rl.Shader)
 	*wShader = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")

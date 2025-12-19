@@ -9,6 +9,9 @@ import (
 func (g *Game) handlePlayingInput(dt float32) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 		fmt.Println("Select card to play")
+		if g.deck.isMouseOnTopCard() {
+			g.deck.toggleSelectTopCard()
+		}
 	}
 	if rl.IsMouseButtonPressed(rl.MouseButtonRight) && rl.IsKeyDown(rl.KeyLeftShift) {
 		g.Turn = TurnResolving
