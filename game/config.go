@@ -38,6 +38,31 @@ type GameConfig struct {
 			AttackBishopQty int `json:"attack_bishop_qty"`
 		} `json:"deck_composition"`
 	} `json:"rules"`
+	Enemies struct {
+		Pawn struct {
+			Health int `json:"health"`
+			Attack int `json:"attack"`
+		} `json:"pawn"`
+		Knight struct {
+			Health int `json:"health"`
+			Attack int `json:"attack"`
+		} `json:"knight"`
+		Bishop struct {
+			Health int `json:"health"`
+			Attack int `json:"attack"`
+		} `json:"bishop"`
+		Queen struct {
+			Health int `json:"health"`
+			Attack int `json:"attack"`
+		} `json:"queen"`
+		King struct {
+			Health int `json:"health"`
+			Attack int `json:"attack"`
+		} `json:"king"`
+	} `json:"enemies"`
+	Player struct {
+		Health int `json:"health"`
+	} `json:"player"`
 }
 
 func (g *Game) ApplyConfig() {

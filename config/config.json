@@ -24,5 +24,30 @@
       "attack_knight_qty": 10,
       "attack_bishop_qty": 10
     }
+  },
+  "enemies": {
+    "pawn": {
+      "health": 1,
+      "attack": 2
+    },
+    "knight": {
+      "health": 1,
+      "attack": 1
+    },
+    "bishop": {
+      "health": 2,
+      "attack": 2
+    },
+    "queen": {
+      "health": 2,
+      "attack": 3
+    },
+    "king": {
+      "health": 4,
+      "attack": 2
+    }
+  },
+  "player": {
+    "health": 20
   }
 }

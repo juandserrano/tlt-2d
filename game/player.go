@@ -9,6 +9,7 @@ type Castle struct {
 	position rl.Vector3
 	gridX    int
 	gridZ    int
+	health   int
 }
 
 func (p *Castle) draw() {
@@ -22,6 +23,7 @@ func (g *Game) initPlayerCastle() {
 	g.playerCastle.position.X = startXZPos.X
 	g.playerCastle.position.Z = startXZPos.Y
 	g.playerCastle.position.Y = 0
+	g.playerCastle.health = g.Config.Player.Health
 }
 
 func (g *Game) TurnPlayer(dt float32) {

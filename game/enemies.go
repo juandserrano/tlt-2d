@@ -30,6 +30,8 @@ type Enemy struct {
 	enemyType   EnemyType
 	gridPos     GridCoord
 	moveOnGridX bool
+	health      int
+	attack      int
 }
 
 func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
@@ -54,10 +56,16 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 	switch eType {
 	case EnemyTypePawn:
 		e.model = g.enemyModels[EnemyTypePawn]
+		e.health = g.Config.Enemies.Pawn.Health
+		e.attack = g.Config.Enemies.Pawn.Attack
 	case EnemyTypeKnight:
 		e.model = g.enemyModels[EnemyTypeKnight]
+		e.health = g.Config.Enemies.Knight.Health
+		e.attack = g.Config.Enemies.Knight.Attack
 	case EnemyTypeBishop:
 		e.model = g.enemyModels[EnemyTypeBishop]
+		e.health = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
 	}
 	return e
 
