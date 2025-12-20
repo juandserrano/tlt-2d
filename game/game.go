@@ -35,6 +35,8 @@ type Game struct {
 	enemyBag       EnemyBag
 	playerHand     Hand
 	deck           Deck
+	cardsToPlay    []*Card
+	discardPile    []*Card
 	playerCastle   Castle
 	shaders        map[ShaderName]*rl.Shader
 	plainTileModel rl.Model
@@ -68,6 +70,7 @@ func (g *Game) init() {
 	g.enemyModels = make(map[EnemyType]*rl.Model)
 	// g.cardModels = make(map[CardType]*rl.Model)
 	g.cardTextures = make(map[CardType]*rl.Texture2D)
+	g.UI.buttons = make(map[string]*Button)
 	g.LoadResources()
 	g.initShadersAndLights()
 	g.Round = g.NewRound()

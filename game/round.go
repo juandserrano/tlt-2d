@@ -14,8 +14,8 @@ func (r *Round) SetUp(g *Game) {
 	g.enemyBag = g.NewEnemyBag()
 	g.playerHand = g.NewHand()
 	g.deck = g.NewDeck()
-	g.UI.buttons = append(g.UI.buttons, NewButton("draw", 300, 100, func() { g.deck.drawToTopHand(&g.playerHand) }))
-	g.UI.buttons = append(g.UI.buttons, NewButton("play", 300, 300, func() { g.playerHand.playSelected() }))
+	g.UI.buttons["draw"] = NewButton("draw", 300, 100, func() { g.drawToTopHand(&g.playerHand) })
+	g.UI.buttons["play"] = NewButton("play", 300, 300, func() { g.playerHand.playSelected(g) })
 	// g.deck.moveTopCardToHand(&g.playerHand)
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)

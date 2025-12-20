@@ -23,6 +23,7 @@ type Deck struct {
 	position rl.Vector2
 }
 type Card struct {
+	name             string
 	texture          *rl.Texture2D
 	position         rl.Vector2
 	available        bool
@@ -46,6 +47,7 @@ func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 		isShowing:        true,
 		backTexture:      g.cardTextures[CardTypeBack],
 		cardType:         cardType,
+		name:             cardType.String(),
 	}
 	return c
 }
@@ -128,7 +130,8 @@ func (c *Card) toggleSelected() {
 	c.selected = !c.selected
 }
 
-func (d *Deck) drawToTopHand(h *Hand) {
+func (g *Game) drawToTopHand(h *Hand) {
+	g.UI.buttons["draw"].enabled = false
 	availablePositions := 0
 	for i := range h.cardPositions {
 		if h.cardPositions[i].available {
@@ -136,7 +139,7 @@ func (d *Deck) drawToTopHand(h *Hand) {
 		}
 	}
 	for range availablePositions {
-		err := d.moveTopCardToHand(h)
+		err := g.deck.moveTopCardToHand(h)
 		if err != nil {
 			return
 		}
@@ -179,7 +182,23 @@ func (c *Card) isMouseOnCard() bool {
 	return rl.CheckCollisionPointRec(mousePos, bounds)
 }
 
-func (c *Card) play() {
-	fmt.Println("playing ", c)
+func (c *Card) addToplay(g *Game) {
+	g.cardsToPlay = append(g.cardsToPlay, c)
+}
 
+func (t CardType) String() string {
+	switch t {
+	case CardTypeAttackBishop:
+		return "Attack Bishop"
+	case CardTypeAttackKnight:
+		return "Attack Knight"
+	case CardTypeAttackPawn:
+		return "Attack Pawn"
+	case CardTypeAttackQueen:
+		return "Attack Queen"
+	case CardTypeAttackKing:
+		return "Attack King"
+	default:
+		return ""
+	}
 }

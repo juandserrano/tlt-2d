@@ -5,7 +5,7 @@ import (
 )
 
 type UI struct {
-	buttons []Button
+	buttons map[string]*Button
 }
 
 type Button struct {
@@ -14,21 +14,26 @@ type Button struct {
 	rX       int
 	rY       int
 	action   func()
+	enabled  bool
 }
 
 func (g *Game) drawUI() {
-	for i := range g.UI.buttons {
-		g.UI.buttons[i].draw()
+	for _, v := range g.UI.buttons {
+		if v.enabled {
+			v.draw()
+
+		}
 	}
 }
 
-func NewButton(text string, positionX, positionY int, action func()) Button {
-	return Button{
+func NewButton(text string, positionX, positionY int, action func()) *Button {
+	return &Button{
 		text:     text,
 		position: rl.Vector2{X: float32(positionX), Y: float32(positionY)},
 		rX:       40,
 		rY:       20,
 		action:   action,
+		enabled:  false,
 	}
 }
 
@@ -52,5 +57,6 @@ func (b *Button) MouseOnButton() bool {
 
 func (b *Button) draw() {
 	rl.DrawEllipse(int32(b.position.X), int32(b.position.Y), float32(b.rX), float32(b.rY), rl.Black)
-	rl.DrawText(b.text, int32(b.position.X), int32(b.position.Y), 15, rl.Blue)
+	textWidth := rl.MeasureText(b.text, 15)
+	rl.DrawText(b.text, int32(b.position.X)-textWidth/2, int32(b.position.Y)-7, 15, rl.Blue)
 }

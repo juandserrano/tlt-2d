@@ -27,6 +27,9 @@ func (g *Game) initPlayerCastle() {
 }
 
 func (g *Game) TurnPlayer(dt float32) {
+	if len(g.playerHand.cards) < g.playerHand.maxCards {
+		g.UI.buttons["draw"].enabled = true
+	}
 	g.handlePlayingInput(dt)
 
 }

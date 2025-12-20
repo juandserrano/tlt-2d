@@ -14,9 +14,9 @@ func (g *Game) handlePlayingInput(dt float32) {
 				break
 			}
 		}
-		for i := range g.UI.buttons {
-			if g.UI.buttons[i].MouseOnButton() {
-				g.UI.buttons[i].action()
+		for _, v := range g.UI.buttons {
+			if v.enabled && v.MouseOnButton() {
+				v.action()
 			}
 
 		}
