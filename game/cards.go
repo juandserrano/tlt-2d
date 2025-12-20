@@ -23,24 +23,26 @@ type Deck struct {
 	position rl.Vector2
 }
 type Card struct {
-	texture         *rl.Texture2D
-	position        rl.Vector2
-	available       bool
-	selected        bool
-	selectedYOffset int
-	isShowing       bool
-	backTexture     *rl.Texture2D
+	texture        *rl.Texture2D
+	position       rl.Vector2
+	available      bool
+	selected       bool
+	selectedOffset rl.Vector2
+	isShowing      bool
+	backTexture    *rl.Texture2D
+	cardType       CardType
 }
 
 func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 	c := Card{
-		texture:         g.cardTextures[cardType],
-		position:        pos,
-		available:       available,
-		selected:        false,
-		selectedYOffset: 10,
-		isShowing:       false,
-		backTexture:     g.cardTextures[CardTypeBack],
+		texture:        g.cardTextures[cardType],
+		position:       pos,
+		available:      available,
+		selected:       false,
+		selectedOffset: rl.Vector2{X: 0, Y: -10},
+		isShowing:      false,
+		backTexture:    g.cardTextures[CardTypeBack],
+		cardType:       cardType,
 	}
 	return c
 }
@@ -104,15 +106,15 @@ func (g *Game) updateCards() {
 }
 
 func (c *Card) draw() {
-	offset := 0
+	offset := rl.Vector2{}
 	if c.selected {
-		offset = c.selectedYOffset
+		offset = c.selectedOffset
 	}
 	if c.isShowing {
-		rl.DrawTexture(*c.texture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+		rl.DrawTexture(*c.texture, int32(c.position.X+offset.X), int32(c.position.Y+offset.Y), rl.White)
 
 	} else {
-		rl.DrawTexture(*c.backTexture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+		rl.DrawTexture(*c.backTexture, int32(c.position.X+offset.X), int32(c.position.Y+offset.Y), rl.White)
 	}
 }
 
@@ -156,11 +158,16 @@ func (c *Card) isMouseOnCard() bool {
 	mousePos := rl.GetMousePosition()
 	var bounds rl.Rectangle
 	if c.selected {
-		bounds = rl.NewRectangle(c.position.X, c.position.Y-float32(c.selectedYOffset), float32(c.texture.Width), float32(c.texture.Height))
+		bounds = rl.NewRectangle(c.position.X+c.selectedOffset.X, c.position.Y+c.selectedOffset.Y, float32(c.texture.Width), float32(c.texture.Height))
 
 	} else {
 		bounds = rl.NewRectangle(c.position.X, c.position.Y, float32(c.texture.Width), float32(c.texture.Height))
 
 	}
 	return rl.CheckCollisionPointRec(mousePos, bounds)
+}
+
+func (c *Card) play() {
+	fmt.Println("playing ", c)
+
 }

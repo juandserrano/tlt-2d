@@ -60,3 +60,13 @@ func (h *Hand) nextAvailablePosition() (int, rl.Vector2, error) {
 	}
 	return 999, rl.Vector2Zero(), fmt.Errorf("hand is full")
 }
+
+func (h *Hand) playSelected() {
+	for i := range h.cards {
+		if h.cards[i].selected {
+			h.cards[i].play()
+
+		}
+	}
+
+}

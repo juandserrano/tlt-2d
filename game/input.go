@@ -8,11 +8,11 @@ import (
 
 func (g *Game) handlePlayingInput(dt float32) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-		for i := range g.playerHand.cards {
+		for i := len(g.playerHand.cards) - 1; i >= 0; i-- {
 			if g.playerHand.cards[i].isMouseOnCard() {
 				g.playerHand.cards[i].toggleSelected()
+				break
 			}
-
 		}
 		for i := range g.UI.buttons {
 			if g.UI.buttons[i].MouseOnButton() {
