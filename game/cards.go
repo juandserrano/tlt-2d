@@ -1,6 +1,11 @@
 package game
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"fmt"
+	"math/rand"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type CardType int
 
@@ -66,7 +71,20 @@ func (g *Game) NewDeck() Deck {
 		}
 		d.cards = append(d.cards, c)
 	}
+
+	g.ShuffleCards(d.cards)
+	for i := range d.cards {
+		offset := float32(i) * 0.3
+		d.cards[i].position.Y = d.position.Y - offset
+		d.cards[i].position.X = d.position.X + offset
+	}
 	return d
+}
+
+func (g *Game) ShuffleCards(slice []Card) {
+	rand.Shuffle(len(slice), func(i, j int) {
+		slice[i], slice[j] = slice[j], slice[i]
+	})
 }
 
 func (g *Game) drawCards() {
@@ -98,34 +116,50 @@ func (c *Card) draw() {
 	}
 }
 
-func (d *Deck) toggleSelectTopCard() {
-	d.cards[len(d.cards)-1].selected = !d.cards[len(d.cards)-1].selected
+func (c *Card) toggleSelected() {
+	c.selected = !c.selected
 }
 
-func (d *Deck) moveTopCardToHand(h *Hand) {
-	availablePosInHand, err := h.nextAvailablePosition()
+func (d *Deck) drawToTopHand(h *Hand) {
+	availablePositions := 0
+	for i := range h.cardPositions {
+		if h.cardPositions[i].available {
+			availablePositions++
+		}
+	}
+	fmt.Println("avail:", availablePositions)
+	for range availablePositions {
+		d.moveTopCardToHand(h)
+	}
+
+}
+
+func (d *Deck) moveTopCardToHand(h *Hand) error {
+	pos, worldPos, err := h.nextAvailablePosition()
 	if err != nil {
-		return
+		return err
 	}
 	h.cards = append(h.cards, d.cards[len(d.cards)-1]) // Add card to hand cards
 	// Move position of card to deck position
 	newCardInHand := &h.cards[len(h.cards)-1]
+	h.cardPositions[pos].available = false
+	h.cards[pos].isShowing = true
 	newCardInHand.position = rl.Vector2{
-		X: availablePosInHand.X - float32(newCardInHand.texture.Width)/2.0,
-		Y: availablePosInHand.Y - float32(newCardInHand.texture.Height)/2.0}
+		X: worldPos.X - float32(newCardInHand.texture.Width)/2.0*(float32(pos)+1),
+		Y: worldPos.Y - float32(newCardInHand.texture.Height)/2.0}
 	d.cards = d.cards[:len(d.cards)-1] // Remove card from deck
 
+	return nil
 }
 
-func (d *Deck) isMouseOnTopCard() bool {
+func (c *Card) isMouseOnCard() bool {
 	mousePos := rl.GetMousePosition()
-	topCard := d.cards[len(d.cards)-1]
 	var bounds rl.Rectangle
-	if topCard.selected {
-		bounds = rl.NewRectangle(topCard.position.X, topCard.position.Y-float32(topCard.selectedYOffset), float32(topCard.texture.Width), float32(topCard.texture.Height))
+	if c.selected {
+		bounds = rl.NewRectangle(c.position.X, c.position.Y-float32(c.selectedYOffset), float32(c.texture.Width), float32(c.texture.Height))
 
 	} else {
-		bounds = rl.NewRectangle(topCard.position.X, topCard.position.Y, float32(topCard.texture.Width), float32(topCard.texture.Height))
+		bounds = rl.NewRectangle(c.position.X, c.position.Y, float32(c.texture.Width), float32(c.texture.Height))
 
 	}
 	return rl.CheckCollisionPointRec(mousePos, bounds)

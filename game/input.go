@@ -8,8 +8,17 @@ import (
 
 func (g *Game) handlePlayingInput(dt float32) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-		if g.deck.isMouseOnTopCard() {
-			g.deck.toggleSelectTopCard()
+		for i := range g.playerHand.cards {
+			if g.playerHand.cards[i].isMouseOnCard() {
+				g.playerHand.cards[i].toggleSelected()
+			}
+
+		}
+		for i := range g.UI.buttons {
+			if g.UI.buttons[i].MouseOnButton() {
+				g.UI.buttons[i].action()
+			}
+
 		}
 	}
 

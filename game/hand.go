@@ -52,11 +52,11 @@ func (h *Hand) draw() {
 	}
 }
 
-func (h *Hand) nextAvailablePosition() (rl.Vector2, error) {
+func (h *Hand) nextAvailablePosition() (int, rl.Vector2, error) {
 	for i := range h.cardPositions {
 		if h.cardPositions[i].available {
-			return h.cardPositions[i].position, nil
+			return i, h.cardPositions[i].position, nil
 		}
 	}
-	return rl.Vector2Zero(), fmt.Errorf("hand is full")
+	return 999, rl.Vector2Zero(), fmt.Errorf("hand is full")
 }
