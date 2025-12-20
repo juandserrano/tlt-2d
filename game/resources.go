@@ -16,13 +16,15 @@ func (g *Game) LoadModels() {
 	bishopModel := rl.LoadModel("assets/models/enemies/bishop.glb")
 	attackPawnCardTexture := rl.LoadTexture("assets/textures/cards/attack_pawn.png")
 	attackKnightCardTexture := rl.LoadTexture("assets/textures/cards/attack_knight.png")
-	attackBishopCardTexture := rl.LoadTexture("assets/textures/cards/attack_pawn.png")
+	attackBishopCardTexture := rl.LoadTexture("assets/textures/cards/attack_bishop.png")
+	backCardTexture := rl.LoadTexture("assets/textures/cards/card_back.png")
 	g.enemyModels[EnemyTypePawn] = &pawnModel
 	g.enemyModels[EnemyTypeKnight] = &knightModel
 	g.enemyModels[EnemyTypeBishop] = &bishopModel
 	g.cardTextures[CardTypeAttackPawn] = &attackPawnCardTexture
 	g.cardTextures[CardTypeAttackKnight] = &attackKnightCardTexture
 	g.cardTextures[CardTypeAttackBishop] = &attackBishopCardTexture
+	g.cardTextures[CardTypeBack] = &backCardTexture
 
 	g.tiles[TileTypeClear] = Tile{
 		model:    &g.plainTileModel,

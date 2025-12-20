@@ -45,6 +45,7 @@ type Game struct {
 	sunLight     Light
 	spotLight    Light
 	frameCount   int
+	UI           UI
 }
 
 func Run() {

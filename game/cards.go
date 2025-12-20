@@ -10,6 +10,7 @@ const (
 	CardTypeAttackKnight
 	CardTypeAttackKing
 	CardTypeAttackQueen
+	CardTypeBack
 )
 
 type Deck struct {
@@ -22,6 +23,8 @@ type Card struct {
 	available       bool
 	selected        bool
 	selectedYOffset int
+	isShowing       bool
+	backTexture     *rl.Texture2D
 }
 
 func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
@@ -31,6 +34,8 @@ func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 		available:       available,
 		selected:        false,
 		selectedYOffset: 10,
+		isShowing:       false,
+		backTexture:     g.cardTextures[CardTypeBack],
 	}
 	return c
 }
@@ -75,12 +80,22 @@ func (c *Card) update() {
 
 	}
 }
+
+func (g *Game) updateCards() {
+
+}
+
 func (c *Card) draw() {
 	offset := 0
 	if c.selected {
 		offset = c.selectedYOffset
 	}
-	rl.DrawTexture(*c.texture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+	if c.isShowing {
+		rl.DrawTexture(*c.texture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+
+	} else {
+		rl.DrawTexture(*c.backTexture, int32(c.position.X), int32(c.position.Y-float32(offset)), rl.White)
+	}
 }
 
 func (d *Deck) toggleSelectTopCard() {

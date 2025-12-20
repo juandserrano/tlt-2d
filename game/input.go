@@ -12,6 +12,7 @@ func (g *Game) handlePlayingInput(dt float32) {
 			g.deck.toggleSelectTopCard()
 		}
 	}
+
 	if rl.IsMouseButtonPressed(rl.MouseButtonRight) && rl.IsKeyDown(rl.KeyLeftShift) {
 		g.Turn = TurnResolving
 		fmt.Println("ENTERING RESOLVING STATE")

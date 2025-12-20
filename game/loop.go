@@ -65,6 +65,7 @@ func (g *Game) Draw() {
 	if g.Turn == TurnPlayer {
 		g.drawCards()
 		g.playerHand.draw()
+		g.drawUI()
 	}
 	if g.debugLevel != 0 {
 		g.DrawStaticDebug()
