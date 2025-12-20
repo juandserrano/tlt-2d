@@ -21,7 +21,6 @@ func (g *Game) drawUI() {
 	for _, v := range g.UI.buttons {
 		if v.enabled {
 			v.draw()
-
 		}
 	}
 }

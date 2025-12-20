@@ -75,9 +75,6 @@ func (h *Hand) playSelected(g *Game) {
 			h.indexesPlayed = append(h.indexesPlayed, i)
 		}
 	}
-	for i := range g.cardsToPlay {
-		fmt.Printf("playing %#v\n", g.cardsToPlay[i])
-	}
 	h.moveCardsToDiscardPile(h.indexesPlayed, g)
 	h.indexesPlayed = []int{}
 	g.Turn = TurnResolving

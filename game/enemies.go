@@ -77,7 +77,9 @@ func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
 	rl.DrawModelEx(*e.model, pos, rl.Vector3{0, 1, 0}, float32(util.CalculateRotation(pos, rl.Vector3{0, 0, 0})), rl.Vector3One(), rl.White)
 
-	e.drawHealthBar()
+	if e.currentHealth < e.maxHealth {
+		e.drawHealthBar()
+	}
 
 	// Debug neighbour tile coords
 	if g.debugLevel == 2 {
@@ -180,14 +182,6 @@ func GetNeighbourPositions(c GridCoord) []GridCoord {
 		{X: c.X + 1, Z: c.Z},     //
 	}
 
-}
-
-func (g *Game) TurnResolve(dt float32) {
-	fmt.Println("Resolving...")
-	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
-		g.Turn = TurnComputer
-		fmt.Println("ENTERING COMPUTER TURN")
-	}
 }
 
 func (g *Game) TurnComputer(dt float32) {
