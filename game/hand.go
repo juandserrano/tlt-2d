@@ -46,9 +46,13 @@ func (h *Hand) draw() {
 	// Draw background box
 	rl.DrawRectangleRounded(h.rectangle, 0.2, 0, color.RGBA{50, 50, 50, 50})
 
-	// Draw cards
-	for _, c := range h.cards {
-		c.draw()
+	// Draw cards by hand position
+	for i := range h.cardPositions {
+		for _, c := range h.cards {
+			if c.positionInHand == i {
+				c.draw()
+			}
+		}
 	}
 }
 
@@ -65,8 +69,36 @@ func (h *Hand) playSelected() {
 	for i := range h.cards {
 		if h.cards[i].selected {
 			h.cards[i].play()
-
+			h.cardPositions[h.cards[i].positionInHand].available = true
+			// h.indexesPlayed = append(h.indexesPlayed, i)
 		}
 	}
+	h.moveCardsToDiscardPile()
+	// h.prepareHandForNextTurn()
 
+}
+
+func (h *Hand) UpdateHand() []Card {
+	n := 0
+	for _, c := range h.cards {
+		if !c.selected {
+			h.cards[n] = c
+			n++
+		}
+	}
+	return h.cards[:n]
+}
+
+func (h *Hand) moveCardsToDiscardPile() {
+	h.cards = h.UpdateHand()
+	// for i := range h.cardPositions {
+	// 	h.cardPositions[i].available = true
+	// }
+	// for i := range h.cards {
+	// 	pos, worldPos, _ := h.nextAvailablePosition()
+	// 	h.cards[i].position = rl.Vector2{
+	// 		X: worldPos.X - float32(h.cards[i].texture.Width)/2.0*(float32(pos)+1),
+	// 		Y: worldPos.Y - float32(h.cards[i].texture.Height)/2.0}
+	// 	h.cards[i].positionInHand = pos
+	// }
 }

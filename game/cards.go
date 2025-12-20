@@ -23,26 +23,29 @@ type Deck struct {
 	position rl.Vector2
 }
 type Card struct {
-	texture        *rl.Texture2D
-	position       rl.Vector2
-	available      bool
-	selected       bool
-	selectedOffset rl.Vector2
-	isShowing      bool
-	backTexture    *rl.Texture2D
-	cardType       CardType
+	texture          *rl.Texture2D
+	position         rl.Vector2
+	available        bool
+	selected         bool
+	selectedOffset   rl.Vector2
+	selectedRotation float32
+	isShowing        bool
+	backTexture      *rl.Texture2D
+	cardType         CardType
+	positionInHand   int
 }
 
 func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 	c := Card{
-		texture:        g.cardTextures[cardType],
-		position:       pos,
-		available:      available,
-		selected:       false,
-		selectedOffset: rl.Vector2{X: 0, Y: -10},
-		isShowing:      false,
-		backTexture:    g.cardTextures[CardTypeBack],
-		cardType:       cardType,
+		texture:          g.cardTextures[cardType],
+		position:         pos,
+		available:        available,
+		selected:         false,
+		selectedOffset:   rl.Vector2{X: 0, Y: -30},
+		selectedRotation: -3.0,
+		isShowing:        true,
+		backTexture:      g.cardTextures[CardTypeBack],
+		cardType:         cardType,
 	}
 	return c
 }
@@ -71,6 +74,7 @@ func (g *Game) NewDeck() Deck {
 			c = g.NewCard(CardTypeAttackBishop, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
 			bishopLeft--
 		}
+		c.isShowing = false
 		d.cards = append(d.cards, c)
 	}
 
@@ -107,14 +111,16 @@ func (g *Game) updateCards() {
 
 func (c *Card) draw() {
 	offset := rl.Vector2{}
+	var rotation float32 = 0.0
 	if c.selected {
 		offset = c.selectedOffset
+		rotation = c.selectedRotation
 	}
 	if c.isShowing {
-		rl.DrawTexture(*c.texture, int32(c.position.X+offset.X), int32(c.position.Y+offset.Y), rl.White)
+		rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, 1, rl.White)
 
 	} else {
-		rl.DrawTexture(*c.backTexture, int32(c.position.X+offset.X), int32(c.position.Y+offset.Y), rl.White)
+		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, 1, rl.White)
 	}
 }
 
@@ -129,14 +135,19 @@ func (d *Deck) drawToTopHand(h *Hand) {
 			availablePositions++
 		}
 	}
-	fmt.Println("avail:", availablePositions)
 	for range availablePositions {
-		d.moveTopCardToHand(h)
+		err := d.moveTopCardToHand(h)
+		if err != nil {
+			return
+		}
 	}
 
 }
 
 func (d *Deck) moveTopCardToHand(h *Hand) error {
+	if len(d.cards) == 0 {
+		return fmt.Errorf("no more cards on deck")
+	}
 	pos, worldPos, err := h.nextAvailablePosition()
 	if err != nil {
 		return err
@@ -145,7 +156,8 @@ func (d *Deck) moveTopCardToHand(h *Hand) error {
 	// Move position of card to deck position
 	newCardInHand := &h.cards[len(h.cards)-1]
 	h.cardPositions[pos].available = false
-	h.cards[pos].isShowing = true
+	newCardInHand.isShowing = true
+	newCardInHand.positionInHand = pos
 	newCardInHand.position = rl.Vector2{
 		X: worldPos.X - float32(newCardInHand.texture.Width)/2.0*(float32(pos)+1),
 		Y: worldPos.Y - float32(newCardInHand.texture.Height)/2.0}
