@@ -12,16 +12,11 @@ const (
 	CardTypeAttackQueen
 )
 
-const DECK_SIZE = 30
-
 type Deck struct {
 	cards    []Card
 	position rl.Vector2
 }
 type Card struct {
-	// model     *rl.Model
-	// material  *rl.Material
-	// position  rl.Vector3
 	texture         *rl.Texture2D
 	position        rl.Vector2
 	available       bool
@@ -31,7 +26,6 @@ type Card struct {
 
 func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 	c := Card{
-		// model:     g.cardModels[cardType],
 		texture:         g.cardTextures[cardType],
 		position:        pos,
 		available:       available,
@@ -48,9 +42,23 @@ func (c *Card) move(newPos rl.Vector2) {
 func (g *Game) NewDeck() Deck {
 	var d Deck
 	d.position = rl.Vector2{X: 10, Y: 20}
-	for i := range DECK_SIZE {
+	totalCards := g.Config.Rules.DeckComposition.AttackPawnQty + g.Config.Rules.DeckComposition.AttackKnightQty + g.Config.Rules.DeckComposition.AttackBishopQty
+	pawnLeft := g.Config.Rules.DeckComposition.AttackPawnQty
+	knightLeft := g.Config.Rules.DeckComposition.AttackKnightQty
+	bishopLeft := g.Config.Rules.DeckComposition.AttackBishopQty
+	for i := range totalCards {
 		offset := float32(i) * 0.3
-		c := g.NewCard(CardTypeAttackPawn, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+		var c Card
+		if pawnLeft > 0 {
+			c = g.NewCard(CardTypeAttackPawn, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+			pawnLeft--
+		} else if knightLeft > 0 {
+			c = g.NewCard(CardTypeAttackKnight, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+			knightLeft--
+		} else if bishopLeft > 0 {
+			c = g.NewCard(CardTypeAttackBishop, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+			bishopLeft--
+		}
 		d.cards = append(d.cards, c)
 	}
 	return d
@@ -68,8 +76,6 @@ func (c *Card) update() {
 	}
 }
 func (c *Card) draw() {
-	// rl.DrawModelEx(*c.model, c.position,
-	// 	rl.Vector3{0, 1, 0}, 0, rl.Vector3{1, 1, 1}, rl.White)
 	offset := 0
 	if c.selected {
 		offset = c.selectedYOffset

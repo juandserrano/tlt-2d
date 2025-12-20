@@ -18,6 +18,11 @@
     "animate_sun": false
   },
   "rules": {
-    "hand_limit": 5
+    "hand_limit": 5,
+    "deck_composition": {
+      "attack_pawn_qty": 10,
+      "attack_knight_qty": 10,
+      "attack_bishop_qty": 10
+    }
   }
 }

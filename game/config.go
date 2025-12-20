@@ -31,7 +31,12 @@ type GameConfig struct {
 		AnimateSun bool `json:"animate_sun"`
 	} `json:"world"`
 	Rules struct {
-		HandLimit int `json:"hand_limit"`
+		HandLimit       int `json:"hand_limit"`
+		DeckComposition struct {
+			AttackPawnQty   int `json:"attack_pawn_qty"`
+			AttackKnightQty int `json:"attack_knight_qty"`
+			AttackBishopQty int `json:"attack_bishop_qty"`
+		} `json:"deck_composition"`
 	} `json:"rules"`
 }
 
