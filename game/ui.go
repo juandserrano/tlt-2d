@@ -18,6 +18,12 @@ type Button struct {
 }
 
 func (g *Game) drawUI() {
+	for _, e := range EnemiesInPlay {
+		if e.healthBarShowing {
+			e.drawHealthBar(g)
+		}
+
+	}
 	for _, v := range g.UI.buttons {
 		if v.enabled {
 			v.draw()

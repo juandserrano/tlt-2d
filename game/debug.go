@@ -34,8 +34,12 @@ func (g *Game) DrawStaticDebug() {
 func (g *Game) TerminalDebug() {
 	if g.frameCount%30 == 0 {
 		for _, e := range EnemiesInPlay {
-			fmt.Println(e.isHighlighted)
+			if e.enemyType == EnemyTypeBishop {
+				fmt.Println("curr:", e.currentHealth)
+				fmt.Println("max:", e.maxHealth)
+			}
 		}
+		fmt.Println("len:", len(EnemiesInPlay))
 
 	}
 }

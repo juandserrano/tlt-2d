@@ -80,9 +80,6 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
 	rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
-	if e.healthBarShowing {
-		e.drawHealthBar()
-	}
 
 	// Debug neighbour tile coords
 	if g.debugLevel == 2 {
@@ -109,45 +106,31 @@ func (g *Game) isMouseOnEnemy(e *Enemy) bool {
 	bb.Max = rl.Vector3Add(bb.Max, pos)
 
 	rayCollision := rl.GetRayCollisionBox(ray, bb)
-	if rayCollision.Hit {
-		return true
-	}
-	return false
+	return rayCollision.Hit
 }
 
-func (e *Enemy) drawHealthBar() {
-	// --- DRAW TEXT 3D ---
-	// 1. Push the current matrix so we don't mess up other 3D objects
-	rl.PushMatrix()
-
+func (e *Enemy) drawHealthBar(g *Game) {
 	barWidth := 50
 	barHeight := 10
-	// 2. Move to the position in 3D space (X, Y, Z)
+
 	enemyWorldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
-	rl.Translatef(enemyWorldPos.X-0.6, 0.1, enemyWorldPos.Y)
+	targetPos := rl.Vector3{X: enemyWorldPos.X, Y: 2, Z: enemyWorldPos.Y}
+	screenPosition := rl.GetWorldToScreen(targetPos, g.camera)
+	fmt.Println("screenpo:", screenPosition)
+	rl.DrawRectangle(int32(screenPosition.X-float32(barWidth)/2.0), int32(screenPosition.Y-float32(barHeight)/2.0), int32(float32(barWidth)*float32(e.currentHealth)/float32(e.maxHealth)), int32(barHeight), rl.Red)
 
-	// 3. Rotate the text.
-	// By default, text lies flat on the floor looking up.
-	// Rotate 90 degrees on X to make it stand up.
-	// Rotate 180 degrees on Y because text usually renders "backwards" in 3D look-at logic.
-	rl.Rotatef(90, 1, 0, 0)
-	// rl.Rotatef(45, 0, 1, 0)
-	rl.Rotatef(90, 0, 0, 1)
+	// rl.PushMatrix()
+	// barWidth := 50
+	// barHeight := 10
+	// enemyWorldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
+	// rl.Translatef(enemyWorldPos.X-0.6, 0.1, enemyWorldPos.Y)
 
-	// 4. Scale it DOWN.
-	// Standard font size 20 is "20 meters" high in 3D.
-	// We scale by 0.1 to make it manageable.
-	rl.Scalef(0.02, 0.02, 0.02)
-
-	// 5. Draw the text (Relative to 0,0 because we already translated the matrix)
-	// We center the text by calculating width/2
-
-	// rl.DrawRectangle(-int32(barWidth)/2.0, -int32(barHeight)/2.0, int32(barWidth), int32(barHeight), rl.Black)
-	rl.DrawRectangle(2-int32(barWidth/2.0), 2-int32(barHeight/2.0), (int32(barWidth)-2)*int32(e.currentHealth/e.maxHealth), int32(barHeight)-2, rl.Red)
-
-	// 6. Restore the matrix
-	rl.PopMatrix()
-	// --------------------
+	// rl.Rotatef(90, 1, 0, 0)
+	// // rl.Rotatef(45, 0, 1, 0)
+	// rl.Rotatef(90, 0, 0, 1)
+	// rl.Scalef(0.02, 0.02, 0.02)
+	// rl.DrawRectangle(-int32(barWidth/2.0), int32(barHeight/2.0), int32(float32(barWidth)*float32(e.currentHealth)/float32(e.maxHealth)), int32(barHeight), rl.Red)
+	// rl.PopMatrix()
 }
 
 func (g *Game) drawEnemies() {

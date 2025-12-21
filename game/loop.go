@@ -23,15 +23,8 @@ func (g *Game) mouseOverEnemies() {
 	if g.frameCount%5 == 0 {
 		ray := rl.GetScreenToWorldRay(rl.GetMousePosition(), g.camera)
 		for i := range EnemiesInPlay {
-			// rayCollision := rl.GetRayCollisionMesh(ray, EnemiesInPlay[i].model.GetMeshes()[0], EnemiesInPlay[i].model.Transform)
-
-			// Get model bounding box (local space)
 			bb := rl.GetModelBoundingBox(*EnemiesInPlay[i].model)
-
-			// Get enemy position (world space)
 			pos := g.GetTileCenter(EnemiesInPlay[i].gridPos)
-
-			// Transform bounding box to world space
 			bb.Min = rl.Vector3Add(bb.Min, pos)
 			bb.Max = rl.Vector3Add(bb.Max, pos)
 
