@@ -65,8 +65,8 @@ func (g *Game) Update(dt float32) {
 		switch g.Turn {
 		case TurnPlayer:
 			g.TurnPlayer(dt)
-		case TurnResolving:
-			g.TurnResolve(dt)
+		// case TurnResolving:
+		// 	g.TurnResolve(dt)
 		case TurnComputer:
 			g.TurnComputer(dt)
 		}

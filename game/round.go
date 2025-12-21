@@ -1,11 +1,5 @@
 package game
 
-import (
-	"fmt"
-
-	rl "github.com/gen2brain/raylib-go/raylib"
-)
-
 type Round struct {
 	TurnNumber int
 }
@@ -58,47 +52,55 @@ func (g *Game) CreateEnemyWave(waveNumber int) {
 
 }
 
-func (g *Game) TurnResolve(dt float32) {
-	g.resolvePlayedCards()
-	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
-		g.Turn = TurnComputer
-		fmt.Println("ENTERING COMPUTER TURN")
-	}
-}
+// func (g *Game) TurnResolve(dt float32) {
+// 	g.resolvePlayedCards()
+// 	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+// 		g.Turn = TurnComputer
+// 		fmt.Println("ENTERING COMPUTER TURN")
+// 	}
+// }
 
-func (g *Game) resolvePlayedCards() {
-	for i := range g.cardsToPlay {
-		g.cardsToPlay[i].resolve()
-	}
-	// g.cardsToPlay = []*Card{}
-}
+// func (g *Game) resolvePlayedCards() {
+// 	for i := range g.cardsToPlay {
+// 		g.cardsToPlay[i].resolve()
+// 	}
+// 	// g.cardsToPlay = []*Card{}
+// }
 
-func (c *Card) resolve() {
-	switch c.cardType {
-	case CardTypeAttackPawn:
-		fmt.Println("Its a pwn cards")
-		for i := range EnemiesInPlay {
-			if EnemiesInPlay[i].enemyType == EnemyTypePawn {
-				fmt.Printf("Resolving:\n%#v\n", c)
-				fmt.Println(EnemiesInPlay[i].currentHealth)
-				EnemiesInPlay[i].currentHealth--
-				fmt.Println(EnemiesInPlay[i].currentHealth)
-				return
-			}
-		}
-	case CardTypeAttackKnight:
-		for i := range EnemiesInPlay {
-			if EnemiesInPlay[i].enemyType == EnemyTypeKnight {
-				EnemiesInPlay[i].currentHealth--
-				break
-			}
-		}
-	case CardTypeAttackBishop:
-		for i := range EnemiesInPlay {
-			if EnemiesInPlay[i].enemyType == EnemyTypeBishop {
-				EnemiesInPlay[i].currentHealth--
-				break
-			}
-		}
-	}
-}
+// func (c *Card) resolve() {
+// 	switch c.cardType {
+// 	case CardTypeAttackPawn:
+// 		for i := range EnemiesInPlay {
+// 			if EnemiesInPlay[i].enemyType == EnemyTypePawn {
+// 				EnemiesInPlay[i].currentHealth--
+// 				if EnemiesInPlay[i].currentHealth <= 0 {
+// 					EnemiesInPlay[i] = EnemiesInPlay[len(EnemiesInPlay)-1]
+// 					EnemiesInPlay = EnemiesInPlay[:len(EnemiesInPlay)-1]
+// 				}
+// 				return
+// 			}
+// 		}
+// 	case CardTypeAttackKnight:
+// 		for i := range EnemiesInPlay {
+// 			if EnemiesInPlay[i].enemyType == EnemyTypeKnight {
+// 				EnemiesInPlay[i].currentHealth--
+// 				if EnemiesInPlay[i].currentHealth <= 0 {
+// 					EnemiesInPlay[i] = EnemiesInPlay[len(EnemiesInPlay)-1]
+// 					EnemiesInPlay = EnemiesInPlay[:len(EnemiesInPlay)-1]
+// 				}
+// 				return
+// 			}
+// 		}
+// 	case CardTypeAttackBishop:
+// 		for i := range EnemiesInPlay {
+// 			if EnemiesInPlay[i].enemyType == EnemyTypeBishop {
+// 				EnemiesInPlay[i].currentHealth--
+// 				if EnemiesInPlay[i].currentHealth <= 0 {
+// 					EnemiesInPlay[i] = EnemiesInPlay[len(EnemiesInPlay)-1]
+// 					EnemiesInPlay = EnemiesInPlay[:len(EnemiesInPlay)-1]
+// 				}
+// 				return
+// 			}
+// 		}
+// 	}
+// }

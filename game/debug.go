@@ -21,26 +21,6 @@ func (g *Game) DrawWorldDebug() {
 		for i := range g.levels[g.currentLevel].tiles {
 			g.levels[g.currentLevel].tiles[i].debugDrawGridCoord(rl.Red)
 		}
-
-		// Draw ray from mouse to world
-		ray := rl.GetScreenToWorldRay(rl.GetMousePosition(), g.camera)
-		groundHitInfo := rl.GetRayCollisionQuad(
-			ray,
-			rl.NewVector3(-100, 0, -100), // Large quad corners
-			rl.NewVector3(-100, 0, 100),
-			rl.NewVector3(100, 0, 100),
-			rl.NewVector3(100, 0, -100),
-		)
-
-		if groundHitInfo.Hit {
-			fmt.Println("hit")
-			// 3. Convert the Hit Point (3D World) to Hex Grid (2D Logical)
-			// Note: We map World X -> Hex X, and World Z -> Hex Y
-			rl.DrawRay(ray, rl.Green)
-		} else {
-			fmt.Println("no hit")
-		}
-
 	}
 
 }

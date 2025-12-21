@@ -23,7 +23,7 @@ func (g *Game) handlePlayingInput(dt float32) {
 	}
 
 	if rl.IsMouseButtonPressed(rl.MouseButtonRight) && rl.IsKeyDown(rl.KeyLeftShift) {
-		g.Turn = TurnResolving
+		g.Turn = TurnComputer
 		fmt.Println("ENTERING RESOLVING STATE")
 	}
 
