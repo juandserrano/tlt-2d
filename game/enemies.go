@@ -26,13 +26,14 @@ const (
 var EnemiesInPlay []Enemy
 
 type Enemy struct {
-	model         *rl.Model
-	enemyType     EnemyType
-	gridPos       GridCoord
-	moveOnGridX   bool
-	maxHealth     int
-	currentHealth int
-	attack        int
+	model            *rl.Model
+	enemyType        EnemyType
+	gridPos          GridCoord
+	moveOnGridX      bool
+	maxHealth        int
+	currentHealth    int
+	attack           int
+	healthBarShowing bool
 }
 
 func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
@@ -54,6 +55,7 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 	var e Enemy
 	e.enemyType = eType
 	e.moveOnGridX = true
+	e.healthBarShowing = false
 	switch eType {
 	case EnemyTypePawn:
 		e.model = g.enemyModels[EnemyTypePawn]
@@ -76,8 +78,8 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 func (e *Enemy) draw(g *Game) {
 	pos := g.GetTileCenter(e.gridPos)
 	rl.DrawModelEx(*e.model, pos, rl.Vector3{0, 1, 0}, float32(util.CalculateRotation(pos, rl.Vector3{0, 0, 0})), rl.Vector3One(), rl.White)
-
-	if e.currentHealth < e.maxHealth {
+	if e.healthBarShowing {
+		fmt.Println("Hit")
 		e.drawHealthBar()
 	}
 

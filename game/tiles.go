@@ -5,6 +5,7 @@ import (
 )
 
 const HEX_TILE_WIDTH = 1.16
+const HEX_TILE_SIZE = HEX_TILE_WIDTH / 2.0
 
 type TileType int
 

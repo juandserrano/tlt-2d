@@ -9,7 +9,7 @@
       "b": 0.3,
       "a": 1.0
     },
-    "target_fps": 120
+    "target_fps": 60
   },
   "camera": {
     "move_speed": 0.5
