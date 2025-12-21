@@ -95,6 +95,7 @@ func (h *Hand) UpdateHand() []Card {
 
 func (h *Hand) moveCardToDiscardPile(c *Card) {
 	h.selectedCard = nil
+	h.cardPositions[c.positionInHand].available = true
 	for i := range h.cards {
 		if h.cards[i].id == c.id {
 			h.cards[i] = h.cards[len(h.cards)-1]
@@ -102,6 +103,16 @@ func (h *Hand) moveCardToDiscardPile(c *Card) {
 			break
 		}
 	}
-	h.cardPositions[c.positionInHand].available = true
 	// h.cards = h.UpdateHand()
+}
+
+func (g *Game) reorderHand() {
+	for i := range g.playerHand.cardPositions {
+		g.playerHand.cardPositions[i].available = true
+	}
+
+	for i := range g.playerHand.cards {
+		g.playerHand.cards[i].positionInHand = i
+		g.playerHand.cardPositions[i].available = false
+	}
 }

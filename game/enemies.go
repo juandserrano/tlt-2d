@@ -114,9 +114,8 @@ func (e *Enemy) drawHealthBar(g *Game) {
 	barHeight := 10
 
 	enemyWorldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
-	targetPos := rl.Vector3{X: enemyWorldPos.X, Y: 2, Z: enemyWorldPos.Y}
+	targetPos := rl.Vector3{X: enemyWorldPos.X, Y: 0, Z: enemyWorldPos.Y}
 	screenPosition := rl.GetWorldToScreen(targetPos, g.camera)
-	fmt.Println("screenpo:", screenPosition)
 	rl.DrawRectangle(int32(screenPosition.X-float32(barWidth)/2.0), int32(screenPosition.Y-float32(barHeight)/2.0), int32(float32(barWidth)*float32(e.currentHealth)/float32(e.maxHealth)), int32(barHeight), rl.Red)
 
 	// rl.PushMatrix()
@@ -198,6 +197,7 @@ func (g *Game) TurnComputer(dt float32) {
 	// 	g.Turn = TurnPlayer
 	// 	fmt.Println("ENTERING PLAYER TURN")
 	// }
+	g.reorderHand()
 	for i := range EnemiesInPlay {
 		EnemiesInPlay[i].move()
 	}

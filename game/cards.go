@@ -134,7 +134,6 @@ func (c *Card) toggleSelected() {
 }
 
 func (g *Game) drawToTopHand(h *Hand) {
-	fmt.Println("clicked draaw")
 	// g.UI.buttons["draw"].enabled = false
 	availablePositions := 0
 	for i := range h.cardPositions {
