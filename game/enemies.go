@@ -34,6 +34,7 @@ type Enemy struct {
 	currentHealth    int
 	attack           int
 	healthBarShowing bool
+	isHighlighted    bool
 }
 
 func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
@@ -56,6 +57,7 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 	e.enemyType = eType
 	e.moveOnGridX = true
 	e.healthBarShowing = false
+	e.isHighlighted = false
 	switch eType {
 	case EnemyTypePawn:
 		e.model = g.enemyModels[EnemyTypePawn]
@@ -91,6 +93,26 @@ func (e *Enemy) draw(g *Game) {
 		}
 
 	}
+}
+
+func (g *Game) isMouseOnEnemy(e *Enemy) bool {
+	ray := rl.GetScreenToWorldRay(rl.GetMousePosition(), g.camera)
+
+	// Get model bounding box (local space)
+	bb := rl.GetModelBoundingBox(*e.model)
+
+	// Get enemy position (world space)
+	pos := g.GetTileCenter(e.gridPos)
+
+	// Transform bounding box to world space
+	bb.Min = rl.Vector3Add(bb.Min, pos)
+	bb.Max = rl.Vector3Add(bb.Max, pos)
+
+	rayCollision := rl.GetRayCollisionBox(ray, bb)
+	if rayCollision.Hit {
+		return true
+	}
+	return false
 }
 
 func (e *Enemy) drawHealthBar() {
@@ -186,13 +208,17 @@ func GetNeighbourPositions(c GridCoord) []GridCoord {
 }
 
 func (g *Game) TurnComputer(dt float32) {
-	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-		g.NextTurn()
+	// if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
+	// 	g.NextTurn()
+	// }
+	// if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+	// 	g.Turn = TurnPlayer
+	// 	fmt.Println("ENTERING PLAYER TURN")
+	// }
+	for i := range EnemiesInPlay {
+		EnemiesInPlay[i].move()
 	}
-	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
-		g.Turn = TurnPlayer
-		fmt.Println("ENTERING PLAYER TURN")
-	}
+	g.Turn = TurnPlayer
 
 }
 

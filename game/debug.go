@@ -31,6 +31,15 @@ func (g *Game) DrawStaticDebug() {
 	rl.DrawText(fmt.Sprintf("mousepos: %v", rl.GetMousePosition()), 100, 100, 20, rl.Blue)
 }
 
+func (g *Game) TerminalDebug() {
+	if g.frameCount%30 == 0 {
+		for _, e := range EnemiesInPlay {
+			fmt.Println(e.isHighlighted)
+		}
+
+	}
+}
+
 func (t *Tile) debugDrawGridCoord(color color.RGBA) {
 	// --- DRAW TEXT 3D ---
 	// 1. Push the current matrix so we don't mess up other 3D objects

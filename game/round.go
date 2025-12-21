@@ -15,7 +15,7 @@ func (r *Round) SetUp(g *Game) {
 	g.playerHand = g.NewHand()
 	g.deck = g.NewDeck()
 	g.UI.buttons["draw"] = NewButton("draw", 300, 100, func() { g.drawToTopHand(&g.playerHand) })
-	g.UI.buttons["play"] = NewButton("play", 300, 300, func() { g.playerHand.playSelected(g) })
+	g.UI.buttons["end_turn"] = NewButton("End Turn", 300, 300, func() { g.Turn = TurnComputer })
 	// g.deck.moveTopCardToHand(&g.playerHand)
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)

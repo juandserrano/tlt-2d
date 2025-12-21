@@ -16,7 +16,8 @@ type Hand struct {
 	cards         []Card
 	maxCards      int
 	cardPositions []HandPosition
-	indexesPlayed []int
+	// indexesPlayed  []int
+	selectedCard *Card
 }
 
 func (g *Game) NewHand() Hand {
@@ -66,20 +67,20 @@ func (h *Hand) nextAvailablePosition() (int, rl.Vector2, error) {
 	return 999, rl.Vector2Zero(), fmt.Errorf("hand is full")
 }
 
-func (h *Hand) playSelected(g *Game) {
-	g.cardsToPlay = []*Card{}
-	for i := range h.cards {
-		if h.cards[i].selected {
-			h.cards[i].addToplay(g)
-			h.cardPositions[h.cards[i].positionInHand].available = true
-			h.indexesPlayed = append(h.indexesPlayed, i)
-		}
-	}
-	h.moveCardsToDiscardPile(h.indexesPlayed, g)
-	h.indexesPlayed = []int{}
-	g.Turn = TurnResolving
+// func (h *Hand) playSelected(g *Game) {
+// 	g.cardsToPlay = []*Card{}
+// 	for i := range h.cards {
+// 		if h.cards[i].selected {
+// 			h.cards[i].addToplay(g)
+// 			h.cardPositions[h.cards[i].positionInHand].available = true
+// 			h.indexesPlayed = append(h.indexesPlayed, i)
+// 		}
+// 	}
+// 	h.moveCardsToDiscardPile(h.indexesPlayed, g)
+// 	h.indexesPlayed = []int{}
+// 	g.Turn = TurnResolving
 
-}
+// }
 
 func (h *Hand) UpdateHand() []Card {
 	n := 0
@@ -92,16 +93,15 @@ func (h *Hand) UpdateHand() []Card {
 	return h.cards[:n]
 }
 
-func (h *Hand) moveCardsToDiscardPile(indexesPlayed []int, g *Game) {
-	h.cards = h.UpdateHand()
-	// for i := range h.cardPositions {
-	// 	h.cardPositions[i].available = true
-	// }
-	// for i := range h.cards {
-	// 	pos, worldPos, _ := h.nextAvailablePosition()
-	// 	h.cards[i].position = rl.Vector2{
-	// 		X: worldPos.X - float32(h.cards[i].texture.Width)/2.0*(float32(pos)+1),
-	// 		Y: worldPos.Y - float32(h.cards[i].texture.Height)/2.0}
-	// 	h.cards[i].positionInHand = pos
-	// }
+func (h *Hand) moveCardToDiscardPile(c *Card) {
+	h.selectedCard = nil
+	for i := range h.cards {
+		if h.cards[i].id == c.id {
+			h.cards[i] = h.cards[len(h.cards)-1]
+			h.cards = h.cards[:len(h.cards)-1]
+			break
+		}
+	}
+	h.cardPositions[c.positionInHand].available = true
+	// h.cards = h.UpdateHand()
 }

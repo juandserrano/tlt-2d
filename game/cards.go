@@ -5,6 +5,7 @@ import (
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/google/uuid"
 )
 
 type CardType int
@@ -23,6 +24,7 @@ type Deck struct {
 	position rl.Vector2
 }
 type Card struct {
+	id               uuid.UUID
 	name             string
 	texture          *rl.Texture2D
 	position         rl.Vector2
@@ -38,6 +40,7 @@ type Card struct {
 
 func (g *Game) NewCard(cardType CardType, pos rl.Vector2, available bool) Card {
 	c := Card{
+		id:               uuid.New(),
 		texture:          g.cardTextures[cardType],
 		position:         pos,
 		available:        available,
@@ -131,7 +134,8 @@ func (c *Card) toggleSelected() {
 }
 
 func (g *Game) drawToTopHand(h *Hand) {
-	g.UI.buttons["draw"].enabled = false
+	fmt.Println("clicked draaw")
+	// g.UI.buttons["draw"].enabled = false
 	availablePositions := 0
 	for i := range h.cardPositions {
 		if h.cardPositions[i].available {
@@ -184,6 +188,11 @@ func (c *Card) isMouseOnCard() bool {
 
 func (c *Card) addToplay(g *Game) {
 	g.cardsToPlay = append(g.cardsToPlay, c)
+}
+
+func (c *Card) attackEnemy(enemy *Enemy, h *Hand) {
+	enemy.currentHealth--
+	h.moveCardToDiscardPile(c)
 }
 
 func (t CardType) String() string {
