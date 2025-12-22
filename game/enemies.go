@@ -201,6 +201,9 @@ func (g *Game) TurnComputer(dt float32) {
 	for i := range EnemiesInPlay {
 		EnemiesInPlay[i].move()
 	}
+	if len(g.playerHand.cards) < g.playerHand.maxCards {
+		g.deck.canDraw = true
+	}
 	g.Turn = TurnPlayer
 
 }

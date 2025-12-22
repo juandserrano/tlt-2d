@@ -22,6 +22,7 @@ const (
 type Deck struct {
 	cards    []Card
 	position rl.Vector2
+	canDraw  bool
 }
 type Card struct {
 	id               uuid.UUID
@@ -61,6 +62,7 @@ func (c *Card) move(newPos rl.Vector2) {
 
 func (g *Game) NewDeck() Deck {
 	var d Deck
+	d.canDraw = true
 	d.position = rl.Vector2{X: 10, Y: 20}
 	totalCards := g.Config.Rules.DeckComposition.AttackPawnQty + g.Config.Rules.DeckComposition.AttackKnightQty + g.Config.Rules.DeckComposition.AttackBishopQty
 	pawnLeft := g.Config.Rules.DeckComposition.AttackPawnQty
@@ -134,18 +136,21 @@ func (c *Card) toggleSelected() {
 }
 
 func (g *Game) drawToTopHand(h *Hand) {
-	// g.UI.buttons["draw"].enabled = false
-	availablePositions := 0
-	for i := range h.cardPositions {
-		if h.cardPositions[i].available {
-			availablePositions++
+	if g.deck.canDraw {
+		availablePositions := 0
+		for i := range h.cardPositions {
+			if h.cardPositions[i].available {
+				availablePositions++
+			}
 		}
-	}
-	for range availablePositions {
-		err := g.deck.moveTopCardToHand(h)
-		if err != nil {
-			return
+		for range availablePositions {
+			err := g.deck.moveTopCardToHand(h)
+			if err != nil {
+				return
+			}
 		}
+		g.deck.canDraw = false
+
 	}
 
 }

@@ -27,8 +27,10 @@ func (g *Game) initPlayerCastle() {
 }
 
 func (g *Game) TurnPlayer(dt float32) {
-	if len(g.playerHand.cards) < g.playerHand.maxCards {
+	if g.deck.canDraw {
 		g.UI.buttons["draw"].enabled = true
+	} else {
+		g.UI.buttons["draw"].enabled = false
 	}
 	g.UI.buttons["end_turn"].enabled = true
 	g.handlePlayingInput(dt)
