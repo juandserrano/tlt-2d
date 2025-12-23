@@ -15,7 +15,7 @@ func (r *Round) SetUp(g *Game) {
 	g.playerHand = g.NewHand()
 	g.deck = g.NewDeck()
 	g.UI.buttons["draw"] = NewButton("draw", 300, 100, func() { g.drawToTopHand(&g.playerHand) })
-	g.UI.buttons["end_turn"] = NewButton("End Turn", 300, 300, func() { g.Turn = TurnComputer })
+	g.UI.buttons["end_turn"] = NewButton("End Turn", 300, 300, func() { g.actionEndTurn() })
 	// g.deck.moveTopCardToHand(&g.playerHand)
 	g.Turn = TurnPlayer
 	g.LoadLevelTiles(1)
@@ -30,6 +30,13 @@ func (r *Round) SetUp(g *Game) {
 
 }
 
+func (g *Game) actionEndTurn() {
+	g.Turn = TurnComputer
+	for i := range g.playerHand.cards {
+		g.playerHand.cards[i].selected = false
+		g.playerHand.selectedCard = nil
+	}
+}
 func (g *Game) spawnEnemies(enemies []Enemy) {
 	for _, t := range g.levels[g.currentLevel].tiles {
 		if t.isSpawn {

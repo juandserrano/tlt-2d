@@ -68,6 +68,7 @@ func (g *Game) Update(dt float32) {
 	}
 
 	g.UpdateShaders()
+	g.OnWindowSizeUpdate()
 
 	if g.debugLevel > 0 {
 		g.TerminalDebug()

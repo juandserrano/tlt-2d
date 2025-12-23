@@ -13,21 +13,32 @@ type HandPosition struct {
 }
 type Hand struct {
 	rectangle     rl.Rectangle
-	cards         []Card
+	cards         []*Card
 	maxCards      int
 	cardPositions []HandPosition
 	// indexesPlayed  []int
 	selectedCard *Card
 }
 
+func (g *Game) OnWindowSizeUpdate() {
+	x := float32(float64(rl.GetScreenWidth()) / 6.0)
+	xEnd := x * 5
+	rectWidth := xEnd - x
+	g.playerHand.rectangle.Width = rectWidth
+
+}
+
 func (g *Game) NewHand() Hand {
+	x := float32(g.Config.Window.Width / 6.0)
+	xEnd := x * 5
+	rectWidth := xEnd - x
 	h := Hand{
 		rectangle: rl.Rectangle{
-			X:      float32(g.Config.Window.Width / 6.0),
+			X:      x,
 			Y:      float32(g.Config.Window.Height) / 6.0 * 4.0,
-			Width:  float32(g.Config.Window.Width) / 6.0 * 4,
+			Width:  rectWidth,
 			Height: float32(g.Config.Window.Height) * 0.3},
-		cards:    []Card{},
+		cards:    []*Card{},
 		maxCards: g.Config.Rules.HandLimit,
 	}
 
@@ -35,7 +46,7 @@ func (g *Game) NewHand() Hand {
 		h.cardPositions = append(h.cardPositions, HandPosition{
 			available: true,
 			position: rl.Vector2{
-				X: h.rectangle.X + (float32(i+1) * h.rectangle.Width / float32(h.maxCards)),
+				X: h.rectangle.X + (float32(i+1) * h.rectangle.Width / float32(h.maxCards)) + 80*float32(i),
 				Y: h.rectangle.Y + h.rectangle.Height/2.0,
 			},
 		})
@@ -52,7 +63,7 @@ func (h *Hand) draw() {
 	for i := range h.cardPositions {
 		for _, c := range h.cards {
 			if c.positionInHand == i {
-				c.draw()
+				c.draw(1)
 			}
 		}
 	}
@@ -82,7 +93,7 @@ func (h *Hand) nextAvailablePosition() (int, rl.Vector2, error) {
 
 // }
 
-func (h *Hand) UpdateHand() []Card {
+func (h *Hand) UpdateHand() []*Card {
 	n := 0
 	for _, c := range h.cards {
 		if !c.selected {

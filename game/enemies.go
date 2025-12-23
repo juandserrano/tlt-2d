@@ -197,7 +197,7 @@ func (g *Game) TurnComputer(dt float32) {
 	// 	g.Turn = TurnPlayer
 	// 	fmt.Println("ENTERING PLAYER TURN")
 	// }
-	g.reorderHand()
+	// g.reorderHand()
 	for i := range EnemiesInPlay {
 		EnemiesInPlay[i].move()
 	}

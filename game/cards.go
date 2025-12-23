@@ -20,7 +20,7 @@ const (
 )
 
 type Deck struct {
-	cards    []Card
+	cards    []*Card
 	position rl.Vector2
 	canDraw  bool
 }
@@ -82,7 +82,7 @@ func (g *Game) NewDeck() Deck {
 			bishopLeft--
 		}
 		c.isShowing = false
-		d.cards = append(d.cards, c)
+		d.cards = append(d.cards, &c)
 	}
 
 	g.ShuffleCards(d.cards)
@@ -94,7 +94,7 @@ func (g *Game) NewDeck() Deck {
 	return d
 }
 
-func (g *Game) ShuffleCards(slice []Card) {
+func (g *Game) ShuffleCards(slice []*Card) {
 	rand.Shuffle(len(slice), func(i, j int) {
 		slice[i], slice[j] = slice[j], slice[i]
 	})
@@ -102,7 +102,7 @@ func (g *Game) ShuffleCards(slice []Card) {
 
 func (g *Game) drawCards() {
 	for i := range g.deck.cards {
-		g.deck.cards[i].draw()
+		g.deck.cards[i].draw(1)
 	}
 }
 
@@ -116,7 +116,7 @@ func (g *Game) updateCards() {
 
 }
 
-func (c *Card) draw() {
+func (c *Card) draw(scale float32) {
 	offset := rl.Vector2{}
 	var rotation float32 = 0.0
 	if c.selected {
@@ -124,10 +124,10 @@ func (c *Card) draw() {
 		rotation = c.selectedRotation
 	}
 	if c.isShowing {
-		rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, 1, rl.White)
+		rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
 
 	} else {
-		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, 1, rl.White)
+		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, scale, rl.White)
 	}
 }
 
@@ -165,7 +165,7 @@ func (d *Deck) moveTopCardToHand(h *Hand) error {
 	}
 	h.cards = append(h.cards, d.cards[len(d.cards)-1]) // Add card to hand cards
 	// Move position of card to deck position
-	newCardInHand := &h.cards[len(h.cards)-1]
+	newCardInHand := h.cards[len(h.cards)-1]
 	h.cardPositions[pos].available = false
 	newCardInHand.isShowing = true
 	newCardInHand.positionInHand = pos

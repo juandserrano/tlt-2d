@@ -9,7 +9,7 @@ func (g *Game) handlePlayingInput(dt float32) {
 		for i := len(g.playerHand.cards) - 1; i >= 0; i-- {
 			if g.playerHand.cards[i].isMouseOnCard() && g.playerHand.selectedCard == nil {
 				g.playerHand.cards[i].toggleSelected()
-				g.playerHand.selectedCard = &g.playerHand.cards[i]
+				g.playerHand.selectedCard = g.playerHand.cards[i]
 				break
 			}
 			if g.playerHand.cards[i].isMouseOnCard() && g.playerHand.cards[i].selected {
