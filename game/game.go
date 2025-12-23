@@ -1,8 +1,12 @@
 package game
 
 import (
+	"embed"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
+
+var assetsFS embed.FS
 
 type GameState int
 
@@ -23,6 +27,7 @@ const (
 )
 
 type Game struct {
+	assets         embed.FS
 	Config         GameConfig
 	State          GameState
 	Turn           TurnState
@@ -50,14 +55,15 @@ type Game struct {
 	UI           UI
 }
 
-func Run() {
+func Run(embedFS *embed.FS) {
 	game := &Game{}
-	game.init()
+	game.init(embedFS)
 	defer rl.CloseWindow()
 	game.Loop()
 }
 
-func (g *Game) init() {
+func (g *Game) init(embedFS *embed.FS) {
+	g.assets = *embedFS
 	g.CheckAndLoadConfig(true)
 	rl.SetConfigFlags(rl.FlagWindowResizable | rl.FlagMsaa4xHint)
 	rl.SetTargetFPS(g.Config.Window.TargetFPS)
@@ -68,7 +74,6 @@ func (g *Game) init() {
 	g.tiles = make(map[TileType]Tile)
 	g.shaders = make(map[ShaderName]*rl.Shader)
 	g.enemyModels = make(map[EnemyType]*rl.Model)
-	// g.cardModels = make(map[CardType]*rl.Model)
 	g.cardTextures = make(map[CardType]*rl.Texture2D)
 	g.UI.buttons = make(map[string]*Button)
 	g.LoadResources()
