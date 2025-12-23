@@ -195,8 +195,14 @@ func (c *Card) addToplay(g *Game) {
 }
 
 func (c *Card) attackEnemy(enemy *Enemy, h *Hand) {
-	enemy.currentHealth--
 	h.moveCardToDiscardPile(c)
+	if enemy.enemyType == EnemyTypeKnight {
+		if rand.Float32() < 0.2 {
+			enemy.move()
+			return
+		}
+	}
+	enemy.currentHealth--
 }
 
 func (t CardType) String() string {
