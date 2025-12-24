@@ -36,6 +36,8 @@ type GameConfig struct {
 			AttackPawnQty   int `json:"attack_pawn_qty"`
 			AttackKnightQty int `json:"attack_knight_qty"`
 			AttackBishopQty int `json:"attack_bishop_qty"`
+			AttackQueenQty  int `json:"attack_queen_qty"`
+			AttackKingQty   int `json:"attack_king_qty"`
 		} `json:"deck_composition"`
 	} `json:"rules"`
 	Enemies struct {

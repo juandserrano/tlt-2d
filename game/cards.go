@@ -64,10 +64,12 @@ func (g *Game) NewDeck() Deck {
 	var d Deck
 	d.canDraw = true
 	d.position = rl.Vector2{X: 10, Y: 20}
-	totalCards := g.Config.Rules.DeckComposition.AttackPawnQty + g.Config.Rules.DeckComposition.AttackKnightQty + g.Config.Rules.DeckComposition.AttackBishopQty
+	totalCards := g.Config.Rules.DeckComposition.AttackPawnQty + g.Config.Rules.DeckComposition.AttackKnightQty + g.Config.Rules.DeckComposition.AttackBishopQty + g.Config.Rules.DeckComposition.AttackKingQty + g.Config.Rules.DeckComposition.AttackQueenQty
 	pawnLeft := g.Config.Rules.DeckComposition.AttackPawnQty
 	knightLeft := g.Config.Rules.DeckComposition.AttackKnightQty
 	bishopLeft := g.Config.Rules.DeckComposition.AttackBishopQty
+	queenLeft := g.Config.Rules.DeckComposition.AttackQueenQty
+	kingLeft := g.Config.Rules.DeckComposition.AttackKingQty
 	for i := range totalCards {
 		offset := float32(i) * 0.3
 		var c Card
@@ -80,6 +82,12 @@ func (g *Game) NewDeck() Deck {
 		} else if bishopLeft > 0 {
 			c = g.NewCard(CardTypeAttackBishop, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
 			bishopLeft--
+		} else if queenLeft > 0 {
+			c = g.NewCard(CardTypeAttackQueen, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+			queenLeft--
+		} else if kingLeft > 0 {
+			c = g.NewCard(CardTypeAttackKing, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
+			kingLeft--
 		}
 		c.isShowing = false
 		d.cards = append(d.cards, &c)

@@ -19,16 +19,24 @@ func (g *Game) LoadModels() {
 	pawnModel := g.LoadModelEmbedded("assets/models/enemies/pawn.glb")
 	knightModel := g.LoadModelEmbedded("assets/models/enemies/knight.glb")
 	bishopModel := g.LoadModelEmbedded("assets/models/enemies/bishop.glb")
+	kingModel := g.LoadModelEmbedded("assets/models/enemies/king.glb")
+	queenModel := g.LoadModelEmbedded("assets/models/enemies/queen.glb")
 	attackPawnCardTexture := g.LoadTextureEmbedded("assets/textures/cards/attack_pawn.png")
 	attackKnightCardTexture := g.LoadTextureEmbedded("assets/textures/cards/attack_knight.png")
 	attackBishopCardTexture := g.LoadTextureEmbedded("assets/textures/cards/attack_bishop.png")
+	attackQueenCardTexture := g.LoadTextureEmbedded("assets/textures/cards/attack_queen.png")
+	attackKingCardTexture := g.LoadTextureEmbedded("assets/textures/cards/attack_king.png")
 	backCardTexture := g.LoadTextureEmbedded("assets/textures/cards/card_back.png")
 	g.enemyModels[EnemyTypePawn] = &pawnModel
 	g.enemyModels[EnemyTypeKnight] = &knightModel
 	g.enemyModels[EnemyTypeBishop] = &bishopModel
+	g.enemyModels[EnemyTypeQueen] = &queenModel
+	g.enemyModels[EnemyTypeKing] = &kingModel
 	g.cardTextures[CardTypeAttackPawn] = &attackPawnCardTexture
 	g.cardTextures[CardTypeAttackKnight] = &attackKnightCardTexture
 	g.cardTextures[CardTypeAttackBishop] = &attackBishopCardTexture
+	g.cardTextures[CardTypeAttackQueen] = &attackQueenCardTexture
+	g.cardTextures[CardTypeAttackKing] = &attackKingCardTexture
 	g.cardTextures[CardTypeBack] = &backCardTexture
 
 	g.tiles[TileTypeClear] = Tile{

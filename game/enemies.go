@@ -72,13 +72,13 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 		e.maxHealth = g.Config.Enemies.Bishop.Health
 		e.attack = g.Config.Enemies.Bishop.Attack
 	case EnemyTypeQueen:
-		e.model = g.enemyModels[EnemyTypeBishop]
-		e.maxHealth = 5
-		e.attack = 2
+		e.model = g.enemyModels[EnemyTypeQueen]
+		e.maxHealth = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
 	case EnemyTypeKing:
-		e.model = g.enemyModels[EnemyTypeBishop]
-		e.maxHealth = 10
-		e.attack = 1
+		e.model = g.enemyModels[EnemyTypeKing]
+		e.maxHealth = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
 	}
 	e.currentHealth = e.maxHealth
 	return e

@@ -22,7 +22,9 @@
     "deck_composition": {
       "attack_pawn_qty": 10,
       "attack_knight_qty": 10,
-      "attack_bishop_qty": 10
+      "attack_bishop_qty": 10,
+      "attack_queen_qty": 2,
+      "attack_king_qty": 2
     }
   },
   "enemies": {

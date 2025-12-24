@@ -50,6 +50,17 @@ func (g *Game) initShadersAndLights() {
 		mats[j].Shader = *g.shaders[AmbientShader]
 	}
 
+	// Assign ambient shader to queen model
+	mats = g.enemyModels[EnemyTypeQueen].GetMaterials()
+	for j := range mats {
+		mats[j].Shader = *g.shaders[AmbientShader]
+	}
+
+	// Assign ambient shader to king model
+	mats = g.enemyModels[EnemyTypeKing].GetMaterials()
+	for j := range mats {
+		mats[j].Shader = *g.shaders[AmbientShader]
+	}
 	// Assign ambient shader to cards models
 	// mats = g.cardModels[CardTypeAttackPawn].GetMaterials()
 	// for i := range mats {
