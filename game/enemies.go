@@ -88,7 +88,6 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 func (e *Enemy) draw(g *Game) {
 	if e != nil && e.model != nil {
 		pos := g.GetTileCenter(e.gridPos)
-		fmt.Println("emies, ", EnemiesInPlay)
 		rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
 
 		// Debug neighbour tile coords

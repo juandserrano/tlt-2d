@@ -13,6 +13,8 @@ const (
 	WaterShader
 )
 
+var outlineShader rl.Shader
+
 func (g *Game) initShadersAndLights() {
 	// SHADERS
 
@@ -20,6 +22,15 @@ func (g *Game) initShadersAndLights() {
 	aShader := new(rl.Shader)
 	*aShader = rl.LoadShader("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
 	g.shaders[AmbientShader] = aShader
+
+	// Load outline shader
+	outlineShader = rl.LoadShader("", "assets/shaders/outline.fs")
+	// Set Uniforms (Do this once if the texture size never changes)
+	locSize := rl.GetShaderLocation(outlineShader, "textureSize")
+	locColor := rl.GetShaderLocation(outlineShader, "outlineColor")
+	rl.SetShaderValue(outlineShader, locSize, []float32{float32(g.cardTextures[CardTypeAttackPawn].Width), float32(g.cardTextures[CardTypeAttackPawn].Height)}, rl.ShaderUniformVec2)
+	// Set Outline Color (Red)
+	rl.SetShaderValue(outlineShader, locColor, []float32{1.0, 0.0, 0.0, 1.0}, rl.ShaderUniformVec4)
 
 	// Ambient light level
 	ambientLoc := rl.GetShaderLocation(*g.shaders[AmbientShader], "ambient")

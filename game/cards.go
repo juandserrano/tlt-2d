@@ -132,8 +132,14 @@ func (c *Card) draw(scale float32) {
 		rotation = c.selectedRotation
 	}
 	if c.isShowing {
-		rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
+		if c.selected {
+			rl.BeginShaderMode(outlineShader)
+			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
+			rl.EndShaderMode()
 
+		} else {
+			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
+		}
 	} else {
 		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, scale, rl.White)
 	}
