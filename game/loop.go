@@ -115,6 +115,9 @@ func (g *Game) Draw() {
 		g.DrawStaticDebug()
 	}
 
+	for _, pos := range g.playerHand.cardPositions {
+		rl.DrawCircleV(pos.position, 5, color.RGBA{255, 255, 255, 255})
+	}
 	rl.EndDrawing()
 }
 

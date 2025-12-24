@@ -21,10 +21,22 @@ type Hand struct {
 }
 
 func (g *Game) OnWindowSizeUpdate() {
-	x := float32(float64(rl.GetScreenWidth()) / 6.0)
-	xEnd := x * 5
-	rectWidth := xEnd - x
-	g.playerHand.rectangle.Width = rectWidth
+	screenMid := rl.GetScreenWidth() / 2
+	rectWidth := 600
+	x := screenMid - rectWidth/2
+
+	g.playerHand.rectangle.X = float32(x)
+	g.playerHand.rectangle.Width = float32(rectWidth)
+	g.playerHand.rectangle.Y = float32(rl.GetScreenHeight()) - 30 - g.playerHand.rectangle.Height
+
+	// update Card positions
+	for i := range g.playerHand.cardPositions {
+		g.playerHand.cardPositions[i].position.X = g.playerHand.rectangle.X + (float32(i+1) * 100) // g.playerHand.rectangle.Width / float32(g.playerHand.maxCards))
+		g.playerHand.cardPositions[i].position.Y = g.playerHand.rectangle.Y + g.playerHand.rectangle.Height/2.0
+	}
+	for i := range g.playerHand.cards {
+		g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[i].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
+	}
 
 }
 
@@ -46,7 +58,7 @@ func (g *Game) NewHand() Hand {
 		h.cardPositions = append(h.cardPositions, HandPosition{
 			available: true,
 			position: rl.Vector2{
-				X: h.rectangle.X + (float32(i+1) * h.rectangle.Width / float32(h.maxCards)) + 80*float32(i),
+				X: h.rectangle.X + (float32(i+1) * h.rectangle.Width / float32(h.maxCards)),
 				Y: h.rectangle.Y + h.rectangle.Height/2.0,
 			},
 		})
