@@ -71,6 +71,14 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 		e.model = g.enemyModels[EnemyTypeBishop]
 		e.maxHealth = g.Config.Enemies.Bishop.Health
 		e.attack = g.Config.Enemies.Bishop.Attack
+	case EnemyTypeQueen:
+		e.model = g.enemyModels[EnemyTypeBishop]
+		e.maxHealth = 5
+		e.attack = 2
+	case EnemyTypeKing:
+		e.model = g.enemyModels[EnemyTypeBishop]
+		e.maxHealth = 10
+		e.attack = 1
 	}
 	e.currentHealth = e.maxHealth
 	return e
@@ -78,7 +86,7 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 }
 
 func (e *Enemy) draw(g *Game) {
-	if e != nil {
+	if e != nil && e.model != nil {
 		pos := g.GetTileCenter(e.gridPos)
 		fmt.Println("emies, ", EnemiesInPlay)
 		rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)

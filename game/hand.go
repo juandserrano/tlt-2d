@@ -35,7 +35,8 @@ func (g *Game) OnWindowSizeUpdate() {
 		g.playerHand.cardPositions[i].position.Y = g.playerHand.rectangle.Y + g.playerHand.rectangle.Height/2.0
 	}
 	for i := range g.playerHand.cards {
-		g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[i].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
+		posIndex := g.playerHand.cards[i].positionInHand
+		g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[posIndex].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
 	}
 
 }
