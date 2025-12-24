@@ -121,6 +121,10 @@ func (g *Game) UpdateShaders() {
 
 	camPos := []float32{g.camera.Position.X, g.camera.Position.Y, g.camera.Position.Z}
 	rl.SetShaderValue(*g.shaders[WaterShader], viewPosLoc, camPos, rl.ShaderUniformVec3)
+
+	// Update Outline Shader Time
+	outlineTimeLoc := rl.GetShaderLocation(outlineShader, "time")
+	rl.SetShaderValue(outlineShader, outlineTimeLoc, []float32{time}, rl.ShaderUniformFloat)
 }
 
 func (g *Game) AnimateSun(time float32) {

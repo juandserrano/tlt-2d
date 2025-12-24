@@ -11,6 +11,7 @@ uniform vec4 colDiffuse;
 // Custom Uniforms (We send these from Go)
 uniform vec2 textureSize; // The width and height of the texture (e.g., 64, 64)
 uniform vec4 outlineColor; // The color of the line (e.g., Red)
+uniform float time; // Time for pulsation
 
 out vec4 finalColor;
 
@@ -59,7 +60,10 @@ void main() {
 
     // 4. If it's an outline, use the outline color. Otherwise, use texture color.
     if (isOutline) {
-        finalColor = outlineColor;
+        // Calculate pulsation (0.0 to 1.0)
+        float pulse = (sin(time * 5.0) + 1.0) * 0.5;
+        // Mix between original texture color and outline color
+        finalColor = mix(texel * colDiffuse * fragColor, outlineColor, pulse);
     } else {
         finalColor = texel * colDiffuse * fragColor;
     }
