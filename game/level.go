@@ -2,6 +2,7 @@ package game
 
 import (
 	"math"
+	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -171,4 +172,18 @@ func (g *Game) GetTileWithGridPos(gPos GridCoord) *Tile {
 	}
 
 	return nil
+}
+
+func (g *Game) GetRandomSpawnableTileGridCoords() GridCoord {
+
+	spawableTiles := []GridCoord{
+		{X: 12, Z: 0},
+		{X: -12, Z: 0},
+		{X: 6, Z: 9},
+		{X: -6, Z: 9},
+		{X: -6, Z: -9},
+		{X: 6, Z: -9},
+	}
+
+	return spawableTiles[rand.Intn(6)]
 }

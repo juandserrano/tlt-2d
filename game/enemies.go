@@ -78,17 +78,20 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 }
 
 func (e *Enemy) draw(g *Game) {
-	pos := g.GetTileCenter(e.gridPos)
-	rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
+	if e != nil {
+		pos := g.GetTileCenter(e.gridPos)
+		fmt.Println("emies, ", EnemiesInPlay)
+		rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
 
-	// Debug neighbour tile coords
-	if g.debugLevel == 2 {
-		neighbours := GetNeighbourPositions(e.gridPos)
-		for i := range neighbours {
-			t := g.GetTileWithGridPos(GridCoord{neighbours[i].X, neighbours[i].Z})
-			t.debugDrawGridCoord(rl.Blue)
+		// Debug neighbour tile coords
+		if g.debugLevel == 2 {
+			neighbours := GetNeighbourPositions(e.gridPos)
+			for i := range neighbours {
+				t := g.GetTileWithGridPos(GridCoord{neighbours[i].X, neighbours[i].Z})
+				t.debugDrawGridCoord(rl.Blue)
+			}
+
 		}
-
 	}
 }
 
@@ -204,7 +207,9 @@ func (g *Game) TurnComputer(dt float32) {
 	if len(g.playerHand.cards) < g.playerHand.maxCards {
 		g.deck.canDraw = true
 	}
+	g.drawEnemies()
 	g.Turn = TurnPlayer
+	g.spawnEnemies(g.enemyBag.PickRandom(1))
 
 }
 

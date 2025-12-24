@@ -38,13 +38,17 @@ func (g *Game) actionEndTurn() {
 	}
 }
 func (g *Game) spawnEnemies(enemies []Enemy) {
-	for _, t := range g.levels[g.currentLevel].tiles {
-		if t.isSpawn {
-			g.PlaceEnemyWithPos(enemies[0], t.gridX, t.gridZ)
-			enemies[0] = enemies[len(enemies)-1]
-			enemies = enemies[:len(enemies)-1]
-		}
+	// for _, t := range g.levels[g.currentLevel].tiles {
+	// if t.isSpawn && len(enemies) > 0 {
+	for i := range enemies {
+		coord := g.GetRandomSpawnableTileGridCoords()
+		g.PlaceEnemyWithPos(enemies[i], coord.X, coord.Z)
+
 	}
+	// enemies[0] = enemies[len(enemies)-1]
+	// enemies = enemies[:len(enemies)-1]
+	// }
+	// }
 }
 
 func (g *Game) CreateEnemyWave(waveNumber int) {
