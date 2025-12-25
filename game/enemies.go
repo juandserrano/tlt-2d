@@ -237,6 +237,27 @@ func GetNeighbourPositions(c GridCoord) []GridCoord {
 }
 
 func (g *Game) TurnComputer(dt float32) {
+	if g.waitingForSpawnAnimation {
+		isAnyFalling := false
+		for i := range EnemiesInPlay {
+			if EnemiesInPlay[i].isFalling {
+				isAnyFalling = true
+				break
+			}
+		}
+
+		if !isAnyFalling && g.CameraShakeIntensity <= 0 {
+			g.turnTransitionTimer += dt
+			if g.turnTransitionTimer > 1.0 {
+				g.turnTransitionTimer = 0
+				g.waitingForSpawnAnimation = false
+				g.Turn = TurnPlayer
+				g.uiAlpha = 0.0
+			}
+		}
+		return
+	}
+
 	if g.enemyMoveIndex < len(EnemiesInPlay) {
 		enemy := &EnemiesInPlay[g.enemyMoveIndex]
 
@@ -264,9 +285,9 @@ func (g *Game) TurnComputer(dt float32) {
 	if len(g.playerHand.cards) < g.playerHand.maxCards {
 		g.deck.canDraw = true
 	}
-	// g.drawEnemies() // This seems redundant in update loop, draw is called in Draw()
-	g.Turn = TurnPlayer
 	g.spawnEnemies(g.enemyBag.PickRandom(1))
+
+	g.waitingForSpawnAnimation = true
 }
 
 func (g *Game) NewEnemyBag() EnemyBag {

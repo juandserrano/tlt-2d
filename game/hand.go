@@ -68,15 +68,16 @@ func (g *Game) NewHand() Hand {
 	return h
 }
 
-func (h *Hand) draw() {
+func (h *Hand) draw(alpha float32) {
 	// Draw background box
-	rl.DrawRectangleRounded(h.rectangle, 0.2, 0, color.RGBA{50, 50, 50, 50})
+	// alpha255 := uint8(alpha * 255) // Unused variable
+	rl.DrawRectangleRounded(h.rectangle, 0.2, 0, color.RGBA{50, 50, 50, uint8(float32(50) * alpha)})
 
 	// Draw cards by hand position
 	for i := range h.cardPositions {
 		for _, c := range h.cards {
 			if c.positionInHand == i {
-				c.draw(1)
+				c.draw(1, alpha)
 			}
 		}
 	}

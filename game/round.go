@@ -31,13 +31,7 @@ func (r *Round) SetUp(g *Game) {
 }
 
 func (g *Game) actionEndTurn() {
-	g.Turn = TurnComputer
-	g.enemyMoveIndex = 0
-	g.waitingForMoveAnimation = false
-	for i := range g.playerHand.cards {
-		g.playerHand.cards[i].selected = false
-		g.playerHand.selectedCard = nil
-	}
+	g.endingTurn = true
 }
 func (g *Game) spawnEnemies(enemies []Enemy) {
 	// for _, t := range g.levels[g.currentLevel].tiles {

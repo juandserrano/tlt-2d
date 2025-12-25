@@ -48,14 +48,18 @@ type Game struct {
 	waterTileModel rl.Model
 	enemyModels    map[EnemyType]*rl.Model
 	// cardModels     map[CardType]*rl.Model
-	cardTextures            map[CardType]*rl.Texture2D
-	sunLight                Light
-	spotLight               Light
-	frameCount              int
-	UI                      UI
-	CameraShakeIntensity    float32
-	enemyMoveIndex          int
-	waitingForMoveAnimation bool
+	cardTextures             map[CardType]*rl.Texture2D
+	sunLight                 Light
+	spotLight                Light
+	frameCount               int
+	UI                       UI
+	CameraShakeIntensity     float32
+	enemyMoveIndex           int
+	waitingForMoveAnimation  bool
+	waitingForSpawnAnimation bool
+	turnTransitionTimer      float32
+	uiAlpha                  float32
+	endingTurn               bool
 }
 
 func Run(embedFS *embed.FS) {

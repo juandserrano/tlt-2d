@@ -110,7 +110,7 @@ func (g *Game) ShuffleCards(slice []*Card) {
 
 func (g *Game) drawCards() {
 	for i := range g.deck.cards {
-		g.deck.cards[i].draw(1)
+		g.deck.cards[i].draw(1, g.uiAlpha)
 	}
 }
 
@@ -124,24 +124,26 @@ func (g *Game) updateCards() {
 
 }
 
-func (c *Card) draw(scale float32) {
+func (c *Card) draw(scale float32, alpha float32) {
 	offset := rl.Vector2{}
 	var rotation float32 = 0.0
 	if c.selected {
 		offset = c.selectedOffset
 		rotation = c.selectedRotation
 	}
+	color := rl.White
+	color.A = uint8(alpha * 255)
 	if c.isShowing {
 		if c.selected {
 			rl.BeginShaderMode(outlineShader)
-			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
+			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, color)
 			rl.EndShaderMode()
 
 		} else {
-			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, rl.White)
+			rl.DrawTextureEx(*c.texture, rl.Vector2Add(c.position, offset), rotation, scale, color)
 		}
 	} else {
-		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, scale, rl.White)
+		rl.DrawTextureEx(*c.backTexture, rl.Vector2Add(c.position, offset), 0, scale, color)
 	}
 }
 
