@@ -27,6 +27,14 @@ func (g *Game) handlePlayingInput(dt float32) {
 				break
 			}
 		}
+
+		for i := range g.discardPile.cards {
+			if g.discardPile.cards[i].isMouseOnCard() && g.playerHand.selectedCard != nil {
+				g.playerHand.moveCardToDiscardPile(g.playerHand.selectedCard, &g.discardPile)
+				break
+			}
+		}
+
 		for i := range EnemiesInPlay {
 			if g.isMouseOnEnemy(&EnemiesInPlay[i]) && EnemiesInPlay[i].isHighlighted && g.playerHand.selectedCard != nil {
 				if CanAttack(g.playerHand.selectedCard, &EnemiesInPlay[i]) {

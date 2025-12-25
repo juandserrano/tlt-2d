@@ -313,7 +313,7 @@ func (g *Game) TurnComputer(dt float32) {
 	if len(g.playerHand.cards) < g.playerHand.maxCards {
 		g.deck.canDraw = true
 	}
-	g.spawnEnemies(g.enemyBag.PickRandom(1))
+	g.spawnEnemies(g.enemyBag.PickRandom(3))
 
 	g.waitingForSpawnAnimation = true
 }
