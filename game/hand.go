@@ -39,6 +39,12 @@ func (g *Game) OnWindowSizeUpdate() {
 		g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[posIndex].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
 	}
 
+	g.discardPile.position.X = float32(rl.GetScreenWidth()) - float32(g.cardTextures[CardTypeAttackPawn].Width) - 10
+
+	for i := range g.discardPile.cards {
+		g.discardPile.cards[i].position = rl.Vector2Add(g.discardPile.position, rl.Vector2{X: float32(i) * 3, Y: 0})
+	}
+
 }
 
 func (g *Game) NewHand() Hand {
@@ -118,9 +124,13 @@ func (h *Hand) UpdateHand() []*Card {
 	return h.cards[:n]
 }
 
-func (h *Hand) moveCardToDiscardPile(c *Card) {
+func (h *Hand) moveCardToDiscardPile(c *Card, discardPile *Deck) {
 	h.selectedCard = nil
 	h.cardPositions[c.positionInHand].available = true
+	c.isShowing = true
+	c.selected = false
+	c.position = discardPile.position
+	discardPile.cards = append(discardPile.cards, c)
 	for i := range h.cards {
 		if h.cards[i].id == c.id {
 			h.cards[i] = h.cards[len(h.cards)-1]
@@ -128,7 +138,6 @@ func (h *Hand) moveCardToDiscardPile(c *Card) {
 			break
 		}
 	}
-	// h.cards = h.UpdateHand()
 }
 
 func (g *Game) reorderHand() {

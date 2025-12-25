@@ -6,7 +6,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-var assetsFS embed.FS
+// var assetsFS embed.FS
 
 type GameState int
 
@@ -27,21 +27,21 @@ const (
 )
 
 type Game struct {
-	assets         embed.FS
-	Config         GameConfig
-	State          GameState
-	Turn           TurnState
-	Round          Round
-	camera         rl.Camera3D
-	tiles          map[TileType]Tile
-	levels         map[int]Level
-	currentLevel   int
-	debugLevel     uint8
-	enemyBag       EnemyBag
-	playerHand     Hand
-	deck           Deck
-	cardsToPlay    []*Card
-	discardPile    []*Card
+	assets       embed.FS
+	Config       GameConfig
+	State        GameState
+	Turn         TurnState
+	Round        Round
+	camera       rl.Camera3D
+	tiles        map[TileType]Tile
+	levels       map[int]Level
+	currentLevel int
+	debugLevel   uint8
+	enemyBag     EnemyBag
+	playerHand   Hand
+	deck         Deck
+	// cardsToPlay    []*Card
+	discardPile    Deck
 	playerCastle   Castle
 	shaders        map[ShaderName]*rl.Shader
 	plainTileModel rl.Model

@@ -60,6 +60,12 @@ func (c *Card) move(newPos rl.Vector2) {
 	c.position = newPos
 }
 
+func (g *Game) NewDiscardPile() Deck {
+	var dp Deck
+	dp.position = rl.Vector2{X: float32(g.Config.Window.Width) - float32(g.cardTextures[CardTypeAttackPawn].Width) - 10, Y: 20}
+	return dp
+}
+
 func (g *Game) NewDeck() Deck {
 	var d Deck
 	d.canDraw = true
@@ -111,6 +117,9 @@ func (g *Game) ShuffleCards(slice []*Card) {
 func (g *Game) drawCards() {
 	for i := range g.deck.cards {
 		g.deck.cards[i].draw(1, g.uiAlpha)
+	}
+	for i := range g.discardPile.cards {
+		g.discardPile.cards[i].draw(1, g.uiAlpha)
 	}
 }
 
@@ -206,12 +215,12 @@ func (c *Card) isMouseOnCard() bool {
 	return rl.CheckCollisionPointRec(mousePos, bounds)
 }
 
-func (c *Card) addToplay(g *Game) {
-	g.cardsToPlay = append(g.cardsToPlay, c)
-}
+// func (c *Card) addToplay(g *Game) {
+// 	g.cardsToPlay = append(g.cardsToPlay, c)
+// }
 
 func (g *Game) StartCardAttack(card *Card, enemy *Enemy) {
-	g.playerHand.moveCardToDiscardPile(card)
+	g.playerHand.moveCardToDiscardPile(card, &g.discardPile)
 
 	onFinish := func() {
 		if enemy.enemyType == EnemyTypeKnight {

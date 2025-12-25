@@ -13,6 +13,7 @@ func (g *Game) NewRound() Round {
 func (r *Round) SetUp(g *Game) {
 	g.enemyBag = g.NewEnemyBag()
 	g.playerHand = g.NewHand()
+	g.discardPile = g.NewDiscardPile()
 	g.deck = g.NewDeck()
 	g.UI.buttons["draw"] = NewButton("draw", 300, 100, func() { g.drawToTopHand(&g.playerHand) })
 	g.UI.buttons["end_turn"] = NewButton("End Turn", 300, 300, func() { g.actionEndTurn() })

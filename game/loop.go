@@ -115,16 +115,14 @@ func (g *Game) Update(dt float32) {
 }
 
 func (g *Game) checkAndCleanEnemies() {
-	var indices []int
-	for i := range EnemiesInPlay {
-		if EnemiesInPlay[i].currentHealth <= 0 {
-			indices = append(indices, i)
+	n := 0
+	for _, e := range EnemiesInPlay {
+		if e.currentHealth > 0 {
+			EnemiesInPlay[n] = e
+			n++
 		}
 	}
-	for i, idx := range indices {
-		EnemiesInPlay[idx] = EnemiesInPlay[len(EnemiesInPlay)-(i+1)]
-	}
-	EnemiesInPlay = EnemiesInPlay[:len(EnemiesInPlay)-len(indices)]
+	EnemiesInPlay = EnemiesInPlay[:n]
 }
 
 func (g *Game) Draw() {
