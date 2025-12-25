@@ -63,6 +63,7 @@ type Game struct {
 	sounds                   map[string]rl.Sound
 	music                    map[string]rl.Music
 	cardAnimations           []*CardAnimation
+	ParticleManager          *ParticleManager
 }
 
 type CardAnimation struct {

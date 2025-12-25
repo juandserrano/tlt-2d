@@ -41,7 +41,9 @@ func (g *Game) mouseOverEnemies() {
 func (g *Game) Update(dt float32) {
 	rl.UpdateMusicStream(g.music["iron_at_the_gate"])
 	g.toggleDebug()
+
 	g.handleCamera()
+	g.ParticleManager.Update(dt)
 
 	// Update Animations
 	var activeAnims []*CardAnimation
@@ -136,6 +138,7 @@ func (g *Game) Draw() {
 		g.drawEnemies()
 		g.DrawLevel(g.currentLevel)
 		g.playerCastle.draw()
+		g.ParticleManager.Draw(g.camera)
 	default:
 	}
 	if g.debugLevel != 0 {

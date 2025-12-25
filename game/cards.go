@@ -238,6 +238,9 @@ func (g *Game) StartCardAttack(card *Card, enemy *Enemy) {
 				return
 			}
 		}
+		g.ParticleManager.SpawnExplosion(enemy.visualPos, 10, rl.Blue)
+		g.ParticleManager.SpawnExplosion(enemy.visualPos, 20, rl.Yellow)
+		g.ParticleManager.SpawnExplosion(enemy.visualPos, 5, rl.Red)
 		enemy.currentHealth--
 	}
 

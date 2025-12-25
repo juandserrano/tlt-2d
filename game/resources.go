@@ -8,6 +8,9 @@ import (
 )
 
 func (g *Game) LoadResources() {
+	g.ParticleManager = NewParticleManager(2000)
+	g.ParticleManager.Init()
+
 	g.LoadModels()
 	g.LoadTextures()
 	g.LoadSounds()
