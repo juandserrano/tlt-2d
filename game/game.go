@@ -61,6 +61,15 @@ type Game struct {
 	uiAlpha                  float32
 	endingTurn               bool
 	sounds                   map[string]rl.Sound
+	cardAnimations           []*CardAnimation
+}
+
+type CardAnimation struct {
+	Card          *Card
+	StartPosition rl.Vector2
+	TargetEnemy   *Enemy
+	Progress      float32
+	OnFinish      func()
 }
 
 func Run(embedFS *embed.FS) {

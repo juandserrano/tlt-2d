@@ -29,10 +29,10 @@ func (g *Game) handlePlayingInput(dt float32) {
 		}
 		for i := range EnemiesInPlay {
 			if g.isMouseOnEnemy(&EnemiesInPlay[i]) && EnemiesInPlay[i].isHighlighted && g.playerHand.selectedCard != nil {
-				EnemiesInPlay[i].isHighlighted = false
-
-				g.playerHand.selectedCard.attackEnemy(&EnemiesInPlay[i], &g.playerHand)
-
+				if CanAttack(g.playerHand.selectedCard, &EnemiesInPlay[i]) {
+					EnemiesInPlay[i].isHighlighted = false
+					g.StartCardAttack(g.playerHand.selectedCard, &EnemiesInPlay[i])
+				}
 			}
 		}
 

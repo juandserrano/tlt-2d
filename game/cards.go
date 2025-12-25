@@ -210,15 +210,44 @@ func (c *Card) addToplay(g *Game) {
 	g.cardsToPlay = append(g.cardsToPlay, c)
 }
 
-func (c *Card) attackEnemy(enemy *Enemy, h *Hand) {
-	h.moveCardToDiscardPile(c)
-	if enemy.enemyType == EnemyTypeKnight {
-		if rand.Float32() < 0.2 {
-			enemy.move()
-			return
+func (g *Game) StartCardAttack(card *Card, enemy *Enemy) {
+	g.playerHand.moveCardToDiscardPile(card)
+
+	onFinish := func() {
+		if enemy.enemyType == EnemyTypeKnight {
+			if rand.Float32() < 0.2 {
+				enemy.move()
+				return
+			}
 		}
+		enemy.currentHealth--
 	}
-	enemy.currentHealth--
+
+	anim := &CardAnimation{
+		Card:          card,
+		StartPosition: card.position,
+		TargetEnemy:   enemy,
+		Progress:      0.0,
+		OnFinish:      onFinish,
+	}
+	g.cardAnimations = append(g.cardAnimations, anim)
+}
+
+func CanAttack(card *Card, enemy *Enemy) bool {
+	switch card.cardType {
+	case CardTypeAttackPawn:
+		return enemy.enemyType == EnemyTypePawn
+	case CardTypeAttackBishop:
+		return enemy.enemyType == EnemyTypeBishop
+	case CardTypeAttackKnight:
+		return enemy.enemyType == EnemyTypeKnight
+	case CardTypeAttackQueen:
+		return enemy.enemyType == EnemyTypeQueen
+	case CardTypeAttackKing:
+		return enemy.enemyType == EnemyTypeKing
+	default:
+		return false
+	}
 }
 
 func (t CardType) String() string {
