@@ -43,6 +43,11 @@ func (g *Game) Update(dt float32) {
 	g.toggleDebug()
 	g.handleCamera()
 
+	// Update Enemies Animation
+	for i := range EnemiesInPlay {
+		EnemiesInPlay[i].Update(dt, g)
+	}
+
 	// TODO: Fin a better place for this
 	g.mouseOverEnemies()
 	/////

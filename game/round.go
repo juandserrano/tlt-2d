@@ -42,8 +42,9 @@ func (g *Game) spawnEnemies(enemies []Enemy) {
 	// if t.isSpawn && len(enemies) > 0 {
 	for i := range enemies {
 		coord := g.GetRandomSpawnableTileGridCoords()
+		enemies[i].isFalling = true
+		enemies[i].visualPos.Y = 20.0
 		g.PlaceEnemyWithPos(enemies[i], coord.X, coord.Z)
-
 	}
 	// enemies[0] = enemies[len(enemies)-1]
 	// enemies = enemies[:len(enemies)-1]

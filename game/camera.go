@@ -37,4 +37,20 @@ func (g *Game) handleCamera() {
 			rl.Vector3Zero(),
 			0.0)
 	}
+
+	// Camera Shake
+	if g.CameraShakeIntensity > 0 {
+		offset := rl.Vector3{
+			X: (float32(rl.GetRandomValue(0, 100))/50.0 - 1.0) * g.CameraShakeIntensity,
+			Y: (float32(rl.GetRandomValue(0, 100))/50.0 - 1.0) * g.CameraShakeIntensity,
+			Z: (float32(rl.GetRandomValue(0, 100))/50.0 - 1.0) * g.CameraShakeIntensity,
+		}
+		g.camera.Position = rl.Vector3Add(g.camera.Position, offset)
+		g.camera.Target = rl.Vector3Add(g.camera.Target, offset)
+
+		g.CameraShakeIntensity -= 0.05 // Decay
+		if g.CameraShakeIntensity < 0 {
+			g.CameraShakeIntensity = 0
+		}
+	}
 }

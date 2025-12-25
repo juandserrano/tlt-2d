@@ -29,12 +29,15 @@ type Enemy struct {
 	model            *rl.Model
 	enemyType        EnemyType
 	gridPos          GridCoord
+	visualPos        rl.Vector3
 	moveOnGridX      bool
 	maxHealth        int
 	currentHealth    int
 	attack           int
 	healthBarShowing bool
 	isHighlighted    bool
+	isFalling        bool
+	velocityY        float32
 }
 
 func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
@@ -43,12 +46,21 @@ func (g *Game) NewEnemyWithPos(eType EnemyType, posGridX, posGridZ int) {
 	e.gridPos.X = posGridX
 	e.gridPos.Z = posGridZ
 
+	// Initialize visual pos
+	worldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
+	e.visualPos = rl.Vector3{X: worldPos.X, Y: 0, Z: worldPos.Y}
+
 	EnemiesInPlay = append(EnemiesInPlay, e)
 }
 
 func (g *Game) PlaceEnemyWithPos(e Enemy, posGridX, posGridZ int) {
 	e.gridPos.X = posGridX
 	e.gridPos.Z = posGridZ
+
+	// Initialize visual pos
+	worldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
+	e.visualPos = rl.Vector3{X: worldPos.X, Y: 0, Z: worldPos.Y}
+
 	EnemiesInPlay = append(EnemiesInPlay, e)
 }
 
@@ -85,10 +97,34 @@ func (g *Game) NewEnemy(eType EnemyType) Enemy {
 
 }
 
+func (e *Enemy) Update(dt float32, g *Game) {
+	if e.isFalling {
+		gravity := float32(50.0)
+		e.velocityY -= gravity * dt
+		e.visualPos.Y += e.velocityY * dt
+
+		if e.visualPos.Y <= 0 {
+			e.visualPos.Y = 0
+			e.isFalling = false
+			e.velocityY = 0
+			// Trigger camera shake
+			g.CameraShakeIntensity = 0.5
+		}
+	} else {
+		// Target position based on grid
+		targetWorld := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
+		target := rl.Vector3{X: targetWorld.X, Y: 0, Z: targetWorld.Y}
+
+		// Interpolate
+		speed := float32(5.0)
+		e.visualPos = rl.Vector3Lerp(e.visualPos, target, dt*speed)
+	}
+}
+
 func (e *Enemy) draw(g *Game) {
 	if e != nil && e.model != nil {
-		pos := g.GetTileCenter(e.gridPos)
-		rl.DrawModelEx(*e.model, pos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(pos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
+		// Use visualPos instead of calculating from gridPos
+		rl.DrawModelEx(*e.model, e.visualPos, rl.Vector3{X: 0, Y: 1, Z: 0}, float32(util.CalculateRotation(e.visualPos, rl.Vector3{X: 0, Y: 0, Z: 0})), rl.Vector3One(), rl.White)
 
 		// Debug neighbour tile coords
 		if g.debugLevel == 2 {
@@ -108,8 +144,9 @@ func (g *Game) isMouseOnEnemy(e *Enemy) bool {
 	// Get model bounding box (local space)
 	bb := rl.GetModelBoundingBox(*e.model)
 
-	// Get enemy position (world space)
-	pos := g.GetTileCenter(e.gridPos)
+	// Get enemy position (world space) - Use visual pos for accurate hit detection during movement?
+	// Or stay with grid pos? Let's use visual pos for smoother feel
+	pos := e.visualPos
 
 	// Transform bounding box to world space
 	bb.Min = rl.Vector3Add(bb.Min, pos)
@@ -123,8 +160,8 @@ func (e *Enemy) drawHealthBar(g *Game) {
 	barWidth := 50
 	barHeight := 10
 
-	enemyWorldPos := GridToWorldHex(e.gridPos.X, e.gridPos.Z, HEX_TILE_WIDTH/2.0)
-	targetPos := rl.Vector3{X: enemyWorldPos.X, Y: 0, Z: enemyWorldPos.Y}
+	// Use visualPos
+	targetPos := rl.Vector3{X: e.visualPos.X, Y: 0, Z: e.visualPos.Z}
 	screenPosition := rl.GetWorldToScreen(targetPos, g.camera)
 	rl.DrawRectangle(int32(screenPosition.X-float32(barWidth)/2.0), int32(screenPosition.Y-float32(barHeight)/2.0), int32(float32(barWidth)*float32(e.currentHealth)/float32(e.maxHealth)), int32(barHeight), rl.Red)
 
