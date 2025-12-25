@@ -61,6 +61,7 @@ type Game struct {
 	uiAlpha                  float32
 	endingTurn               bool
 	sounds                   map[string]rl.Sound
+	music                    map[string]rl.Music
 	cardAnimations           []*CardAnimation
 }
 
@@ -96,6 +97,7 @@ func (g *Game) init(embedFS *embed.FS) {
 	g.cardTextures = make(map[CardType]*rl.Texture2D)
 	g.UI.buttons = make(map[string]*Button)
 	g.sounds = make(map[string]rl.Sound)
+	g.music = make(map[string]rl.Music)
 	g.LoadResources()
 	g.initShadersAndLights()
 	g.Round = g.NewRound()

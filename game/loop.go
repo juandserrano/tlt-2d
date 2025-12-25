@@ -39,7 +39,7 @@ func (g *Game) mouseOverEnemies() {
 }
 
 func (g *Game) Update(dt float32) {
-
+	rl.UpdateMusicStream(g.music["iron_at_the_gate"])
 	g.toggleDebug()
 	g.handleCamera()
 

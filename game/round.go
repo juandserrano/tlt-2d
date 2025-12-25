@@ -1,5 +1,7 @@
 package game
 
+import rl "github.com/gen2brain/raylib-go/raylib"
+
 type Round struct {
 	TurnNumber int
 }
@@ -25,6 +27,10 @@ func (r *Round) SetUp(g *Game) {
 
 	g.spawnSetUpEnemies(startingEnemies)
 
+	if rl.IsMusicStreamPlaying(g.music["iron_at_the_gate"]) {
+		rl.StopMusicStream(g.music["iron_at_the_gate"])
+	}
+	rl.PlayMusicStream(g.music["iron_at_the_gate"])
 	g.Round.TurnNumber = 1
 
 }
@@ -70,7 +76,7 @@ func (g *Game) CreateEnemyWave(waveNumber int) {
 }
 
 // func (g *Game) TurnResolve(dt float32) {
-// 	g.resolvePlayedCards()
+// 	g.resolvePlayedCardsrl
 // 	if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
 // 		g.Turn = TurnComputer
 // 		fmt.Println("ENTERING COMPUTER TURN")

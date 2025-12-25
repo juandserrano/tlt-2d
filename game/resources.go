@@ -17,6 +17,8 @@ func (g *Game) LoadSounds() {
 	g.sounds["chess_slide"] = g.LoadSoundEmbedded("assets/sounds/chess_slide.wav")
 	g.sounds["falling_impact"] = g.LoadSoundEmbedded("assets/sounds/falling_impact.wav")
 	g.sounds["card_select"] = g.LoadSoundEmbedded("assets/sounds/microtick.wav")
+
+	g.music["iron_at_the_gate"] = rl.LoadMusicStream("assets/sounds/iron_at_the_gate.mp3")
 }
 
 func (g *Game) LoadModels() {
@@ -129,6 +131,43 @@ func (g *Game) LoadTextureEmbedded(filename string) rl.Texture2D {
 	rl.UnloadImage(img)
 
 	return texture
+}
+
+func (g *Game) LoadMusicEmbedded(filename string) rl.Music {
+	// 1. Read the file bytes from the embedded filesystem
+	fileData, err := g.assets.ReadFile(filename)
+	if err != nil {
+		fmt.Println("Error reading embedded file:", err)
+		return rl.Music{}
+	}
+
+	ext := ""
+	if len(filename) > 4 {
+		ext = filename[len(filename)-4:] // Simple check for .png, .jpg
+	}
+
+	// 2. Create a temporary file
+	// Raylib NEEDS the extension to know which importer to use.
+	tempFile, err := os.CreateTemp("", "raylib_music-*"+ext)
+	if err != nil {
+		fmt.Println("Error creating temp file:", err)
+		return rl.Music{}
+	}
+
+	// 3. Write data to disk
+	if _, err := tempFile.Write(fileData); err != nil {
+		fmt.Println("Error writing temp file:", err)
+		return rl.Music{}
+	}
+
+	// Close the file handle so Raylib can open it
+	tempPath := tempFile.Name()
+	tempFile.Close()
+
+	// 3. Load Music from RAM
+	music := rl.LoadMusicStream(tempPath)
+	os.Remove(tempPath)
+	return music
 }
 
 func (g *Game) LoadSoundEmbedded(filename string) rl.Sound {
