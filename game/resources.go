@@ -16,6 +16,7 @@ func (g *Game) LoadResources() {
 func (g *Game) LoadSounds() {
 	g.sounds["chess_slide"] = g.LoadSoundEmbedded("assets/sounds/chess_slide.wav")
 	g.sounds["falling_impact"] = g.LoadSoundEmbedded("assets/sounds/falling_impact.wav")
+	g.sounds["card_select"] = g.LoadSoundEmbedded("assets/sounds/microtick.wav")
 }
 
 func (g *Game) LoadModels() {
