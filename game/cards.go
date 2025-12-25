@@ -66,40 +66,44 @@ func (g *Game) NewDiscardPile() Deck {
 	return dp
 }
 
+func (d *Deck) Pop() (*Card, error) {
+	if len(d.cards) == 0 {
+		return nil, fmt.Errorf("deck is empty")
+	}
+	lastIdx := len(d.cards) - 1
+	card := d.cards[lastIdx]
+	d.cards = d.cards[:lastIdx]
+	return card, nil
+}
+
+func (d *Deck) Push(c *Card) {
+	d.cards = append(d.cards, c)
+}
+
 func (g *Game) NewDeck() Deck {
 	var d Deck
 	d.canDraw = true
 	d.position = rl.Vector2{X: 10, Y: 20}
-	totalCards := g.Config.Rules.DeckComposition.AttackPawnQty + g.Config.Rules.DeckComposition.AttackKnightQty + g.Config.Rules.DeckComposition.AttackBishopQty + g.Config.Rules.DeckComposition.AttackKingQty + g.Config.Rules.DeckComposition.AttackQueenQty
-	pawnLeft := g.Config.Rules.DeckComposition.AttackPawnQty
-	knightLeft := g.Config.Rules.DeckComposition.AttackKnightQty
-	bishopLeft := g.Config.Rules.DeckComposition.AttackBishopQty
-	queenLeft := g.Config.Rules.DeckComposition.AttackQueenQty
-	kingLeft := g.Config.Rules.DeckComposition.AttackKingQty
-	for i := range totalCards {
-		offset := float32(i) * 0.3
-		var c Card
-		if pawnLeft > 0 {
-			c = g.NewCard(CardTypeAttackPawn, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
-			pawnLeft--
-		} else if knightLeft > 0 {
-			c = g.NewCard(CardTypeAttackKnight, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
-			knightLeft--
-		} else if bishopLeft > 0 {
-			c = g.NewCard(CardTypeAttackBishop, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
-			bishopLeft--
-		} else if queenLeft > 0 {
-			c = g.NewCard(CardTypeAttackQueen, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
-			queenLeft--
-		} else if kingLeft > 0 {
-			c = g.NewCard(CardTypeAttackKing, rl.Vector2{X: d.position.X + offset, Y: d.position.Y - offset}, true)
-			kingLeft--
+
+	counts := map[CardType]int{
+		CardTypeAttackPawn:   g.Config.Rules.DeckComposition.AttackPawnQty,
+		CardTypeAttackKnight: g.Config.Rules.DeckComposition.AttackKnightQty,
+		CardTypeAttackBishop: g.Config.Rules.DeckComposition.AttackBishopQty,
+		CardTypeAttackQueen:  g.Config.Rules.DeckComposition.AttackQueenQty,
+		CardTypeAttackKing:   g.Config.Rules.DeckComposition.AttackKingQty,
+	}
+
+	for cardType, count := range counts {
+		for range count {
+			c := g.NewCard(cardType, d.position, true)
+			c.isShowing = false
+			d.cards = append(d.cards, &c)
 		}
-		c.isShowing = false
-		d.cards = append(d.cards, &c)
 	}
 
 	g.ShuffleCards(d.cards)
+
+	// Initial positioning
 	for i := range d.cards {
 		offset := float32(i) * 0.3
 		d.cards[i].position.Y = d.position.Y - offset
@@ -181,23 +185,28 @@ func (g *Game) drawToTopHand(h *Hand) {
 }
 
 func (d *Deck) moveTopCardToHand(h *Hand) error {
-	if len(d.cards) == 0 {
-		return fmt.Errorf("no more cards on deck")
-	}
-	pos, worldPos, err := h.nextAvailablePosition()
+	card, err := d.Pop()
 	if err != nil {
 		return err
 	}
-	h.cards = append(h.cards, d.cards[len(d.cards)-1]) // Add card to hand cards
+
+	pos, worldPos, err := h.nextAvailablePosition()
+	if err != nil {
+		// If hand is full, we need to return the card to the deck (conceptually).
+		// For now, since Pop removed it, we push it back.
+		d.Push(card)
+		return err
+	}
+
+	h.cards = append(h.cards, card) // Add card to hand cards
+
 	// Move position of card to deck position
-	newCardInHand := h.cards[len(h.cards)-1]
 	h.cardPositions[pos].available = false
-	newCardInHand.isShowing = true
-	newCardInHand.positionInHand = pos
-	newCardInHand.position = rl.Vector2{
-		X: worldPos.X - float32(newCardInHand.texture.Width)/2.0*(float32(pos)+1),
-		Y: worldPos.Y - float32(newCardInHand.texture.Height)/2.0}
-	d.cards = d.cards[:len(d.cards)-1] // Remove card from deck
+	card.isShowing = true
+	card.positionInHand = pos
+	card.position = rl.Vector2{
+		X: worldPos.X - float32(card.texture.Width)/2.0*(float32(pos)+1),
+		Y: worldPos.Y - float32(card.texture.Height)/2.0}
 
 	return nil
 }

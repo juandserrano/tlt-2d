@@ -130,7 +130,7 @@ func (h *Hand) moveCardToDiscardPile(c *Card, discardPile *Deck) {
 	c.isShowing = true
 	c.selected = false
 	c.position = discardPile.position
-	discardPile.cards = append(discardPile.cards, c)
+	discardPile.Push(c)
 	for i := range h.cards {
 		if h.cards[i].id == c.id {
 			h.cards[i] = h.cards[len(h.cards)-1]
