@@ -32,6 +32,8 @@ func (r *Round) SetUp(g *Game) {
 
 func (g *Game) actionEndTurn() {
 	g.Turn = TurnComputer
+	g.enemyMoveIndex = 0
+	g.waitingForMoveAnimation = false
 	for i := range g.playerHand.cards {
 		g.playerHand.cards[i].selected = false
 		g.playerHand.selectedCard = nil
@@ -42,9 +44,13 @@ func (g *Game) spawnEnemies(enemies []Enemy) {
 	// if t.isSpawn && len(enemies) > 0 {
 	for i := range enemies {
 		coord := g.GetRandomSpawnableTileGridCoords()
-		enemies[i].isFalling = true
-		enemies[i].visualPos.Y = 20.0
 		g.PlaceEnemyWithPos(enemies[i], coord.X, coord.Z)
+		// Modify the last added enemy to start falling
+		if len(EnemiesInPlay) > 0 {
+			idx := len(EnemiesInPlay) - 1
+			EnemiesInPlay[idx].isFalling = true
+			EnemiesInPlay[idx].visualPos.Y = 20.0
+		}
 	}
 	// enemies[0] = enemies[len(enemies)-1]
 	// enemies = enemies[:len(enemies)-1]

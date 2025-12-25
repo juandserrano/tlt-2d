@@ -237,24 +237,36 @@ func GetNeighbourPositions(c GridCoord) []GridCoord {
 }
 
 func (g *Game) TurnComputer(dt float32) {
-	// if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-	// 	g.NextTurn()
-	// }
-	// if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
-	// 	g.Turn = TurnPlayer
-	// 	fmt.Println("ENTERING PLAYER TURN")
-	// }
-	// g.reorderHand()
-	for i := range EnemiesInPlay {
-		EnemiesInPlay[i].move()
+	if g.enemyMoveIndex < len(EnemiesInPlay) {
+		enemy := &EnemiesInPlay[g.enemyMoveIndex]
+
+		if !g.waitingForMoveAnimation {
+			// Start the move
+			enemy.move()
+			g.waitingForMoveAnimation = true
+		} else {
+			// Check if animation is finished (visual pos close to grid pos)
+			targetWorld := GridToWorldHex(enemy.gridPos.X, enemy.gridPos.Z, HEX_TILE_WIDTH/2.0)
+			target := rl.Vector3{X: targetWorld.X, Y: 0, Z: targetWorld.Y}
+
+			dist := rl.Vector3Distance(enemy.visualPos, target)
+
+			// Threshold for "arrived"
+			if dist < 0.1 {
+				g.waitingForMoveAnimation = false
+				g.enemyMoveIndex++
+			}
+		}
+		return // Return here to process one enemy per frame sequence
 	}
+
+	// All enemies moved
 	if len(g.playerHand.cards) < g.playerHand.maxCards {
 		g.deck.canDraw = true
 	}
-	g.drawEnemies()
+	// g.drawEnemies() // This seems redundant in update loop, draw is called in Draw()
 	g.Turn = TurnPlayer
 	g.spawnEnemies(g.enemyBag.PickRandom(1))
-
 }
 
 func (g *Game) NewEnemyBag() EnemyBag {
