@@ -22,9 +22,7 @@ func (r *Round) SetUp(g *Game) {
 	g.initPlayerCastle()
 	startingEnemies := g.enemyBag.PickStartingEnemies()
 
-	g.spawnEnemies(startingEnemies)
-
-	// g.CreateEnemyWave(1)
+	g.spawnSetUpEnemies(startingEnemies)
 
 	g.Round.TurnNumber = 1
 
@@ -33,11 +31,21 @@ func (r *Round) SetUp(g *Game) {
 func (g *Game) actionEndTurn() {
 	g.endingTurn = true
 }
-func (g *Game) spawnEnemies(enemies []Enemy) {
-	// for _, t := range g.levels[g.currentLevel].tiles {
-	// if t.isSpawn && len(enemies) > 0 {
+func (g *Game) spawnSetUpEnemies(enemies []Enemy) {
 	for i := range enemies {
-		coord := g.GetRandomSpawnableTileGridCoords()
+		coords := g.GetAllSpawnableTileGridCoords()
+		g.PlaceEnemyWithPos(enemies[i], coords[i].X, coords[i].Z)
+		// Modify the last added enemy to start falling
+		if len(EnemiesInPlay) > 0 {
+			idx := len(EnemiesInPlay) - 1
+			EnemiesInPlay[idx].isFalling = true
+			EnemiesInPlay[idx].visualPos.Y = 20.0
+		}
+	}
+}
+func (g *Game) spawnEnemies(enemies []Enemy) {
+	for i := range enemies {
+		coord := g.GetRandomSpawnableTileGridCoord()
 		g.PlaceEnemyWithPos(enemies[i], coord.X, coord.Z)
 		// Modify the last added enemy to start falling
 		if len(EnemiesInPlay) > 0 {
@@ -46,10 +54,6 @@ func (g *Game) spawnEnemies(enemies []Enemy) {
 			EnemiesInPlay[idx].visualPos.Y = 20.0
 		}
 	}
-	// enemies[0] = enemies[len(enemies)-1]
-	// enemies = enemies[:len(enemies)-1]
-	// }
-	// }
 }
 
 func (g *Game) CreateEnemyWave(waveNumber int) {

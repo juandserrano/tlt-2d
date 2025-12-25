@@ -277,6 +277,7 @@ func (g *Game) TurnComputer(dt float32) {
 				g.turnTransitionTimer = 0
 				g.waitingForSpawnAnimation = false
 				g.Turn = TurnPlayer
+				fmt.Printf("%#v\n", len(EnemiesInPlay))
 				g.uiAlpha = 0.0
 			}
 		}

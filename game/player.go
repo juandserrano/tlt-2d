@@ -62,6 +62,17 @@ func (g *Game) highlightValidEnemies() {
 				EnemiesInPlay[i].isHighlighted = true
 			}
 		}
-
+	case CardTypeAttackQueen:
+		for i := range EnemiesInPlay {
+			if EnemiesInPlay[i].enemyType == EnemyTypeQueen {
+				EnemiesInPlay[i].isHighlighted = true
+			}
+		}
+	case CardTypeAttackKing:
+		for i := range EnemiesInPlay {
+			if EnemiesInPlay[i].enemyType == EnemyTypeKing {
+				EnemiesInPlay[i].isHighlighted = true
+			}
+		}
 	}
 }

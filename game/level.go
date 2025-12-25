@@ -174,7 +174,21 @@ func (g *Game) GetTileWithGridPos(gPos GridCoord) *Tile {
 	return nil
 }
 
-func (g *Game) GetRandomSpawnableTileGridCoords() GridCoord {
+func (g *Game) GetAllSpawnableTileGridCoords() []GridCoord {
+
+	spawableTiles := []GridCoord{
+		{X: 12, Z: 0},
+		{X: -12, Z: 0},
+		{X: 6, Z: 9},
+		{X: -6, Z: 9},
+		{X: -6, Z: -9},
+		{X: 6, Z: -9},
+	}
+
+	return spawableTiles
+}
+
+func (g *Game) GetRandomSpawnableTileGridCoord() GridCoord {
 
 	spawableTiles := []GridCoord{
 		{X: 12, Z: 0},
