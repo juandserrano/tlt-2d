@@ -65,6 +65,9 @@ type GameConfig struct {
 	Player struct {
 		Health int `json:"health"`
 	} `json:"player"`
+	Animations struct {
+		SlideSpeed float32 `json:"slide_speed"`
+	} `json:"animations"`
 }
 
 func (g *Game) ApplyConfig() {

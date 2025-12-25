@@ -118,7 +118,7 @@ func (e *Enemy) Update(dt float32, g *Game) {
 		target := rl.Vector3{X: targetWorld.X, Y: 0, Z: targetWorld.Y}
 
 		// Interpolate
-		speed := float32(5.0)
+		speed := float32(g.Config.Animations.SlideSpeed)
 		e.visualPos = rl.Vector3Lerp(e.visualPos, target, dt*speed)
 	}
 }

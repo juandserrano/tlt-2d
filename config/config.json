@@ -51,5 +51,8 @@
   },
   "player": {
     "health": 20
+  },
+  "animations": {
+    "slide_speed": 8.0
   }
 }
