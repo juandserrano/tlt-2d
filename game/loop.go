@@ -118,7 +118,7 @@ func (g *Game) checkAndCleanEnemies() {
 func (g *Game) Draw() {
 	rl.BeginDrawing()
 	rl.ClearBackground(color.RGBA{uint8(g.Config.Window.BackgroundColor.R * 255), uint8(g.Config.Window.BackgroundColor.G * 255), uint8(g.Config.Window.BackgroundColor.B * 255), uint8(g.Config.Window.BackgroundColor.A * 255)})
-	rl.BeginMode3D(g.camera)
+	rl.BeginMode3D(g.GetRenderCamera())
 	switch g.State {
 	// case StateWorldEditor:
 	// 	g.DrawLevel(g.currentLevel)
@@ -141,9 +141,6 @@ func (g *Game) Draw() {
 		g.DrawStaticDebug()
 	}
 
-	for _, pos := range g.playerHand.cardPositions {
-		rl.DrawCircleV(pos.position, 5, color.RGBA{255, 255, 255, 255})
-	}
 	rl.EndDrawing()
 }
 
