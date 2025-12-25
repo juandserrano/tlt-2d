@@ -10,6 +10,12 @@ import (
 func (g *Game) LoadResources() {
 	g.LoadModels()
 	g.LoadTextures()
+	g.LoadSounds()
+}
+
+func (g *Game) LoadSounds() {
+	g.sounds["chess_slide"] = g.LoadSoundEmbedded("assets/sounds/chess_slide.wav")
+	g.sounds["falling_impact"] = g.LoadSoundEmbedded("assets/sounds/falling_impact.wav")
 }
 
 func (g *Game) LoadModels() {
@@ -122,4 +128,37 @@ func (g *Game) LoadTextureEmbedded(filename string) rl.Texture2D {
 	rl.UnloadImage(img)
 
 	return texture
+}
+
+func (g *Game) LoadSoundEmbedded(filename string) rl.Sound {
+	fileData, err := g.assets.ReadFile(filename)
+	if err != nil {
+		fmt.Println("Error reading embedded sound:", err)
+		return rl.Sound{}
+	}
+
+	ext := ""
+	if len(filename) > 4 {
+		ext = filename[len(filename)-4:]
+	}
+
+	tempFile, err := os.CreateTemp("", "raylib_sound-*"+ext)
+	if err != nil {
+		fmt.Println("Error creating temp file:", err)
+		return rl.Sound{}
+	}
+
+	if _, err := tempFile.Write(fileData); err != nil {
+		fmt.Println("Error writing temp file:", err)
+		return rl.Sound{}
+	}
+
+	tempPath := tempFile.Name()
+	tempFile.Close()
+
+	sound := rl.LoadSound(tempPath)
+
+	os.Remove(tempPath)
+
+	return sound
 }

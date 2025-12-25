@@ -60,11 +60,13 @@ type Game struct {
 	turnTransitionTimer      float32
 	uiAlpha                  float32
 	endingTurn               bool
+	sounds                   map[string]rl.Sound
 }
 
 func Run(embedFS *embed.FS) {
 	game := &Game{}
 	game.init(embedFS)
+	defer rl.CloseAudioDevice()
 	defer rl.CloseWindow()
 	game.Loop()
 }
@@ -75,6 +77,7 @@ func (g *Game) init(embedFS *embed.FS) {
 	rl.SetConfigFlags(rl.FlagWindowResizable | rl.FlagMsaa4xHint)
 	rl.SetTargetFPS(g.Config.Window.TargetFPS)
 	rl.InitWindow(g.Config.Window.Width, g.Config.Window.Height, g.Config.GameName)
+	rl.InitAudioDevice()
 	g.debugLevel = 0
 	g.initCamera()
 	g.levels = make(map[int]Level)
@@ -83,6 +86,7 @@ func (g *Game) init(embedFS *embed.FS) {
 	g.enemyModels = make(map[EnemyType]*rl.Model)
 	g.cardTextures = make(map[CardType]*rl.Texture2D)
 	g.UI.buttons = make(map[string]*Button)
+	g.sounds = make(map[string]rl.Sound)
 	g.LoadResources()
 	g.initShadersAndLights()
 	g.Round = g.NewRound()

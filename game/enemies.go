@@ -109,6 +109,8 @@ func (e *Enemy) Update(dt float32, g *Game) {
 			e.velocityY = 0
 			// Trigger camera shake
 			g.CameraShakeIntensity = 0.5
+			rl.SetSoundPitch(g.sounds["falling_impact"], 0.8+rand.Float32()*0.4)
+			rl.PlaySound(g.sounds["falling_impact"])
 		}
 	} else {
 		// Target position based on grid
@@ -287,6 +289,8 @@ func (g *Game) TurnComputer(dt float32) {
 		if !g.waitingForMoveAnimation {
 			// Start the move
 			enemy.move()
+			rl.SetSoundPitch(g.sounds["chess_slide"], 0.95+rand.Float32()*0.1)
+			rl.PlaySound(g.sounds["chess_slide"])
 			g.waitingForMoveAnimation = true
 		} else {
 			// Check if animation is finished (visual pos close to grid pos)
