@@ -24,13 +24,16 @@ func (g *Game) initShadersAndLights() {
 	g.shaders[AmbientShader] = aShader
 
 	// Load outline shader
-	outlineShader = rl.LoadShader("", "assets/shaders/outline.fs")
+	outlineShader = rl.LoadShader("", "assets/shaders/glow.fs")
+	// outlineShader = rl.LoadShader("", "assets/shaders/outline.fs")
 	// Set Uniforms (Do this once if the texture size never changes)
 	locSize := rl.GetShaderLocation(outlineShader, "textureSize")
-	locColor := rl.GetShaderLocation(outlineShader, "outlineColor")
+	locRadius := rl.GetShaderLocation(outlineShader, "radius")
+	locColor := rl.GetShaderLocation(outlineShader, "glowColor")
+	rl.SetShaderValue(outlineShader, locRadius, []float32{9.0}, rl.ShaderUniformFloat)
 	rl.SetShaderValue(outlineShader, locSize, []float32{float32(g.cardTextures[CardTypeAttackPawn].Width), float32(g.cardTextures[CardTypeAttackPawn].Height)}, rl.ShaderUniformVec2)
 	// Set Outline Color (Red)
-	rl.SetShaderValue(outlineShader, locColor, []float32{1.0, 0.0, 0.0, 1.0}, rl.ShaderUniformVec4)
+	rl.SetShaderValue(outlineShader, locColor, []float32{0.5, 0.0, 0.0}, rl.ShaderUniformVec3)
 
 	// Ambient light level
 	ambientLoc := rl.GetShaderLocation(*g.shaders[AmbientShader], "ambient")
