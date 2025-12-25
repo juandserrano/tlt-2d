@@ -205,12 +205,35 @@ func closestGridPositionToOrigin(gridPositions []GridCoord) GridCoord {
 	return closestGridCoord
 }
 
+func isTileOccupied(gridPos GridCoord, enemies []Enemy) bool {
+	for i := range enemies {
+		if enemies[i].currentHealth > 0 && enemies[i].gridPos == gridPos {
+			return true
+		}
+	}
+	return false
+}
+
 func (e *Enemy) move() {
 	neighbourPositions := GetNeighbourPositions(e.gridPos)
-	closest := closestGridPositionToOrigin(neighbourPositions)
 	if e.gridPos.X == 0 && e.gridPos.Z == 0 {
-		closest = e.gridPos
+		return
 	}
+
+	var availablePositions []GridCoord
+	for _, pos := range neighbourPositions {
+		if !isTileOccupied(pos, EnemiesInPlay) {
+			availablePositions = append(availablePositions, pos)
+		}
+	}
+
+	// If all neighbours are occupied, stay put (or maybe check if we are closer than some available spot?)
+	// For now, if blocked, stay put. Ideally we'd check if we are ALREADY at a good spot, but moving towards 0,0 is the goal.
+	if len(availablePositions) == 0 {
+		return
+	}
+
+	closest := closestGridPositionToOrigin(availablePositions)
 	e.gridPos = closest
 }
 
