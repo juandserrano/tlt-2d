@@ -229,7 +229,7 @@ func (c *Card) isMouseOnCard() bool {
 // }
 
 func (g *Game) StartCardAttack(card *Card, enemy *Enemy) {
-	g.playerHand.moveCardToDiscardPile(card, &g.discardPile)
+	g.playerHand.moveCardToDiscardPile(card, &g.discardPile, g)
 
 	onFinish := func() {
 		if enemy.enemyType == EnemyTypeKnight {

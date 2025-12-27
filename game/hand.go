@@ -35,8 +35,19 @@ func (g *Game) OnWindowSizeUpdate() {
 		g.playerHand.cardPositions[i].position.Y = g.playerHand.rectangle.Y + g.playerHand.rectangle.Height/2.0
 	}
 	for i := range g.playerHand.cards {
-		posIndex := g.playerHand.cards[i].positionInHand
-		g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[posIndex].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
+		// Skip updating position if card is being animated
+		isAnimating := false
+		for _, anim := range g.cardSlideAnimations {
+			if anim.Card.id == g.playerHand.cards[i].id {
+				isAnimating = true
+				break
+			}
+		}
+
+		if !isAnimating {
+			posIndex := g.playerHand.cards[i].positionInHand
+			g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[posIndex].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
+		}
 	}
 
 	g.discardPile.position.X = float32(rl.GetScreenWidth()) - float32(g.cardTextures[CardTypeAttackPawn].Width) - 10
@@ -124,18 +135,58 @@ func (h *Hand) UpdateHand() []*Card {
 	return h.cards[:n]
 }
 
-func (h *Hand) moveCardToDiscardPile(c *Card, discardPile *Deck) {
+func (h *Hand) moveCardToDiscardPile(c *Card, discardPile *Deck, g *Game) {
 	h.selectedCard = nil
-	h.cardPositions[c.positionInHand].available = true
 	c.isShowing = true
 	c.selected = false
-	// c.position = discardPile.position
 	discardPile.Push(c)
+
+	// Remove card from hand
 	for i := range h.cards {
 		if h.cards[i].id == c.id {
 			h.cards[i] = h.cards[len(h.cards)-1]
 			h.cards = h.cards[:len(h.cards)-1]
 			break
+		}
+	}
+
+	// Sort remaining cards by positionInHand to maintain order
+	// Use a simple bubble sort since the slice is small
+	for i := 0; i < len(h.cards); i++ {
+		for j := i + 1; j < len(h.cards); j++ {
+			if h.cards[i].positionInHand > h.cards[j].positionInHand {
+				h.cards[i], h.cards[j] = h.cards[j], h.cards[i]
+			}
+		}
+	}
+
+	// Reset all positions to available first
+	for i := range h.cardPositions {
+		h.cardPositions[i].available = true
+	}
+
+	// Reassign positions and create slide animations
+	for i := range h.cards {
+		oldPos := h.cards[i].positionInHand
+		newPos := i
+		h.cards[i].positionInHand = newPos
+		h.cardPositions[newPos].available = false
+
+		// Create slide animation if position changed
+		if oldPos != newPos {
+			targetWorldPos := h.cardPositions[newPos].position
+			targetPos := rl.Vector2{
+				X: targetWorldPos.X - float32(h.cards[i].texture.Width)/2.0,
+				Y: targetWorldPos.Y - float32(h.cards[i].texture.Height)/2.0,
+			}
+
+			anim := &CardSlideAnimation{
+				Card:           h.cards[i],
+				StartPosition:  h.cards[i].position,
+				TargetPosition: targetPos,
+				Progress:       0.0,
+			}
+			g.cardSlideAnimations = append(g.cardSlideAnimations, anim)
 		}
 	}
 }

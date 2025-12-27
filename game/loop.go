@@ -57,6 +57,19 @@ func (g *Game) Update(dt float32) {
 	}
 	g.cardAnimations = activeAnims
 
+	// Update Card Slide Animations
+	var activeSlideAnims []*CardSlideAnimation
+	for _, anim := range g.cardSlideAnimations {
+		anim.Progress += dt * 5.0 // Fast, responsive sliding
+		if anim.Progress >= 1.0 {
+			anim.Card.position = anim.TargetPosition
+		} else {
+			anim.Card.position = rl.Vector2Lerp(anim.StartPosition, anim.TargetPosition, anim.Progress)
+			activeSlideAnims = append(activeSlideAnims, anim)
+		}
+	}
+	g.cardSlideAnimations = activeSlideAnims
+
 	// Update Enemies Animation
 	for i := range EnemiesInPlay {
 		EnemiesInPlay[i].Update(dt, g)

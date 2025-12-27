@@ -42,7 +42,7 @@ func (g *Game) handlePlayingInput(dt float32) {
 		// 3. Discard Pile
 		for i := range g.discardPile.cards {
 			if g.discardPile.cards[i].isMouseOnCard() && g.playerHand.selectedCard != nil {
-				g.playerHand.moveCardToDiscardPile(g.playerHand.selectedCard, &g.discardPile)
+				g.playerHand.moveCardToDiscardPile(g.playerHand.selectedCard, &g.discardPile, g)
 				return // Consume input
 			}
 		}

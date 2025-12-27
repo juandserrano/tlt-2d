@@ -63,6 +63,7 @@ type Game struct {
 	sounds                   map[string]rl.Sound
 	music                    map[string]rl.Music
 	cardAnimations           []*CardAnimation
+	cardSlideAnimations      []*CardSlideAnimation
 	ParticleManager          *ParticleManager
 }
 
@@ -72,6 +73,13 @@ type CardAnimation struct {
 	TargetEnemy   *Enemy
 	Progress      float32
 	OnFinish      func()
+}
+
+type CardSlideAnimation struct {
+	Card           *Card
+	StartPosition  rl.Vector2
+	TargetPosition rl.Vector2
+	Progress       float32
 }
 
 func Run(embedFS *embed.FS) {
