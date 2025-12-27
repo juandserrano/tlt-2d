@@ -24,28 +24,21 @@ LoadModels :: proc(g: ^Game) {
 	g.playerCastle.model = rl.LoadModel("assets/models/castle/tower.glb")
 	g.plainTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
 	g.waterTileModel = rl.LoadModel("assets/models/tiles/basic_ground_tile.glb")
-	pawnModel := rl.LoadModel("assets/models/enemies/pawn.glb")
-	knightModel := rl.LoadModel("assets/models/enemies/knight.glb")
-	bishopModel := rl.LoadModel("assets/models/enemies/bishop.glb")
-	kingModel := rl.LoadModel("assets/models/enemies/king.glb")
-	queenModel := rl.LoadModel("assets/models/enemies/queen.glb")
-	attackPawnCardTexture := rl.LoadTexture("assets/textures/cards/attack_pawn.png")
-	attackKnightCardTexture := rl.LoadTexture("assets/textures/cards/attack_knight.png")
-	attackBishopCardTexture := rl.LoadTexture("assets/textures/cards/attack_bishop.png")
-	attackQueenCardTexture := rl.LoadTexture("assets/textures/cards/attack_queen.png")
-	attackKingCardTexture := rl.LoadTexture("assets/textures/cards/attack_king.png")
-	backCardTexture := rl.LoadTexture("assets/textures/cards/card_back.png")
-	g.enemyModels[.EnemyTypePawn] = &pawnModel
-	g.enemyModels[.EnemyTypeKnight] = &knightModel
-	g.enemyModels[.EnemyTypeBishop] = &bishopModel
-	g.enemyModels[.EnemyTypeQueen] = &queenModel
-	g.enemyModels[.EnemyTypeKing] = &kingModel
-	g.cardTextures[.CardTypeAttackPawn] = &attackPawnCardTexture
-	g.cardTextures[.CardTypeAttackKnight] = &attackKnightCardTexture
-	g.cardTextures[.CardTypeAttackBishop] = &attackBishopCardTexture
-	g.cardTextures[.CardTypeAttackQueen] = &attackQueenCardTexture
-	g.cardTextures[.CardTypeAttackKing] = &attackKingCardTexture
-	g.cardTextures[.CardTypeBack] = &backCardTexture
+	g.enemyModels[.EnemyTypePawn] = rl.LoadModel("assets/models/enemies/pawn.glb")
+	g.enemyModels[.EnemyTypeKnight] = rl.LoadModel("assets/models/enemies/knight.glb")
+	g.enemyModels[.EnemyTypeBishop] = rl.LoadModel("assets/models/enemies/bishop.glb")
+	g.enemyModels[.EnemyTypeQueen] = rl.LoadModel("assets/models/enemies/queen.glb")
+	g.enemyModels[.EnemyTypeKing] = rl.LoadModel("assets/models/enemies/king.glb")
+	g.cardTextures[.CardTypeAttackPawn] = rl.LoadTexture("assets/textures/cards/attack_pawn.png")
+	g.cardTextures[.CardTypeAttackKnight] = rl.LoadTexture(
+		"assets/textures/cards/attack_knight.png",
+	)
+	g.cardTextures[.CardTypeAttackBishop] = rl.LoadTexture(
+		"assets/textures/cards/attack_bishop.png",
+	)
+	g.cardTextures[.CardTypeAttackQueen] = rl.LoadTexture("assets/textures/cards/attack_queen.png")
+	g.cardTextures[.CardTypeAttackKing] = rl.LoadTexture("assets/textures/cards/attack_king.png")
+	g.cardTextures[.CardTypeBack] = rl.LoadTexture("assets/textures/cards/card_back.png")
 
 	g.tiles[.TileTypeClear] = Tile {
 		model    = &g.plainTileModel,

@@ -1,5 +1,6 @@
 package game
 
+import "core:fmt"
 import "core:math"
 import "core:math/rand"
 import rl "vendor:raylib"
@@ -8,6 +9,8 @@ GridCoord :: struct {
 	x: int,
 	z: int,
 }
+
+SPAWNABLE_COORDS := [6]GridCoord{{12, 0}, {-12, 0}, {6, 9}, {-6, 9}, {-6, -9}, {6, -9}}
 
 // GridToWorldHex converts grid coordinates (col, row) to World Pixels
 GridToWorldHex :: proc(col, row: int, size: f32) -> rl.Vector2 {
@@ -122,15 +125,9 @@ GetTileWithGridPos :: proc(g: ^Game, gPos: GridCoord) -> ^Tile {
 }
 
 GetAllSpawnableTileGridCoords :: proc(g: ^Game) -> []GridCoord {
-
-	spawableTiles := []GridCoord{{12, 0}, {-12, 0}, {6, 9}, {-6, 9}, {-6, -9}, {6, -9}}
-
-	return spawableTiles
+	return SPAWNABLE_COORDS[:]
 }
 
 GetRandomSpawnableTileGridCoord :: proc(g: ^Game) -> GridCoord {
-
-	spawableTiles := []GridCoord{{12, 0}, {-12, 0}, {6, 9}, {-6, 9}, {-6, -9}, {6, -9}}
-
-	return spawableTiles[rand.int_range(0, 7)]
+	return SPAWNABLE_COORDS[rand.int_range(0, 6)]
 }

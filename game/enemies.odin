@@ -2,12 +2,13 @@ package game
 
 import "core:fmt"
 import "core:math"
+import "core:math/linalg"
 import "core:math/rand"
 import "util"
 import rl "vendor:raylib"
 
 EnemyBag :: struct {
-	enemies: []Enemy,
+	enemies: [dynamic]Enemy,
 }
 
 EnemyType :: enum {
@@ -18,7 +19,7 @@ EnemyType :: enum {
 	EnemyTypeKing,
 }
 
-EnemiesInPlay: []Enemy
+EnemiesInPlay: [dynamic]Enemy
 
 Enemy :: struct {
 	model:            ^rl.Model,
@@ -35,6 +36,66 @@ Enemy :: struct {
 	velocityY:        f32,
 }
 
+newEnemy :: proc(g: ^Game, eType: EnemyType) -> Enemy {
+	e: Enemy
+	e.enemyType = eType
+	e.moveOnGridX = true
+	e.healthBarShowing = false
+	e.isHighlighted = false
+	#partial switch eType {
+	case .EnemyTypePawn:
+		e.model = &g.enemyModels[.EnemyTypePawn]
+		e.maxHealth = g.Config.Enemies.Pawn.Health
+		e.attack = g.Config.Enemies.Pawn.Attack
+	case .EnemyTypeKnight:
+		e.model = &g.enemyModels[.EnemyTypeKnight]
+		e.maxHealth = g.Config.Enemies.Knight.Health
+		e.attack = g.Config.Enemies.Knight.Attack
+	case .EnemyTypeBishop:
+		e.model = &g.enemyModels[.EnemyTypeBishop]
+		e.maxHealth = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
+	case .EnemyTypeQueen:
+		e.model = &g.enemyModels[.EnemyTypeQueen]
+		e.maxHealth = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
+	case .EnemyTypeKing:
+		e.model = &g.enemyModels[.EnemyTypeKing]
+		e.maxHealth = g.Config.Enemies.Bishop.Health
+		e.attack = g.Config.Enemies.Bishop.Attack
+	case:
+	}
+	e.maxHealth = 2
+	e.currentHealth = e.maxHealth
+	return e
+
+}
+
+UpdateEnemy :: proc(e: ^Enemy, dt: f32, g: ^Game) {
+	if e.isFalling {
+		gravity := f32(50.0)
+		e.velocityY -= gravity * dt
+		e.visualPos.y += e.velocityY * dt
+
+		if e.visualPos.y <= 0 {
+			e.visualPos.y = 0
+			e.isFalling = false
+			e.velocityY = 0
+			// Trigger camera shake
+			g.CameraShakeIntensity = 0.5
+			rl.SetSoundPitch(g.sounds["falling_impact"], 0.8 + rand.float32() * 0.4)
+			rl.PlaySound(g.sounds["falling_impact"])
+		}
+	} else {
+		// Target position based on grid
+		targetWorld := GridToWorldHex(e.gridPos.x, e.gridPos.z, HEX_TILE_WIDTH / 2.0)
+		target := rl.Vector3{targetWorld.x, 0, targetWorld.y}
+
+		// Interpolate
+		speed := f32(g.Config.Animations.SlideSpeed)
+		e.visualPos = linalg.lerp(e.visualPos, target, dt * speed)
+	}
+}
 drawEnemyHealthBar :: proc(e: ^Enemy, g: ^Game) {
 	barWidth := 50
 	barHeight := 10
@@ -53,6 +114,7 @@ drawEnemyHealthBar :: proc(e: ^Enemy, g: ^Game) {
 
 drawEnemy :: proc(e: ^Enemy, g: ^Game) {
 	if (e != nil && e.model != nil) {
+		fmt.println("enemy:", e)
 		// Use visualPos instead of calculating from gridPos
 		rotation := util.CalculateRotation(e.visualPos, rl.Vector3{0, 0, 0})
 		rl.DrawModelEx(
@@ -66,8 +128,7 @@ drawEnemy :: proc(e: ^Enemy, g: ^Game) {
 
 		// Debug neighbour tile coords
 		if g.debugLevel == 2 {
-			neighbours: []GridCoord
-			GetNeighbourPositions(e.gridPos, &neighbours)
+			neighbours := GetNeighbourPositions(e.gridPos)
 			for n in neighbours {
 				// t := GetTileWithGridPos(g, GridCoord{n.x, n.z})
 				// debugDrawGridCoord(t, rl.BLUE)
@@ -103,7 +164,7 @@ closestGridPositionToOrigin :: proc(gridPositions: [dynamic]GridCoord) -> GridCo
 	return closestGridCoord
 }
 
-isTileOccupied :: proc(gridPos: GridCoord, enemies: []Enemy) -> bool {
+isTileOccupied :: proc(gridPos: GridCoord, enemies: [dynamic]Enemy) -> bool {
 	for e in enemies {
 		if e.currentHealth > 0 && e.gridPos == gridPos {
 			return true
@@ -113,8 +174,7 @@ isTileOccupied :: proc(gridPos: GridCoord, enemies: []Enemy) -> bool {
 }
 
 moveEnemy :: proc(e: ^Enemy) {
-	neighbourPositions: []GridCoord
-	GetNeighbourPositions(e.gridPos, &neighbourPositions)
+	neighbourPositions := GetNeighbourPositions(e.gridPos)
 	if e.gridPos.x == 0 && e.gridPos.z == 0 {
 		return
 	}
@@ -136,9 +196,9 @@ moveEnemy :: proc(e: ^Enemy) {
 	e.gridPos = closest
 }
 
-GetNeighbourPositions :: proc(c: GridCoord, result: ^[]GridCoord) {
+GetNeighbourPositions :: proc(c: GridCoord) -> [6]GridCoord {
 	if c.x % 2 != 0 {
-		result^ = {
+		return {
 			{c.x - 1, c.z}, //
 			{c.x - 1, c.z + 1}, //
 			{c.x, c.z + 1}, //
@@ -146,9 +206,8 @@ GetNeighbourPositions :: proc(c: GridCoord, result: ^[]GridCoord) {
 			{c.x + 1, c.z + 1}, //
 			{c.x + 1, c.z}, //
 		}
-		return
 	}
-	result^ = {
+	return {
 		{c.x - 1, c.z}, //
 		{c.x - 1, c.z - 1}, //
 		{c.x, c.z + 1}, //
@@ -175,7 +234,6 @@ TurnComputer :: proc(g: ^Game, dt: f32) {
 				g.turnTransitionTimer = 0
 				g.waitingForSpawnAnimation = false
 				g.Turn = .TurnPlayer
-				fmt.printf("%#v\n", len(EnemiesInPlay))
 				// Fade UI back in for player turn
 				// g.AnimationController.FadeUITo(1.0, 2.0, nil)
 			}
@@ -218,22 +276,22 @@ TurnComputer :: proc(g: ^Game, dt: f32) {
 }
 
 NewEnemyBag :: proc(g: ^Game) -> EnemyBag {
-	enemies: []Enemy
+	enemies: [dynamic]Enemy
 	pawnQty := 20
 	knightQty := 10
 	bishopQty := 5
 
-	// for range pawnQty {
-	// 	enemies = append(enemies, g.NewEnemy(EnemyTypePawn))
-	// }
-	// for range knightQty {
-	// 	enemies = append(enemies, g.NewEnemy(EnemyTypeKnight))
-	// }
-	// for range bishopQty {
-	// 	enemies = append(enemies, g.NewEnemy(EnemyTypeBishop))
-	// }
-	// enemies = append(enemies, g.NewEnemy(EnemyTypeQueen))
-	// enemies = append(enemies, g.NewEnemy(EnemyTypeKing))
+	for i in 1 ..= pawnQty {
+		append(&enemies, newEnemy(g, .EnemyTypePawn))
+	}
+	for i in 1 ..= knightQty {
+		append(&enemies, newEnemy(g, .EnemyTypeKnight))
+	}
+	for i in 1 ..= bishopQty {
+		append(&enemies, newEnemy(g, .EnemyTypeBishop))
+	}
+	append(&enemies, newEnemy(g, .EnemyTypeQueen))
+	append(&enemies, newEnemy(g, .EnemyTypeKing))
 
 	bag := EnemyBag {
 		enemies = enemies,
@@ -252,8 +310,9 @@ PickRandomEnemy :: proc(b: ^EnemyBag, qty: int) -> [dynamic]Enemy {
 		}
 		idx := rand.int_range(0, len(b.enemies))
 		append(&picked, b.enemies[idx])
-		b.enemies[idx] = b.enemies[len(b.enemies) - 1]
-		b.enemies = b.enemies[:len(b.enemies) - 1]
+		unordered_remove(&b.enemies, idx)
+		// b.enemies[idx] = b.enemies[len(b.enemies) - 1]
+		// b.enemies = b.enemies[:len(b.enemies) - 1]
 	}
 	return picked
 }
@@ -266,11 +325,12 @@ PickOneFromType :: proc(b: ^EnemyBag, eType: EnemyType) -> (Enemy, ErrorType) {
 	if len(b.enemies) == 0 {
 		return picked, .ErrorNoMoreEnemies
 	}
-	for &e in b.enemies {
+	for &e, i in b.enemies {
 		if e.enemyType == eType {
 			picked = e
-			e = b.enemies[len(b.enemies) - 1]
-			b.enemies = b.enemies[:len(b.enemies) - 1]
+			unordered_remove(&b.enemies, i)
+			// e = b.enemies[len(b.enemies) - 1]
+			// b.enemies = b.enemies[:len(b.enemies) - 1]
 			return picked, nil
 		}
 	}
@@ -282,21 +342,21 @@ PickStartingEnemies :: proc(b: ^EnemyBag) -> [dynamic]Enemy {
 	pawnQty := 3
 	knightQty := 2
 	bishopQty := 1
-	for i in 0 ..= pawnQty {
+	for i in 1 ..= pawnQty {
 		pawn, err := PickOneFromType(b, .EnemyTypePawn)
 		if err != nil {
 			return nil
 		}
 		append(&startingEnemies, pawn)
 	}
-	for i in 0 ..= knightQty {
+	for i in 1 ..= knightQty {
 		knight, err := PickOneFromType(b, .EnemyTypeKnight)
 		if err != nil {
 			return nil
 		}
 		append(&startingEnemies, knight)
 	}
-	for i in 0 ..= bishopQty {
+	for i in 1 ..= bishopQty {
 		bishop, err := PickOneFromType(b, .EnemyTypeBishop)
 		if err != nil {
 			return nil
@@ -305,4 +365,28 @@ PickStartingEnemies :: proc(b: ^EnemyBag) -> [dynamic]Enemy {
 	}
 	return startingEnemies
 
+}
+
+PlaceEnemyWithPos :: proc(g: ^Game, e: ^Enemy, posGridX, posGridZ: int) {
+	e.gridPos.x = posGridX
+	e.gridPos.z = posGridZ
+
+	// Initialize visual pos
+	worldPos := GridToWorldHex(e.gridPos.x, e.gridPos.z, HEX_TILE_WIDTH / 2.0)
+	e.visualPos = rl.Vector3{worldPos.x, 0, worldPos.y}
+
+	append(&EnemiesInPlay, e^)
+}
+
+spawnSetUpEnemies :: proc(g: ^Game, enemies: [dynamic]Enemy) {
+	coords := GetAllSpawnableTileGridCoords(g)
+	for &e, i in enemies {
+		PlaceEnemyWithPos(g, &e, coords[i].x, coords[i].z)
+		// Modify the last added enemy to start falling
+		if len(EnemiesInPlay) > 0 {
+			idx := len(EnemiesInPlay) - 1
+			EnemiesInPlay[idx].isFalling = true
+			EnemiesInPlay[idx].visualPos.y = 20.0
+		}
+	}
 }

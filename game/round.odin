@@ -11,7 +11,7 @@ NewRound :: proc(g: ^Game) -> Round {
 }
 
 SetUpRound :: proc(r: ^Round, g: ^Game) {
-	// g.enemyBag = g.NewEnemyBag()
+	g.enemyBag = NewEnemyBag(g)
 	// g.playerHand = g.NewHand()
 	// g.discardPile = g.NewDiscardPile()
 	// g.deck = g.NewDeck()
@@ -20,9 +20,9 @@ SetUpRound :: proc(r: ^Round, g: ^Game) {
 	g.Turn = .TurnPlayer
 	LoadLevelTiles(g, 1)
 	initPlayerCastle(g)
-	// startingEnemies := g.enemyBag.PickStartingEnemies()
+	startingEnemies := PickStartingEnemies(&g.enemyBag)
 
-	// g.spawnSetUpEnemies(startingEnemies)
+	spawnSetUpEnemies(g, startingEnemies)
 
 	// if rl.IsMusicStreamPlaying(g.music["iron_at_the_gate"]) {
 	// 	rl.StopMusicStream(g.music["iron_at_the_gate"])

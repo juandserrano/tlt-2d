@@ -23,7 +23,7 @@ Game :: struct {
 	Turn:                     TurnState,
 	Round:                    Round,
 	camera:                   rl.Camera3D,
-	tiles:                    map[TileType]Tile,
+	tiles:                    [TileType]Tile,
 	levels:                   map[int]Level,
 	currentLevel:             int,
 	debugLevel:               i8,
@@ -32,11 +32,11 @@ Game :: struct {
 	// deck         Deck
 	// discardPile    Deck
 	playerCastle:             Castle,
-	shaders:                  map[ShaderName]^rl.Shader,
+	shaders:                  [ShaderName]rl.Shader,
 	plainTileModel:           rl.Model,
 	waterTileModel:           rl.Model,
-	enemyModels:              map[EnemyType]^rl.Model,
-	cardTextures:             map[CardType]^rl.Texture2D,
+	enemyModels:              [EnemyType]rl.Model,
+	cardTextures:             [CardType]rl.Texture2D,
 	sunLight:                 Light,
 	spotLight:                Light,
 	frameCount:               int,
@@ -48,7 +48,7 @@ Game :: struct {
 	turnTransitionTimer:      f32,
 	sounds:                   map[string]rl.Sound,
 	music:                    map[string]rl.Music,
-	// AnimationController      *AnimationController
+	AnimationController:      AnimationController,
 	// ParticleManager          *ParticleManager
 }
 
@@ -70,16 +70,12 @@ init :: proc(g: ^Game) {
 	g.debugLevel = 0
 	initCamera(g)
 	g.levels = make(map[int]Level)
-	g.tiles = make(map[TileType]Tile)
-	g.shaders = make(map[ShaderName]^rl.Shader)
-	g.enemyModels = make(map[EnemyType]^rl.Model)
-	g.cardTextures = make(map[CardType]^rl.Texture2D)
 	g.UI.buttons = make(map[string]Button)
 	g.sounds = make(map[string]rl.Sound)
 	g.music = make(map[string]rl.Music)
 	LoadResources(g)
 	initShadersAndLights(g)
-	// g.AnimationController = NewAnimationController()
+	g.AnimationController = NewAnimationController()
 	g.Round = NewRound(g)
 	g.State = .StatePlaying
 }
@@ -106,10 +102,10 @@ Update :: proc(g: ^Game) {
 	// g.ParticleManager.Update(dt)
 
 	// // Update Animations
-	// g.AnimationController.Update(dt)
+	UpdateAnimations(&g.AnimationController, dt)
 
 	// // Update Enemies Animation via controller
-	// g.AnimationController.UpdateEnemies(dt, EnemiesInPlay, g)
+	UpdateEnemyAnimations(&g.AnimationController, dt, EnemiesInPlay, g)
 
 	// // TODO: Fin a better place for this
 	// g.mouseOverEnemies()
@@ -143,7 +139,7 @@ Update :: proc(g: ^Game) {
 
 	}
 
-	// g.UpdateShaders()
+	UpdateShaders(g)
 	// g.OnWindowSizeUpdate()
 
 	if g.debugLevel > 0 {
@@ -169,7 +165,6 @@ Draw :: proc(g: ^Game) {
 	#partial switch g.State {
 	case .StatePlaying:
 		drawEnemies(g)
-		fmt.printf("current level: %d", g.currentLevel)
 		drawLevel(&g.levels[g.currentLevel])
 		drawCastle(&g.playerCastle)
 	// DrawParticles(&g.particleManager, g.camera)

@@ -1,5 +1,6 @@
 package game
 
+import "core:math"
 import rl "vendor:raylib"
 
 ShaderName :: enum {
@@ -12,9 +13,10 @@ initShadersAndLights :: proc(g: ^Game) {
 	// SHADERS
 
 	// Load ambient + diffuse shader
-	aShader := new(rl.Shader)
-	aShader^ = rl.LoadShader("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
-	g.shaders[.AmbientShader] = aShader
+	g.shaders[.AmbientShader] = rl.LoadShader(
+		"assets/shaders/lighting.vs",
+		"assets/shaders/lighting.fs",
+	)
 
 	// Load outline shader
 	outlineShader = rl.LoadShader("", "assets/shaders/glow.fs")
@@ -37,9 +39,9 @@ initShadersAndLights :: proc(g: ^Game) {
 	rl.SetShaderValue(outlineShader, locColor, &[]f32{0.5, 0.0, 0.0}, .VEC3)
 
 	// Ambient light level
-	ambientLoc := rl.GetShaderLocation(g.shaders[.AmbientShader]^, "ambient")
+	ambientLoc := rl.GetShaderLocation(g.shaders[.AmbientShader], "ambient")
 	ambient := []f32{0.5, 0.5, 0.5, 1.0}
-	rl.SetShaderValue(g.shaders[.AmbientShader]^, ambientLoc, &ambient, .VEC4)
+	rl.SetShaderValue(g.shaders[.AmbientShader], ambientLoc, &ambient, .VEC4)
 
 
 	// g.playerCastle.model.materials.shader = g.shaders[.AmbientShader] // Assigh ambient shader to player tower
@@ -83,9 +85,7 @@ initShadersAndLights :: proc(g: ^Game) {
 	// 	mats[i].Shader = *g.shaders[AmbientShader]
 	// }
 
-	wShader := new(rl.Shader)
-	wShader^ = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")
-	g.shaders[.WaterShader] = wShader
+	g.shaders[.WaterShader] = rl.LoadShader("assets/shaders/water.vs", "assets/shaders/water.fs")
 
 	// materials := g.tiles[TileTypeWater].model.GetMaterials()
 	// for i := range materials {
@@ -96,7 +96,7 @@ initShadersAndLights :: proc(g: ^Game) {
 
 	// Create basic sun illumination
 	g.sunLight = CreateLight(
-		g.shaders[.AmbientShader]^,
+		g.shaders[.AmbientShader],
 		0,
 		.LightDirectional,
 		rl.Vector3 {
@@ -110,7 +110,7 @@ initShadersAndLights :: proc(g: ^Game) {
 	)
 
 	g.spotLight = CreateLight(
-		g.shaders[.AmbientShader]^,
+		g.shaders[.AmbientShader],
 		1,
 		.LightPoint,
 		rl.Vector3{g.playerCastle.position.x - 3, 10, g.playerCastle.position.z},
@@ -119,4 +119,31 @@ initShadersAndLights :: proc(g: ^Game) {
 		1,
 	)
 
+}
+
+UpdateShaders :: proc(g: ^Game) {
+	time := f32(rl.GetTime())
+
+	// Animate sun (Circle around center)
+	if g.Config.World.AnimateSun {
+		AnimateSun(g, time)
+	}
+
+	// Get shader locations
+	timeLoc := rl.GetShaderLocation(g.shaders[.WaterShader], "time")
+	viewPosLoc := rl.GetShaderLocation(g.shaders[.WaterShader], "viewPos")
+	rl.SetShaderValue(g.shaders[.WaterShader], timeLoc, &[]f32{time}, .FLOAT)
+
+	camPos := []f32{g.camera.position.x, g.camera.position.y, g.camera.position.z}
+	rl.SetShaderValue(g.shaders[.WaterShader], viewPosLoc, &camPos, .VEC3)
+
+	// Update Outline Shader Time
+	outlineTimeLoc := rl.GetShaderLocation(outlineShader, "time")
+	rl.SetShaderValue(outlineShader, outlineTimeLoc, &[]f32{time}, .FLOAT)
+}
+
+AnimateSun :: proc(g: ^Game, time: f32) {
+	g.sunLight.Position.x = f32(math.cos(f64(time)) * 100.0)
+	g.sunLight.Position.z = f32(math.sin(f64(time)) * 50.0)
+	UpdateLightValues(g.shaders[.AmbientShader], g.sunLight)
 }
