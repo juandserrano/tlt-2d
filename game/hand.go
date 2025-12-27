@@ -36,15 +36,7 @@ func (g *Game) OnWindowSizeUpdate() {
 	}
 	for i := range g.playerHand.cards {
 		// Skip updating position if card is being animated
-		isAnimating := false
-		for _, anim := range g.cardSlideAnimations {
-			if anim.Card.id == g.playerHand.cards[i].id {
-				isAnimating = true
-				break
-			}
-		}
-
-		if !isAnimating {
+		if !g.AnimationController.IsCardAnimating(g.playerHand.cards[i].id) {
 			posIndex := g.playerHand.cards[i].positionInHand
 			g.playerHand.cards[i].position = rl.Vector2Add(g.playerHand.cardPositions[posIndex].position, rl.Vector2{X: float32(-g.cardTextures[CardTypeAttackPawn].Width / 2), Y: float32(-g.cardTextures[CardTypeAttackPawn].Height / 2)})
 		}
@@ -186,7 +178,7 @@ func (h *Hand) moveCardToDiscardPile(c *Card, discardPile *Deck, g *Game) {
 				TargetPosition: targetPos,
 				Progress:       0.0,
 			}
-			g.cardSlideAnimations = append(g.cardSlideAnimations, anim)
+			g.AnimationController.AddCardSlideAnimation(anim)
 		}
 	}
 }

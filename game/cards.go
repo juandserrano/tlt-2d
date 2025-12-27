@@ -251,7 +251,7 @@ func (g *Game) StartCardAttack(card *Card, enemy *Enemy) {
 		Progress:      0.0,
 		OnFinish:      onFinish,
 	}
-	g.cardAnimations = append(g.cardAnimations, anim)
+	g.AnimationController.AddCardAttackAnimation(anim)
 }
 
 func CanAttack(card *Card, enemy *Enemy) bool {
