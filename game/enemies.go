@@ -278,7 +278,8 @@ func (g *Game) TurnComputer(dt float32) {
 				g.waitingForSpawnAnimation = false
 				g.Turn = TurnPlayer
 				fmt.Printf("%#v\n", len(EnemiesInPlay))
-				g.uiAlpha = 0.0
+				// Fade UI back in for player turn
+				g.AnimationController.FadeUITo(1.0, 2.0, nil)
 			}
 		}
 		return

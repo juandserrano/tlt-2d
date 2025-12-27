@@ -58,8 +58,6 @@ type Game struct {
 	waitingForMoveAnimation  bool
 	waitingForSpawnAnimation bool
 	turnTransitionTimer      float32
-	uiAlpha                  float32
-	endingTurn               bool
 	sounds                   map[string]rl.Sound
 	music                    map[string]rl.Music
 	AnimationController      *AnimationController

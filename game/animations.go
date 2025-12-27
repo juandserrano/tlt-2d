@@ -22,10 +22,19 @@ type CardSlideAnimation struct {
 	Progress       float32
 }
 
+// UIFadeAnimation represents UI fading in or out
+type UIFadeAnimation struct {
+	TargetAlpha float32 // 0.0 for fade out, 1.0 for fade in
+	Speed       float32 // Speed multiplier
+	OnComplete  func()  // Optional callback when fade completes
+}
+
 // AnimationController manages all animations in the game
 type AnimationController struct {
 	cardAttackAnimations []*CardAnimation
 	cardSlideAnimations  []*CardSlideAnimation
+	uiFadeAnimation      *UIFadeAnimation
+	uiAlpha              float32 // Current UI alpha value
 }
 
 // NewAnimationController creates a new animation controller
@@ -33,6 +42,7 @@ func NewAnimationController() *AnimationController {
 	return &AnimationController{
 		cardAttackAnimations: []*CardAnimation{},
 		cardSlideAnimations:  []*CardSlideAnimation{},
+		uiAlpha:              1.0, // Start with UI fully visible
 	}
 }
 
@@ -72,6 +82,31 @@ func (ac *AnimationController) Update(dt float32) {
 		}
 	}
 	ac.cardSlideAnimations = activeSlideAnims
+
+	// Update UI fade animation
+	if ac.uiFadeAnimation != nil {
+		if ac.uiAlpha < ac.uiFadeAnimation.TargetAlpha {
+			// Fading in
+			ac.uiAlpha += dt * ac.uiFadeAnimation.Speed
+			if ac.uiAlpha >= ac.uiFadeAnimation.TargetAlpha {
+				ac.uiAlpha = ac.uiFadeAnimation.TargetAlpha
+				if ac.uiFadeAnimation.OnComplete != nil {
+					ac.uiFadeAnimation.OnComplete()
+				}
+				ac.uiFadeAnimation = nil
+			}
+		} else if ac.uiAlpha > ac.uiFadeAnimation.TargetAlpha {
+			// Fading out
+			ac.uiAlpha -= dt * ac.uiFadeAnimation.Speed
+			if ac.uiAlpha <= ac.uiFadeAnimation.TargetAlpha {
+				ac.uiAlpha = ac.uiFadeAnimation.TargetAlpha
+				if ac.uiFadeAnimation.OnComplete != nil {
+					ac.uiFadeAnimation.OnComplete()
+				}
+				ac.uiFadeAnimation = nil
+			}
+		}
+	}
 }
 
 // DrawCardAttackAnimations renders all active card attack animations
@@ -102,4 +137,23 @@ func (ac *AnimationController) IsCardAnimating(cardID uuid.UUID) bool {
 		}
 	}
 	return false
+}
+
+// FadeUITo starts a UI fade animation to the target alpha value
+func (ac *AnimationController) FadeUITo(targetAlpha float32, speed float32, onComplete func()) {
+	ac.uiFadeAnimation = &UIFadeAnimation{
+		TargetAlpha: targetAlpha,
+		Speed:       speed,
+		OnComplete:  onComplete,
+	}
+}
+
+// GetUIAlpha returns the current UI alpha value
+func (ac *AnimationController) GetUIAlpha() float32 {
+	return ac.uiAlpha
+}
+
+// SetUIAlpha directly sets the UI alpha value (use when not animating)
+func (ac *AnimationController) SetUIAlpha(alpha float32) {
+	ac.uiAlpha = alpha
 }

@@ -64,27 +64,11 @@ func (g *Game) Update(dt float32) {
 		}
 		switch g.Turn {
 		case TurnPlayer:
-			if g.endingTurn {
-				g.uiAlpha -= dt * 2.0
-				if g.uiAlpha <= 0 {
-					g.uiAlpha = 0
-					g.endingTurn = false
-					g.Turn = TurnComputer
-					g.enemyMoveIndex = 0
-					g.waitingForMoveAnimation = false
-					g.waitingForSpawnAnimation = false
-					for i := range g.playerHand.cards {
-						g.playerHand.cards[i].selected = false
-						g.playerHand.selectedCard = nil
-					}
-				}
-			} else {
-				g.uiAlpha += dt * 2.0
-				if g.uiAlpha > 1.0 {
-					g.uiAlpha = 1.0
-				}
-				g.TurnPlayer(dt)
+			// Fade in UI at start of player turn
+			if g.AnimationController.GetUIAlpha() < 1.0 {
+				// Already fading in via AnimationController
 			}
+			g.TurnPlayer(dt)
 
 			g.checkAndCleanEnemies()
 		// case TurnResolving:
@@ -142,7 +126,7 @@ func (g *Game) Draw() {
 
 	if g.Turn == TurnPlayer {
 		g.drawCards()
-		g.playerHand.draw(g.uiAlpha)
+		g.playerHand.draw(g.AnimationController.GetUIAlpha())
 		g.drawUI()
 	}
 	if g.debugLevel != 0 {

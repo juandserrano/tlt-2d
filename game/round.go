@@ -36,7 +36,17 @@ func (r *Round) SetUp(g *Game) {
 }
 
 func (g *Game) actionEndTurn() {
-	g.endingTurn = true
+	// Fade out UI and switch to computer turn when complete
+	g.AnimationController.FadeUITo(0.0, 2.0, func() {
+		g.Turn = TurnComputer
+		g.enemyMoveIndex = 0
+		g.waitingForMoveAnimation = false
+		g.waitingForSpawnAnimation = false
+		for i := range g.playerHand.cards {
+			g.playerHand.cards[i].selected = false
+			g.playerHand.selectedCard = nil
+		}
+	})
 }
 func (g *Game) spawnSetUpEnemies(enemies []Enemy) {
 	for i := range enemies {

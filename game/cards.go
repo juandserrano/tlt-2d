@@ -120,10 +120,10 @@ func (g *Game) ShuffleCards(slice []*Card) {
 
 func (g *Game) drawCards() {
 	for i := range g.deck.cards {
-		g.deck.cards[i].draw(1, g.uiAlpha)
+		g.deck.cards[i].draw(1, g.AnimationController.GetUIAlpha())
 	}
 	for i := range g.discardPile.cards {
-		g.discardPile.cards[i].draw(1, g.uiAlpha)
+		g.discardPile.cards[i].draw(1, g.AnimationController.GetUIAlpha())
 	}
 }
 
