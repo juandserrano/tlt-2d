@@ -48,10 +48,8 @@ func (g *Game) Update(dt float32) {
 	// Update Animations
 	g.AnimationController.Update(dt)
 
-	// Update Enemies Animation
-	for i := range EnemiesInPlay {
-		EnemiesInPlay[i].Update(dt, g)
-	}
+	// Update Enemies Animation via controller
+	g.AnimationController.UpdateEnemies(dt, EnemiesInPlay, g)
 
 	// TODO: Fin a better place for this
 	g.mouseOverEnemies()

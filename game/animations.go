@@ -157,3 +157,10 @@ func (ac *AnimationController) GetUIAlpha() float32 {
 func (ac *AnimationController) SetUIAlpha(alpha float32) {
 	ac.uiAlpha = alpha
 }
+
+// UpdateEnemies processes all enemy animations
+func (ac *AnimationController) UpdateEnemies(dt float32, enemies []Enemy, g *Game) {
+	for i := range enemies {
+		enemies[i].Update(dt, g)
+	}
+}
