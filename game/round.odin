@@ -18,7 +18,7 @@ SetUpRound :: proc(r: ^Round, g: ^Game) {
 	// g.UI.buttons["draw"] = NewButton("draw", 300, 100, proc() {drawToTopHand(g, &g.playerHand)})
 	// g.UI.buttons["end_turn"] = NewButton("End Turn", 300, 300, proc() {actionEndTurn(g)})
 	g.Turn = .TurnPlayer
-	// g.LoadLevelTiles(1)
+	LoadLevelTiles(g, 1)
 	initPlayerCastle(g)
 	// startingEnemies := g.enemyBag.PickStartingEnemies()
 

@@ -41,7 +41,7 @@ NewButton :: proc(text: string, positionX, positionY: int, action: proc()) -> Bu
 			})
 }
 
-MouseOnButton :: proc(b: ^Button) -> bool {
+isMouseOnButton :: proc(b: ^Button) -> bool {
 	point := rl.GetMousePosition()
 	// Avoid division by zero
 	if b.rX <= 0 || b.rY <= 0 {

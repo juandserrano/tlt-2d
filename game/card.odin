@@ -5,7 +5,7 @@ import rl "vendor:raylib"
 
 CardType :: enum {
 	CardTypeAttackPawn,
-	CardTypeAttackBisho,
+	CardTypeAttackBishop,
 	CardTypeAttackKnight,
 	CardTypeAttackKing,
 	CardTypeAttackQueen,

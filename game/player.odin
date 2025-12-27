@@ -31,8 +31,8 @@ TurnPlayer :: proc(g: ^Game, dt: f32) {
 	// 	g.UI.buttons["draw"].enabled = false
 	// }
 	// g.UI.buttons["end_turn"].enabled = true
-	// g.handlePlayingInput(dt)
-	// g.highlightValidEnemies()
+	handlePlayingInput(g, dt)
+	highlightValidEnemies(g)
 
 }
 

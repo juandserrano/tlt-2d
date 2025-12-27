@@ -1,5 +1,6 @@
 package game
 
+import "core:fmt"
 import "core:time"
 import rl "vendor:raylib"
 
@@ -8,7 +9,6 @@ GameState :: enum {
 	StatePlaying,
 	StatePause,
 	StateGameOver,
-	StateWorldEditor,
 }
 
 TurnState :: enum {
@@ -30,7 +30,6 @@ Game :: struct {
 	enemyBag:                 EnemyBag,
 	// playerHand   Hand
 	// deck         Deck
-	// // cardsToPlay    []*Card
 	// discardPile    Deck
 	playerCastle:             Castle,
 	shaders:                  map[ShaderName]^rl.Shader,
@@ -38,8 +37,8 @@ Game :: struct {
 	waterTileModel:           rl.Model,
 	enemyModels:              map[EnemyType]^rl.Model,
 	cardTextures:             map[CardType]^rl.Texture2D,
-	// sunLight                 Light
-	// spotLight                Light
+	sunLight:                 Light,
+	spotLight:                Light,
 	frameCount:               int,
 	UI:                       UI,
 	CameraShakeIntensity:     f32,
@@ -70,7 +69,7 @@ init :: proc(g: ^Game) {
 	rl.InitAudioDevice()
 	g.debugLevel = 0
 	initCamera(g)
-	// g.levels = make(map[int]Level)
+	g.levels = make(map[int]Level)
 	g.tiles = make(map[TileType]Tile)
 	g.shaders = make(map[ShaderName]^rl.Shader)
 	g.enemyModels = make(map[EnemyType]^rl.Model)
@@ -78,11 +77,11 @@ init :: proc(g: ^Game) {
 	g.UI.buttons = make(map[string]Button)
 	g.sounds = make(map[string]rl.Sound)
 	g.music = make(map[string]rl.Music)
-	// g.LoadResources()
-	// g.initShadersAndLights()
+	LoadResources(g)
+	initShadersAndLights(g)
 	// g.AnimationController = NewAnimationController()
-	// g.Round = g.NewRound()
-	// g.State = StatePlaying
+	g.Round = NewRound(g)
+	g.State = .StatePlaying
 }
 
 Loop :: proc(g: ^Game) {
@@ -100,7 +99,7 @@ Loop :: proc(g: ^Game) {
 
 Update :: proc(g: ^Game) {
 	dt := rl.GetFrameTime()
-	// rl.UpdateMusicStream(g.music["iron_at_the_gate"])
+	rl.UpdateMusicStream(g.music["iron_at_the_gate"])
 	toggleDebug(g)
 
 	handleCamera(g)
@@ -125,50 +124,54 @@ Update :: proc(g: ^Game) {
 		case .TurnPlayer:
 			// Fade in UI at start of player turn
 			// if g.AnimationController.GetUIAlpha() < 1.0 {
-				// Already fading in via AnimationController
-			}
-			g.TurnPlayer(dt)
+			// Already fading in via AnimationController
+			// }
+			TurnPlayer(g, dt)
 
-			g.checkAndCleanEnemies()
+		// g.checkAndCleanEnemies()
 		// case TurnResolving:
 		// 	g.TurnResolve(dt)
 		case .TurnComputer:
-			g.TurnComputer(dt)
+			TurnComputer(g, dt)
+
+		case:
 		}
 	// case .StatePause:
 
 	// case StateWorldEditor:
+	case:
 
 	}
 
 	// g.UpdateShaders()
 	// g.OnWindowSizeUpdate()
 
-	// if g.debugLevel > 0 {
-	// 	g.TerminalDebug()
-
-	// }
-
+	if g.debugLevel > 0 {
+		terminalDebug(g)
+	}
 }
 
 Draw :: proc(g: ^Game) {
 	rl.BeginDrawing()
 	rl.ClearBackground(
 		rl.Color {
-			u8(g.Config.Window.BackgroundColor.R * 255),
-			u8(g.Config.Window.BackgroundColor.G * 255),
-			u8(g.Config.Window.BackgroundColor.B * 255),
-			u8(g.Config.Window.BackgroundColor.A * 255),
+			200,
+			200,
+			200,
+			255,
+			// u8(g.Config.Window.BackgroundColor.R * 255),
+			// u8(g.Config.Window.BackgroundColor.G * 255),
+			// u8(g.Config.Window.BackgroundColor.B * 255),
+			// u8(g.Config.Window.BackgroundColor.A * 255),
 		},
 	)
 	rl.BeginMode3D(GetRenderCamera(g))
 	#partial switch g.State {
-	// // case StateWorldEditor:
-	// // 	g.DrawLevel(g.currentLevel)
 	case .StatePlaying:
 		drawEnemies(g)
-		// drawLevel(g.currentLevel)
-		drawPlayerCastle(g)
+		fmt.printf("current level: %d", g.currentLevel)
+		drawLevel(&g.levels[g.currentLevel])
+		drawCastle(&g.playerCastle)
 	// DrawParticles(&g.particleManager, g.camera)
 	case:
 		break
